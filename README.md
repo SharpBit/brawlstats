@@ -8,3 +8,5 @@ pip install git+https://github.com/SharpBit/abrawl-py
 Note: The wrapper and API are both still in beta
 ### Documentation
 Documentation is coming soon! If you would like to help, DM SharpBit#9614 on discord.
+### Misc
+If you come across an issue in the wrapper, please [create an issue](https://github.com/SharpBit/abrawl-py) and I will look into it ASAP.
