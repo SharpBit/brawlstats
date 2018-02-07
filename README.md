@@ -1,5 +1,5 @@
 # abrawl-py
-An async python wrapper for the [Brawl Stars API](brawl-stars.herokuapp.com)
+An async python wrapper for the [Brawl Stars API](http://brawl-stars.herokuapp.com)
 ### Installation
 Install the beta version by typing this into your console
 ```
