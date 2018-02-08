@@ -4,8 +4,8 @@ with open("README.md", "r") as readme_file:
     long_description = readme_file.read()
 
 setup(
-    name='abrawl-py',
-    version='1.0.0',
+    name='abrawlpy',
+    version='1.1.0',
     description='An async Python API wrapper for the Brawl Stars API',
     long_description=long_description,
     url='https://github.com/SharpBit/brawlstars',
