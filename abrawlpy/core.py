@@ -45,7 +45,7 @@ class Client:
 
         token: str
             The API Key that you can get from
-            (link)
+            https://discord.gg/r3rbf9U
         timeout: Optional[int]
             Quits requests to the API after a number of seconds. Default=10
 
@@ -71,8 +71,8 @@ class Client:
                 both = client.get_events('both')
     '''
 
-    def __init__(self, **options):
-        # self.token = token   For future authentification
+    def __init__(self, token, **options):
+        self.token = token
         self.session = aiohttp.ClientSession()
         self.timeout = options.get('timeout')  # kwargs are for more future functionality besides timeout
         self.headers = {
