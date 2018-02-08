@@ -33,7 +33,7 @@ from .utils import API
 ############
 
 
-__version__ = 'v1.1.0'
+__version__ = 'v1.1.1'
 __title__ = 'abrawlpy'
 __license__ = 'MIT'
 __author__ = 'SharpBit'
