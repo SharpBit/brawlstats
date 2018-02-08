@@ -76,6 +76,7 @@ class Client:
         self.session = aiohttp.ClientSession()
         self.timeout = options.get('timeout')  # kwargs are for more future functionality besides timeout
         self.headers = {
+            'Authorization': 'Bearer ' + token
             'User-Agent': 'abrawlpy | Python'
         }
 
