@@ -85,7 +85,7 @@ class Client:
     def __del__(self):
         self.session.close()
 
-    async def get_profile(tag):
+    async def get_profile(self, tag):
         try:
             async with self.session.get(f'{API.PROFILE}/{tag}', timeout=self.timeout, headers=self.headers) as resp:
                 if resp.status == 200:
@@ -99,8 +99,25 @@ class Client:
         except asyncio.TimeoutError:
             raise ServerError()
 
-        profile = Profile(raw_data.data, camel_killer_box=True)
+        profile = Profile(raw_data['data'], camel_killer_box=True)
         return profile
+
+    async def get_band(self, tag):
+        try:
+            async with self.session.get(f'{API.BAND}/{tag}', timeout=self.timeout, headers=self.headers) as resp:
+                if resp.status == 200:
+                    raw_data = await resp.json()
+                elif resp.status == 404:
+                    raise InvalidTag()
+                elif resp.status == 504:
+                    raise ServerError()
+                else:
+                    raise UnexpectedError()
+        except asyncio.TimeoutError:
+            raise ServerError()
+
+        band = Band(raw_data['data'], camel_killer_box=True)
+        return band
 
 
 class Profile(Box):
