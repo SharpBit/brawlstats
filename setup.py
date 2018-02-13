@@ -1,14 +1,11 @@
 from setuptools import setup, find_packages
 
-with open("README.md", "r") as readme_file:
-    long_description = readme_file.read()
-
 setup(
     name='abrawlpy',
     version='1.2.1',
     description='An async Python API wrapper for the Brawl Stars API',
-    long_description=long_description,
-    url='https://github.com/SharpBit/brawlstars',
+    long_description='This package include an easy to use async Client to get Brawl Stars player and band statistics, as well as events. Github: https://github.com/SharpBit/abrawlpy',
+    url='https://github.com/SharpBit/abrawlpy',
     author='SharpBit',
     author_email='uworst888@gmail.com',
     license='MIT',
