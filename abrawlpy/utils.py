@@ -24,7 +24,7 @@ SOFTWARE.
 
 
 class API:
-    BASE = 'http://brawl-stars.herokuapp.com/api'
+    BASE = 'http://brawlstars-api.herokuapp.com/api'
     PROFILE = BASE + '/players'
     BAND = BASE + '/bands'
     EVENTS = BASE + '/events'
