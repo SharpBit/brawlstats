@@ -100,7 +100,7 @@ class Client:
         except asyncio.TimeoutError:
             raise ServerError()
 
-        profile = Profile(raw_data['data'], camel_killer_box=True)
+        profile = Profile(raw_data, camel_killer_box=True)
         return profile
 
     async def get_band(self, tag):
@@ -117,7 +117,7 @@ class Client:
         except asyncio.TimeoutError:
             raise ServerError()
 
-        band = Band(raw_data['data'], camel_killer_box=True)
+        band = Band(raw_data, camel_killer_box=True)
         return band
 
 
