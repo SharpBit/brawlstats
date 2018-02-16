@@ -11,7 +11,7 @@ If you would like to test the *beta* version, type in
 pip install git+https://github.com/SharpBit/abrawlpy
 ```
 ### Documentation
-Documentation is coming soon! If you would like to help, DM SharpBit#9614 on discord.
+Documentation is coming soon! If you would like to help, DM SharpBit#9614 on Discord or open a [pull request](https://github.com/SharpBit/abrawlpy/pulls)
 ### Misc
 If you come across an issue in the wrapper, please [create an issue](https://github.com/SharpBit/abrawl-py) and I will look into it ASAP.
 
