@@ -1,7 +1,7 @@
 # abrawlpy
 An async python wrapper for the [Brawl Stars API](http://brawlstars-api.herokuapp.com/api)
 ### Installation
-Install the beta version by typing this into your console
+Install the latest stable version by typing this into your console
 ```
 pip install abrawlpy
 ```
@@ -44,18 +44,18 @@ import abrawlpy
 
 class BrawlStars:
     '''A simple cog for Brawl Stars commands'''
-    
+
     def __init__(self, bot):
         self.bot = bot
         self.client = abrawlpy.Client('token', timeout=5)
-        
+
     @commands.command()
     async def profile(self, ctx, tag):
         '''Get a brawl stars profile'''
         player = await self.client.get_profile(tag)
         await ctx.send(player.name)
         await ctx.send(player.trophies)
-        
+
 
 def setup(bot):
     bot.add_cog(BrawlStars(bot))
