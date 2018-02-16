@@ -2,7 +2,10 @@
 A full profile of a player (all its statistics)
 
 ### Methods
-`get_band()`- Parameters: None, Returns [Band](https://github.com/SharpBit/abrawlpy/blob/master/docs/band.md) or `None` if no clan.
+| Name | Parameter | Type |
+|------|-----------|------|
+| `get_band` | full=False (Default) | [SimpleBand](https://github.com/SharpBit/abrawlpy/blob/master/docs/band.md#simpleband)
+| `get_band` | full=True | [Band](https://github.com/SharpBit/abrawlpy/blob/master/docs/band.md) or `None` if no clan. |
 
 ### Attributes
 

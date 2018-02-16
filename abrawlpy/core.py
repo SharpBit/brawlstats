@@ -128,17 +128,41 @@ class Profile(Box):
 
     Methods
     --------
-        get_band():
+        get_band(full=False):
             Returns a Band object for the player's band.
             If the player is not in a band,
             it returns None
+
+            `full` defaults to False. This means that it will send a simple band object. If you specify it to True, then it will retrieve a full band object.
     '''
 
     def __repr__(self):
-        return f'<Profile object name={self.profile.name} tag={self.profile.tag}>'
+        return f"<Profile object name='{self.name}' tag={self.tag}>"
 
-    async def get_band(self):
-        band = Band(self.band, camel_killer_box=True)
+    async def get_band(self, full=False):
+        if full is False:
+            band = SimpleBand(self.band, camel_killer_box=True)
+        else:
+            band = Client.get_band(self.band.tag)
+        return band
+
+
+class SimpleBand(Box):
+    '''
+    Returns a simple band object with some of its attributes.
+
+    Methods
+    --------
+
+        get_full():
+            Gets the full band object and returns it.
+    '''
+
+    def __repr__(self):
+        return f"<Simple Band object name='{self.name}' tag='{self.tag}'>"
+
+    async def get_full(self):
+        band = Client.get_band(self.tag)
         return band
 
 
@@ -149,7 +173,7 @@ class Band(Box):
     '''
 
     def __repr__(self):
-        return f'<Band object name={self.name} tag={self.tag}>'
+        return f"<Band object name='{self.name}' tag='{self.tag}'>"
 
 
 class Event(Box):
@@ -158,4 +182,4 @@ class Event(Box):
     '''
 
     def __repr__(self):
-        return f'<Event object type={self.type}>'  # TBD
+        return f"<Event object type='{self.type}'>"  # TBD
