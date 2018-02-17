@@ -11,13 +11,13 @@ If you would like to test the *beta* version, type in
 pip install git+https://github.com/SharpBit/abrawlpy
 ```
 ### Documentation
-Documentation is coming soon! If you would like to help, DM SharpBit#9614 on Discord or open a [pull request](https://github.com/SharpBit/abrawlpy/pulls)
+Documentation is currently in the [docs folder](https://github.com/SharpBit/abrawlpy/tree/master/docs). If you see a mistake, open a [pull request](https://github.com/SharpBit/abrawlpy/pulls) with the correct fix.
 ### Misc
 If you come across an issue in the wrapper, please [create an issue](https://github.com/SharpBit/abrawl-py) and I will look into it ASAP.
 
 ### Examples
 
-Using an async loop
+Using an async loop.
 ```py
 import abrawlpy
 import asyncio
