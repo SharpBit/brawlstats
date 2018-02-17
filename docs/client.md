@@ -15,6 +15,7 @@ Note: Do not put your API key on a public github repo.
 |------|------|---------|
 | token | str | **Required** |
 | timeout | int | 10 |
+
 Get your token by DMing Zihad#6591 on Discord or ask in the [API Server](https://discord.gg/6FtGdX7).
 
 
