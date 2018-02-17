@@ -8,8 +8,8 @@ print(profile.name) # prints the player's name
 ### Methods
 | Name | Parameter | Type |
 |------|-----------|------|
-| `get_band` | full=False (Default) | [SimpleBand](https://github.com/SharpBit/abrawlpy/blob/master/docs/band.md#simpleband)
-| `get_band` | full=True | [Band](https://github.com/SharpBit/abrawlpy/blob/master/docs/band.md) or `None` if no clan. |
+| `get_band` | full=False (Default) | [SimpleBand](https://github.com/SharpBit/abrawlpy/blob/master/docs/band.md#simpleband) or `None` if no band |
+| `get_band` | full=True | [Band](https://github.com/SharpBit/abrawlpy/blob/master/docs/band.md) or `None` if no band |
 
 ### Attributes
 
@@ -25,7 +25,6 @@ print(profile.name) # prints the player's name
 | `showdown_victories` | int |
 | `trophies` | int |
 | `highest_trophies` | int |
-| `band.high` | int |
-| `band.low` | int |
+| `band` | [SimpleBand](https://github.com/SharpBit/abrawlpy/blob/master/docs/band.md#simpleband) |
 
-Note: The band attribute returns a simple band object, which the `get_band()` method returns a full band object.
+Note: The band attribute returns a [simple band object](https://github.com/SharpBit/abrawlpy/blob/master/docs/band.md), while the `get_band()` method returns a [full band object](https://github.com/SharpBit/abrawlpy/blob/master/docs/band.md).

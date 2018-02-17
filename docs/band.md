@@ -25,11 +25,11 @@ loop.run_until_complete(main())
 | `id.low` | int |
 | `name` | str |
 | `status` | str |
-| `band_members_count` | int |
-| `band_trophies` | int |
-| `band_required_trophies` | int |
-| `band_description` | str |
-| `band_members` | List\[[Member](https://github.com/SharpBit/abrawlpy/blob/master/docs/member.md), [Member](https://github.com/SharpBit/abrawlpy/blob/master/docs/member.md)\] |
+| `members_count` | int |
+| `trophies` | int |
+| `required_trophies` | int |
+| `description` | str |
+| `members` | List\[[Member](https://github.com/SharpBit/abrawlpy/blob/master/docs/member.md), [Member](https://github.com/SharpBit/abrawlpy/blob/master/docs/member.md)\] |
 
 # Simple Band
 Only returns some statistics of the band.
@@ -37,10 +37,10 @@ Only returns some statistics of the band.
 ### Attributes
 | Name | Type |
 |------|------|
-| `band_name` | str |
-| `band_tag` | str |
-| `band_trophies` | int |
-| `band_required_trophies` | int |
-| `members_count` | int |
-| `maybe_player_role` | int |
-
+| `id.high` | int |
+| `id.low` | int |
+| `name` | str |
+| `tag` | str |
+| `trophies` | int |
+| `required_trophies` | int |
+| `members` | int |

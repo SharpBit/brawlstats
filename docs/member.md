@@ -16,4 +16,5 @@ print(members[0].name, members[0].role) # prints best player's name and role (so
 | `role` | str |
 | `exp_level` | int |
 | `trophies` | int |
-| `avatar` | int |
+| `avatar_id` | int |
+| `avatar_url` | str |

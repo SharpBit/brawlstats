@@ -91,6 +91,8 @@ class Client:
             async with self.session.get(f'{API.PROFILE}/{tag}', timeout=self.timeout, headers=self.headers) as resp:
                 if resp.status == 200:
                     raw_data = await resp.json()
+                elif resp.status == 401:
+                    raise Forbidden()
                 elif resp.status == 404:
                     raise InvalidTag()
                 elif resp.status == 504:
@@ -108,6 +110,8 @@ class Client:
             async with self.session.get(f'{API.BAND}/{tag}', timeout=self.timeout, headers=self.headers) as resp:
                 if resp.status == 200:
                     raw_data = await resp.json()
+                elif resp.status == 401:
+                    raise Forbidden()
                 elif resp.status == 404:
                     raise InvalidTag()
                 elif resp.status == 504:
@@ -159,7 +163,7 @@ class SimpleBand(Box):
     '''
 
     def __repr__(self):
-        return f"<Simple Band object name='{self.name}' tag='{self.tag}'>"
+        return f"<SimpleBand object name='{self.name}' tag='{self.tag}'>"
 
     async def get_full(self):
         band = Client.get_band(self.tag)
