@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='abrawlpy',
-    version='1.2.2',
+    version='1.2.3',
     description='An async Python API wrapper for the Brawl Stars API',
     long_description='This package include an easy to use async Client to get Brawl Stars player and band statistics, as well as events. Github: https://github.com/SharpBit/abrawlpy',
     url='https://github.com/SharpBit/abrawlpy',

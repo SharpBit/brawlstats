@@ -1,5 +1,9 @@
 # Member
-Returns some info about a band member.
+Returns some info about a band member. Get this by accessing the band's `band_members`
+```py
+members = band.band_members
+print(members[0].name, members[0].role) # prints best player's name and role (sorted by trophies)
+```
 
 ### Attributes
 

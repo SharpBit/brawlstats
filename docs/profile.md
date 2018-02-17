@@ -1,5 +1,9 @@
 # Profile
 A full profile of a player (all its statistics)
+```py
+profile = await client.get_profile('UG99J2')
+print(profile.name) # prints the player's name
+```
 
 ### Methods
 | Name | Parameter | Type |

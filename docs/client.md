@@ -24,4 +24,4 @@ Get your token by DMing Zihad#6591 on Discord or ask in the [API Server](https:/
 | Method | Parameter | Type |
 |--------|-----------|------|
 | `get_profile` | Tag[str] | [Profile](https://github.com/SharpBit/abrawlpy/blob/master/docs/profile.md) |
-| `get_band` | Tag[str] | [Band](https://github.com/SharpBit/abrawlpy/blob/master/docs/band.md)
+| `get_band` | Tag[str], Full[bool]=False | [Band](https://github.com/SharpBit/abrawlpy/blob/master/docs/band.md)
