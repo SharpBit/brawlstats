@@ -95,7 +95,7 @@ class Client:
                     raise Forbidden()
                 elif resp.status == 404:
                     raise InvalidTag()
-                elif resp.status == 504:
+                elif resp.status == 503:
                     raise ServerError()
                 else:
                     raise UnexpectedError()

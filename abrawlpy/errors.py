@@ -61,6 +61,6 @@ class ServerError(RequestError):
     '''Raised when the API is down'''
 
     def __init__(self):
-        self.code = 504
+        self.code = 503
         self.error = 'The API is down. Please be patient and try again later.'
         super().__init__(self.code, self.error)

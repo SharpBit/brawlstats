@@ -10,7 +10,7 @@ If something you did is incorrect, chances are this wrapper will send you an err
 | 401 | Forbidden | Your API Key has been blocked by the API. |
 | 404 | InvalidTag | An incorrect player or band tag has been passed. |
 | 500 | UnexpectedError | An unexpected error has occured. Please [contact us.](https://github.com/SharpBit/abrawlpy/issues) |
-| 504 | ServerError | The API is down. Please be patient and try again later. |
+| 503 | ServerError | The API is down. Please be patient and try again later. |
 
 ### How to Handle Exceptions
 The first way to handle all exceptions in this library is to catch the base class, `RequestError`. You can do this using a simple try and except statement. If you are unfamiliar with try and except statements, I recommend you watch this [tutorial](https://youtu.be/NIWwJbo-9_8).<br><br>
@@ -21,7 +21,7 @@ try:
 except abrawlpy.errors.RequestError as e:
     print(e.code + ': ' + e.error)
 ```
-If the API was down, it would print: `504: The API is down. Please be patient and try again later.`<br>
+If the API was down, it would print: `503: The API is down. Please be patient and try again later.`<br>
 If your API key in your Client was incorrect, it would print: `401: Your API Key has been blocked by the API.`<br>
 However, if you only want to catch a specific error, you can do that as well. For example:
 ```py
