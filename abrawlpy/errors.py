@@ -33,34 +33,34 @@ class RequestError(Exception):
 class Forbidden(RequestError):
     '''Raised when your API Key is blocked'''
 
-    def __init__(self):
-        self.code = 401
-        self.error = 'Your API Key has been blocked by the API.'
+    def __init__(self, url):
+        self.code = 403
+        self.error = f'Your API Key has been blocked by the API. URL: {url}'
         super().__init__(self.code, self.error)
 
 
 class InvalidTag(RequestError):
     '''Raised when an invalid player or band tag has been passed'''
 
-    def __init__(self):
+    def __init__(self, url):
         self.code = 404
-        self.error = 'An incorrect tag has been passed.'
+        self.error = f'An incorrect tag has been passed. URL" {url}'
         super().__init__(self.code, self.error)
 
 
 class UnexpectedError(RequestError):
     '''Raised when an unknown error has occured'''
 
-    def __init__(self):
+    def __init__(self, url):
         self.code = 500
-        self.error = 'An unexpected error has occured. Please contact us.'
+        self.error = f'An unexpected error has occured. Please contact us. URL: {url}'
         super().__init__(self.code, self.error)
 
 
 class ServerError(RequestError):
     '''Raised when the API is down'''
 
-    def __init__(self):
+    def __init__(self, url):
         self.code = 503
-        self.error = 'The API is down. Please be patient and try again later.'
+        self.error = f'The API is down. Please be patient and try again later. URL: {url}'
         super().__init__(self.code, self.error)

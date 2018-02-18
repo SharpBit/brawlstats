@@ -25,7 +25,6 @@ SOFTWARE.
 
 from .core import *
 from .errors import *
-from .utils import API
 
 
 ############
@@ -33,7 +32,7 @@ from .utils import API
 ############
 
 
-__version__ = 'v1.3.1'
+__version__ = 'v1.4.0'
 __title__ = 'abrawlpy'
 __license__ = 'MIT'
 __author__ = 'SharpBit'

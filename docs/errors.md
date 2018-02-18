@@ -7,7 +7,7 @@ If something you did is incorrect, chances are this wrapper will send you an err
 | Code | Name | Reason |
 |------|------|--------|
 | Any | RequestError | Base class for all exceptions. Used to catch any error. |
-| 401 | Forbidden | Your API Key has been blocked by the API. |
+| 403 | Forbidden | Your API Key has been blocked by the API. |
 | 404 | InvalidTag | An incorrect player or band tag has been passed. |
 | 500 | UnexpectedError | An unexpected error has occured. Please [contact us.](https://github.com/SharpBit/abrawlpy/issues) |
 | 503 | ServerError | The API is down. Please be patient and try again later. |
@@ -18,21 +18,21 @@ Example:
 ```py
 try:
     profile = await client.get_profile('2PP')
-except abrawlpy.errors.RequestError as e:
+except abrawlpy.RequestError as e:
     print(e.code + ': ' + e.error)
 ```
-If the API was down, it would print: `503: The API is down. Please be patient and try again later.`<br>
-If your API key in your Client was incorrect, it would print: `401: Your API Key has been blocked by the API.`<br>
+If the API was down, it would print: `503: The API is down. Please be patient and try again later. URL: {requested_url}`<br>
+If your API key in your Client was incorrect, it would print: `403: Your API Key has been blocked by the API. URL: {requested_url}`<br>
 However, if you only want to catch a specific error, you can do that as well. For example:
 ```py
 try:
     tag = input('Enter a band tag:\n')
     band = await client.get_band(tag) # user input may not be correct
     # therefore, catch `InvalidTag`
-except abrawlpy.errors.InvalidTag:
+except abrawlpy.InvalidTag:
     print('Invalid Tag.')
 ```
-If you don't want to type `abrawlpy.errors.Error` every single time, you can fix this by simply typing
+If you don't want to type `abrawlpy.Error` every single time, you can fix this by simply typing
 ```py
 from abrawlpy.errors import *
 ```

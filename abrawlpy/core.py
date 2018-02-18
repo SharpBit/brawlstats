@@ -25,9 +25,14 @@ SOFTWARE.
 
 import aiohttp
 from .utils import API
-from .errors import *
+from .errors import Forbidden, InvalidTag, UnexpectedError, ServerError
 from box import Box
 import asyncio
+
+
+class BaseBox(Box):
+    def __init__(*args, **kwargs):
+        super().__init__(*args, **kwargs, camel_killer_box=True)
 
 
 class Client:
@@ -46,13 +51,20 @@ class Client:
         token: str
             The API Key that you can get from
             https://discord.gg/r3rbf9U
-        timeout: Optional[int]
-            Quits requests to the API after a number of seconds. Default=10
+        **timeout: Optional[int]
+            Quits requests to the API after a number of seconds. Default=5
+        **session: Optional[session]
+            Use a current aiohttp session or a new one
+        **loop: Optional[loop]
+            Use a current loop or an new one
 
     Example:
     ---------
 
-        client = abrawlpy.Client(os.getenv('bstoken'), timeout=5)
+        bot.session = aiohttp.ClientSession()
+
+        client = abrawlpy.Client(os.getenv('bstoken'), timeout=3, session=bot.session, loop=bot.loop)
+        # bot is something that Discord bots have, you can use something else
 
     Methods
     ---------
@@ -72,9 +84,9 @@ class Client:
     '''
 
     def __init__(self, token, **options):
-        self.token = token
-        self.session = aiohttp.ClientSession()
-        self.timeout = options.get('timeout')  # kwargs are for more future functionality besides timeout
+        loop = options.get('loop')
+        self.session = options.get('session', aiohttp.ClientSession(loop=loop))
+        self.timeout = options.get('timeout', 5)
         self.headers = {
             'Authorization': token,
             'User-Agent': 'abrawlpy | Python'
@@ -86,46 +98,57 @@ class Client:
     def __del__(self):
         self.session.close()
 
+    def check_tag(self, tag):
+        tag = tag.upper().strip("#").replace('O', '0')
+        for c in tag:
+            if c not in '0289PYLQGRJCUV':
+                raise InvalidTag()
+        return tag
+
     async def get_profile(self, tag):
+        tag = self.check_tag(tag)
+        url = f'{API.PROFILE}/{tag}'
         try:
-            async with self.session.get(f'{API.PROFILE}/{tag}', timeout=self.timeout, headers=self.headers) as resp:
+            async with self.session.get(url, timeout=self.timeout, headers=self.headers) as resp:
                 if resp.status == 200:
                     raw_data = await resp.json()
-                elif resp.status == 401:
-                    raise Forbidden()
+                elif resp.status == 403:
+                    raise Forbidden(url)
                 elif resp.status == 404:
-                    raise InvalidTag()
+                    raise InvalidTag(url)
                 elif resp.status == 503:
-                    raise ServerError()
+                    raise ServerError(url)
                 else:
-                    raise UnexpectedError()
+                    raise UnexpectedError(url)
         except asyncio.TimeoutError:
-            raise ServerError()
+            raise ServerError(url)
 
-        profile = Profile(raw_data, camel_killer_box=True)
-        return profile
+        return Profile(raw_data)
+
+    get_player = get_profile
 
     async def get_band(self, tag):
+        tag = self.check_tag(tag)
         try:
-            async with self.session.get(f'{API.BAND}/{tag}', timeout=self.timeout, headers=self.headers) as resp:
+            url = f'{API.BAND}/{tag}'
+            async with self.session.get(url, timeout=self.timeout, headers=self.headers) as resp:
                 if resp.status == 200:
                     raw_data = await resp.json()
                 elif resp.status == 401:
-                    raise Forbidden()
+                    raise Forbidden(url)
                 elif resp.status == 404:
-                    raise InvalidTag()
+                    raise InvalidTag(url)
                 elif resp.status == 504:
-                    raise ServerError()
+                    raise ServerError(url)
                 else:
-                    raise UnexpectedError()
+                    raise UnexpectedError(url)
         except asyncio.TimeoutError:
-            raise ServerError()
+            raise ServerError(url)
 
-        band = Band(raw_data, camel_killer_box=True)
-        return band
+        return Band(raw_data)
 
 
-class Profile(Box):
+class Profile(BaseBox):
     '''
     Returns a full player object with all
     of its attributes.
@@ -141,17 +164,20 @@ class Profile(Box):
     '''
 
     def __repr__(self):
-        return f"<Profile object name='{self.name}' tag={self.tag}>"
+        return f"<Profile object name='{self.name}' tag='{self.tag}'>"
+
+    def __str__(self):
+        return f"{self.name} (#{self.tag})"
 
     async def get_band(self, full=False):
         if full is False:
-            band = SimpleBand(self.band, camel_killer_box=True)
+            band = SimpleBand(self.band)
         else:
             band = Client.get_band(self.band.tag)
         return band
 
 
-class SimpleBand(Box):
+class SimpleBand(BaseBox):
     '''
     Returns a simple band object with some of its attributes.
 
@@ -165,12 +191,14 @@ class SimpleBand(Box):
     def __repr__(self):
         return f"<SimpleBand object name='{self.name}' tag='{self.tag}'>"
 
+    def __str__(self):
+        return f"{self.name} (#{self.tag})"
+
     async def get_full(self):
-        band = Client.get_band(self.tag)
-        return band
+        return Client.get_band(self.tag)
 
 
-class Band(Box):
+class Band(BaseBox):
     '''
     Returns a full band object with all
     of its attributes.
@@ -179,8 +207,11 @@ class Band(Box):
     def __repr__(self):
         return f"<Band object name='{self.name}' tag='{self.tag}'>"
 
+    def __str__(self):
+        return f"{self.name} (#{self.tag})"
 
-class Event(Box):
+
+class Event(BaseBox):
     '''
     Returns a current, upcoming, or both events
     '''

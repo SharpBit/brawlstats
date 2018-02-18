@@ -6,7 +6,7 @@ Import abrawlpy and create the client like so:
 ```py
 import abrawlpy
 
-client = abrawlpy.Client('token', timeout=5)
+client = abrawlpy.Client('token', timeout=3)
 ```
 Note: Do not put your API key on a public github repo.
 ### Parameters
@@ -14,9 +14,11 @@ Note: Do not put your API key on a public github repo.
 | Name | Type | Default |
 |------|------|---------|
 | token | str | **Required** |
-| timeout | int | 10 |
+| \*\*timeout | int | 5 |
+| \*\*session | session | aiohttp.ClientSession() |
+| \*\*loop | loop | None |
 
-Get your token by DMing Zihad#6591 on Discord or ask in the [API Server](https://discord.gg/6FtGdX7).
+Get your token by typing `#getToken` in the [API Server](https://discord.gg/6FtGdX7).
 
 
 ### Methods

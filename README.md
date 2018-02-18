@@ -22,7 +22,7 @@ Using an async loop.
 import abrawlpy
 import asyncio
 
-client = abrawlpy.Client('token', timeout=5)
+client = abrawlpy.Client('token', timeout=3)
 # Do not post your token on a public github
 
 # await only works in an async loop
@@ -51,17 +51,16 @@ class BrawlStars:
 
     def __init__(self, bot):
         self.bot = bot
-        self.client = abrawlpy.Client('token', timeout=5)
+        self.client = abrawlpy.Client('token', timeout=3)
 
     @commands.command()
     async def profile(self, ctx, tag):
         '''Get a brawl stars profile'''
         try:
             player = await self.client.get_profile(tag)
-        except abrawlpy.errors.RequestError as e:
+        except abrawlpy.RequestError as e:
             return await ctx.send(f'```\n{e.code}: {e.error}\n```')
-        await ctx.send(f'Name: {player.name}')
-        await ctx.send(f'Trophies: {player.trophies}')
+        await ctx.send(f'Name: {player.name}\nTrophies: {player.trophies}')
 
 
 def setup(bot):
