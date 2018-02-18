@@ -1,8 +1,16 @@
 # Profile
 A full profile of a player (all its statistics)
 ```py
-profile = await client.get_profile('UG99J2')
-print(profile.name) # prints the player's name
+import abrawlpy
+import asyncio
+
+client = abrawlpy.Client('token')
+async def main():
+    profile = await client.get_profile('UG99J2') # get a player profile
+    print(profile.name) # prints 'joeycipp'
+
+loop = asyncio.get_event_loop()
+loop.run_until_complete(main())
 ```
 
 ### Methods

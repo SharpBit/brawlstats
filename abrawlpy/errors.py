@@ -48,7 +48,6 @@ class InvalidTag(RequestError):
         super().__init__(self.code, self.error)
 
 
-
 class UnexpectedError(RequestError):
     '''Raised when an unknown error has occured'''
 
@@ -56,7 +55,6 @@ class UnexpectedError(RequestError):
         self.code = 500
         self.error = 'An unexpected error has occured. Please contact us.'
         super().__init__(self.code, self.error)
-        
 
 
 class ServerError(RequestError):
@@ -66,5 +64,3 @@ class ServerError(RequestError):
         self.code = 504
         self.error = 'The API is down. Please be patient and try again later.'
         super().__init__(self.code, self.error)
-        
- 
