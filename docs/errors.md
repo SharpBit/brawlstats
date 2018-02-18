@@ -32,7 +32,7 @@ try:
 except abrawlpy.InvalidTag:
     print('Invalid Tag.')
 ```
-If you don't want to type `abrawlpy.Error` every single time, you can fix this by simply typing
+If you don't want to type `abrawlpy.RequestError` every single time, you can fix this by simply typing
 ```py
 from abrawlpy.errors import *
 ```

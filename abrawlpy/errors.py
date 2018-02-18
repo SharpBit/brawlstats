@@ -35,7 +35,7 @@ class Forbidden(RequestError):
 
     def __init__(self, url):
         self.code = 403
-        self.error = f'Your API Key has been blocked by the API. URL: {url}'
+        self.error = 'Your API Key has been blocked by the API. URL: ' + url
         super().__init__(self.code, self.error)
 
 
@@ -44,7 +44,7 @@ class InvalidTag(RequestError):
 
     def __init__(self, url):
         self.code = 404
-        self.error = f'An incorrect tag has been passed. URL" {url}'
+        self.error = 'An incorrect tag has been passed. URL: ' + url
         super().__init__(self.code, self.error)
 
 
@@ -53,7 +53,7 @@ class UnexpectedError(RequestError):
 
     def __init__(self, url):
         self.code = 500
-        self.error = f'An unexpected error has occured. Please contact us. URL: {url}'
+        self.error = 'An unexpected error has occured. Please contact us. URL: ' + url
         super().__init__(self.code, self.error)
 
 
@@ -62,5 +62,5 @@ class ServerError(RequestError):
 
     def __init__(self, url):
         self.code = 503
-        self.error = f'The API is down. Please be patient and try again later. URL: {url}'
+        self.error = 'The API is down. Please be patient and try again later. URL: ' + url
         super().__init__(self.code, self.error)

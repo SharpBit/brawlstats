@@ -28,6 +28,7 @@ from .utils import API
 from .errors import Forbidden, InvalidTag, UnexpectedError, ServerError
 from box import Box
 import asyncio
+from json import JSONDecodeError
 
 
 class BaseBox(Box):
@@ -93,21 +94,21 @@ class Client:
         }
 
     def __repr__(self):
-        return f'<ABrawlPy-Client timeout={self.timeout}>'
+        return '<ABrawlPy-Client timeout=' + self.timeout + '>'
 
     def __del__(self):
         self.session.close()
 
-    def check_tag(self, tag):
+    def check_tag(self, tag, endpoint):
         tag = tag.upper().strip("#").replace('O', '0')
         for c in tag:
             if c not in '0289PYLQGRJCUV':
-                raise InvalidTag()
+                raise InvalidTag(endpoint + '/' + tag)
         return tag
 
     async def get_profile(self, tag):
-        tag = self.check_tag(tag)
-        url = f'{API.PROFILE}/{tag}'
+        tag = self.check_tag(tag, API.PROFILE)
+        url = API.PROFILE + '/' + tag
         try:
             async with self.session.get(url, timeout=self.timeout, headers=self.headers) as resp:
                 if resp.status == 200:
@@ -120,7 +121,7 @@ class Client:
                     raise ServerError(url)
                 else:
                     raise UnexpectedError(url)
-        except asyncio.TimeoutError:
+        except (asyncio.TimeoutError, JSONDecodeError):
             raise ServerError(url)
 
         return Profile(raw_data)
@@ -128,7 +129,7 @@ class Client:
     get_player = get_profile
 
     async def get_band(self, tag):
-        tag = self.check_tag(tag)
+        tag = self.check_tag(tag, API.BAND)
         try:
             url = f'{API.BAND}/{tag}'
             async with self.session.get(url, timeout=self.timeout, headers=self.headers) as resp:
@@ -142,7 +143,7 @@ class Client:
                     raise ServerError(url)
                 else:
                     raise UnexpectedError(url)
-        except asyncio.TimeoutError:
+        except (asyncio.TimeoutError, JSONDecodeError):
             raise ServerError(url)
 
         return Band(raw_data)
@@ -164,13 +165,13 @@ class Profile(BaseBox):
     '''
 
     def __repr__(self):
-        return f"<Profile object name='{self.name}' tag='{self.tag}'>"
+        return "<Profile object name='" + self.name + "' tag='" + self.tag + "'>"
 
     def __str__(self):
-        return f"{self.name} (#{self.tag})"
+        return self.name + "(#" + self.tag + ")"
 
     async def get_band(self, full=False):
-        if full is False:
+        if not full:
             band = SimpleBand(self.band)
         else:
             band = Client.get_band(self.band.tag)
@@ -189,10 +190,10 @@ class SimpleBand(BaseBox):
     '''
 
     def __repr__(self):
-        return f"<SimpleBand object name='{self.name}' tag='{self.tag}'>"
+        return "<SimpleBand object name='" + self.name + "' tag='" + self.tag + "'>"
 
     def __str__(self):
-        return f"{self.name} (#{self.tag})"
+        return self.name + "(#" + self.tag + ")"
 
     async def get_full(self):
         return Client.get_band(self.tag)
@@ -205,10 +206,10 @@ class Band(BaseBox):
     '''
 
     def __repr__(self):
-        return f"<Band object name='{self.name}' tag='{self.tag}'>"
+        return "<Band object name='" + self.name + "' tag='" + self.tag + "'>"
 
     def __str__(self):
-        return f"{self.name} (#{self.tag})"
+        return self.name + "(#" + self.tag + ")"
 
 
 class Event(BaseBox):
@@ -217,4 +218,4 @@ class Event(BaseBox):
     '''
 
     def __repr__(self):
-        return f"<Event object type='{self.type}'>"  # TBD
+        return "<Event object type='" + self.type + "'>"  # TBD
