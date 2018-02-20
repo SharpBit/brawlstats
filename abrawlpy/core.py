@@ -106,9 +106,8 @@ class Client:
                 raise InvalidTag(endpoint + '/' + tag)
         return tag
 
-    async def get_profile(self, tag):
-        tag = self.check_tag(tag, API.PROFILE)
-        url = API.PROFILE + '/' + tag
+    async def _aget(self, url):
+        '''Gets the response from the API.'''
         try:
             async with self.session.get(url, timeout=self.timeout, headers=self.headers) as resp:
                 if resp.status == 200:
@@ -123,30 +122,21 @@ class Client:
                     raise UnexpectedError(url)
         except (asyncio.TimeoutError, JSONDecodeError):
             raise ServerError(url)
+        return raw_data
 
-        return Profile(raw_data)
+    async def get_profile(self, tag):
+        tag = self.check_tag(tag, API.PROFILE)
+        response = await self._aget(API.PROFILE + '/' + tag)
+
+        return Profile(response)
 
     get_player = get_profile
 
     async def get_band(self, tag):
         tag = self.check_tag(tag, API.BAND)
-        try:
-            url = f'{API.BAND}/{tag}'
-            async with self.session.get(url, timeout=self.timeout, headers=self.headers) as resp:
-                if resp.status == 200:
-                    raw_data = await resp.json()
-                elif resp.status == 401:
-                    raise Forbidden(url)
-                elif resp.status == 404:
-                    raise InvalidTag(url)
-                elif resp.status == 504:
-                    raise ServerError(url)
-                else:
-                    raise UnexpectedError(url)
-        except (asyncio.TimeoutError, JSONDecodeError):
-            raise ServerError(url)
+        response = await self._aget(API.BAND + '/' + tag)
 
-        return Band(raw_data)
+        return Band(response)
 
 
 class Profile(BaseBox):
@@ -161,7 +151,8 @@ class Profile(BaseBox):
             If the player is not in a band,
             it returns None
 
-            `full` defaults to False. This means that it will send a simple band object. If you specify it to True, then it will retrieve a full band object.
+            `full` defaults to False. This means that it will send a simple band object.
+            If you specify it to True, then it will retrieve a full band object.
     '''
 
     def __repr__(self):

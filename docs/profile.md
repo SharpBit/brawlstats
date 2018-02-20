@@ -14,10 +14,10 @@ loop.run_until_complete(main())
 ```
 
 ### Methods
-| Name | Parameter | Type |
-|------|-----------|------|
-| `get_band` | full=False (Default) | [SimpleBand](https://github.com/SharpBit/abrawlpy/blob/master/docs/band.md#simpleband) or `None` if no band |
-| `get_band` | full=True | [Band](https://github.com/SharpBit/abrawlpy/blob/master/docs/band.md) or `None` if no band |
+
+`get_band`<br>
+    full-`bool`<br>
+    Returns: [Band](https://github.com/SharpBit/abrawlpy/blob/master/docs/band.md) if `full=True` else [SimpleBand](https://github.com/SharpBit/abrawlpy/blob/master/docs/band.md#simpleband) or `None` if no band. Default=`False`
 
 ### Attributes
 
@@ -34,5 +34,3 @@ loop.run_until_complete(main())
 | `trophies` | int |
 | `highest_trophies` | int |
 | `band` | [SimpleBand](https://github.com/SharpBit/abrawlpy/blob/master/docs/band.md#simpleband) |
-
-Note: The band attribute returns a [simple band object](https://github.com/SharpBit/abrawlpy/blob/master/docs/band.md), while the `get_band()` method returns a [full band object](https://github.com/SharpBit/abrawlpy/blob/master/docs/band.md).
