@@ -76,12 +76,15 @@ class Client:
             Get a brawl stars band.
         get_events(timeframe):
             Get current or upcoming events.
+        get_leaderboard(p_or_b, count):
+            Get a player or band leaderboard with count players/bands.
 
-            Example
+            Examples
             --------
-                current = client.get_events('current')
-                upcoming = client.get_events('upcoming')
-                both = client.get_events('both')
+                current = await client.get_events('current')
+                # gets current events
+                p_lb = await client.get_leaderboard('players', 5)
+                # gets top five players
     '''
 
     def __init__(self, token, **options):
@@ -94,7 +97,7 @@ class Client:
         }
 
     def __repr__(self):
-        return '<ABrawlPy-Client timeout=' + self.timeout + '>'
+        return '<ABrawlPy-Client timeout={}>'.format(self.timeout)
 
     def __del__(self):
         self.session.close()
@@ -138,6 +141,14 @@ class Client:
 
         return Band(response)
 
+    async def get_leaderboard(self, p_or_b, count=200):
+        if p_or_b not in ('players', 'bands') or count > 200:
+            raise ValueError("Please enter 'players' or 'bands' or make sure 'count' is 200 or less.")
+        url = API.LEADERBOARD + '/' + p_or_b + '?count=' + count
+        response = await self._aget(url)
+
+        return Leaderboard(response, type=p_or_b, count=count)
+
 
 class Profile(BaseBox):
     '''
@@ -156,10 +167,10 @@ class Profile(BaseBox):
     '''
 
     def __repr__(self):
-        return "<Profile object name='" + self.name + "' tag='" + self.tag + "'>"
+        return "<Profile object name='{0.name}' tag='{0.tag}'>".format(self)
 
     def __str__(self):
-        return self.name + "(#" + self.tag + ")"
+        return '{0.name} (#{0.tag})'.format(self)
 
     async def get_band(self, full=False):
         if not full:
@@ -181,10 +192,10 @@ class SimpleBand(BaseBox):
     '''
 
     def __repr__(self):
-        return "<SimpleBand object name='" + self.name + "' tag='" + self.tag + "'>"
+        return "<SimpleBand object name='{0.name}' tag='{0.tag}'>".format(self)
 
     def __str__(self):
-        return self.name + "(#" + self.tag + ")"
+        return '{0.name} (#{0.tag})'.format(self)
 
     async def get_full(self):
         return Client.get_band(self.tag)
@@ -197,16 +208,32 @@ class Band(BaseBox):
     '''
 
     def __repr__(self):
-        return "<Band object name='" + self.name + "' tag='" + self.tag + "'>"
+        return "<Band object name='{0.name}' tag='{0.tag}'>".format(self)
 
     def __str__(self):
-        return self.name + "(#" + self.tag + ")"
+        return '{0.name} (#{0.tag})'.format(self)
 
 
 class Event(BaseBox):
     '''
-    Returns a current, upcoming, or both events
+    Returns a current, upcoming, or both events.
     '''
 
     def __repr__(self):
-        return "<Event object type='" + self.type + "'>"  # TBD
+        return "<Event object type='{}'>".format(self.type)  # TBD
+
+
+class Leaderboard(BaseBox):
+    '''
+    Returns a player or band leaderboard
+    that contains a list of players or bands.
+    '''
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs, type=None, count=200)
+
+    def __repr__(self):
+        return "<Leaderboard object type='{}' count={}".format(self.type, self.count)
+
+    def __str__(self):
+        return '{} Leaderboard containing {} items'.format(self.type, self.count)

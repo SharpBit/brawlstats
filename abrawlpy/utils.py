@@ -28,3 +28,4 @@ class API:
     PROFILE = BASE + '/players'
     BAND = BASE + '/bands'
     EVENTS = BASE + '/events'
+    LEADERBOARD = BASE + '/leaderboards'

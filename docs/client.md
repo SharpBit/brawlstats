@@ -23,10 +23,14 @@ Get your token by typing `#getToken` in the [API Server](https://discord.gg/6FtG
 
 ### Methods
 
- `get_profile`<br>
+`get_profile`<br>
     tag-`str` A valid player tag<br>
     Returns: [Profile](https://github.com/SharpBit/abrawlpy/blob/master/docs/profile.md)<br>
 `get_band`<br>
     tag-`str` A valid player tag<br>
     full-`bool` [Band](https://github.com/SharpBit/abrawlpy/blob/master/docs/band.md) if `full` is `True` else [SimpleBand](https://github.com/SharpBit/abrawlpy/blob/master/docs/band.md#simpleband) or `None` if no band. Default = `False`.<br>
     (why am i using talking like a ternary operator)
+`get_leaderboard`<br>
+    p_or_b-`str` 'players' or 'bands'<br>
+    count-`int` The number of players/bands to get.
+    Returns: List\[[LBPlayer](), [LBPlayer]()\] or List\[[LBBand](), [LBBand]()\]
