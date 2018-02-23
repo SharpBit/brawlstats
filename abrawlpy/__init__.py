@@ -32,7 +32,7 @@ from .errors import *
 ############
 
 
-__version__ = 'v1.6.0'
+__version__ = 'v1.6.1'
 __title__ = 'abrawlpy'
 __license__ = 'MIT'
 __author__ = 'SharpBit'

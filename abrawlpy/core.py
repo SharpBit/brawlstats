@@ -64,6 +64,7 @@ class Client:
 
         bot.session = aiohttp.ClientSession()
 
+        # get your token by joining our API server and typing #getToken at https://discord.gg/6FtGdX7
         client = abrawlpy.Client(os.getenv('bstoken'), timeout=3, session=bot.session, loop=bot.loop)
         # bot is something that Discord bots have, you can use something else
 
@@ -147,7 +148,9 @@ class Client:
         url = API.LEADERBOARD + '/' + p_or_b + '?count=' + count
         response = await self._aget(url)
 
-        return Leaderboard(response, type=p_or_b, count=count)
+        if p_or_b == 'players':
+            return Leaderboard(response.players, type=p_or_b, count=count)
+        return Leaderboard(response.bands, type=p_or_b, count=count)
 
 
 class Profile(BaseBox):

@@ -13,7 +13,7 @@ pip install git+https://github.com/SharpBit/abrawlpy
 ### Documentation
 Documentation is currently in the [docs folder](https://github.com/SharpBit/abrawlpy/tree/master/docs). If you see a mistake, open a [pull request](https://github.com/SharpBit/abrawlpy/pulls) with the correct fix.
 ### Misc
-If you come across an issue in the wrapper, please [create an issue](https://github.com/SharpBit/abrawlpy/issues) and I will look into it ASAP.
+If you come across an issue in the wrapper, please [create an issue](https://github.com/SharpBit/abrawlpy/issues) and I will look into it ASAP. If you need help or an API Key, join the API's [discord server](https://discord.gg/6FtGdX7).
 
 ### Examples
 
@@ -35,6 +35,9 @@ async def main():
     best_players = band.members[0:3] # members sorted by trophies, gets best 3 players
     for player in best_players:
         print(player.name, player.trophies) # prints name and trophies
+    leaderboard = await client.get_leaderboard('players', 5) # gets top 5 players
+    for player in leaderboard:
+        print(player.name, player.position_in_leaderboard)
 
 # run the async loop
 loop = asyncio.get_event_loop()
@@ -61,7 +64,7 @@ class BrawlStars:
             player = await self.client.get_profile(tag)
         except RequestError as e: # catches all exceptions
             return await ctx.send('```\n' + str(e.code) + ': ' + e.error + '\n```') # sends code and error message
-        await ctx.send('Name: ' + player.name + '\nTrophies: ' + str(player.trophies)') # sends player name and trophies
+        await ctx.send('Name: {0.name}\nTrophies: {0.trophies}'.format(player)) # sends player name and trophies
 
 
 def setup(bot):
