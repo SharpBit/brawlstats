@@ -33,6 +33,7 @@ from json import JSONDecodeError
 
 class BaseBox(Box):
     def __init__(self, *args, **kwargs):
+        del kwargs['camel_killer_box']
         super().__init__(*args, **kwargs, camel_killer_box=True)
 
 
