@@ -32,8 +32,9 @@ from json import JSONDecodeError
 
 
 class BaseBox(Box):
-    def __init__(*args, **kwargs):
-        super().__init__(*args, **kwargs, camel_killer_box=True)
+    def __init__(self, *args, **kwargs):
+        kwargs['camel_killer_box'] = True
+        super().__init__(*args, **kwargs)
 
 
 class Client:
@@ -118,7 +119,7 @@ class Client:
                     raw_data = await resp.json()
                 elif resp.status == 403:
                     raise Forbidden(url)
-                elif resp.status == 404:
+                elif resp.status == 400:
                     raise InvalidTag(url)
                 elif resp.status == 503:
                     raise ServerError(url)
