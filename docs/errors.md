@@ -7,8 +7,9 @@ If something you did is incorrect, chances are this wrapper will send you an err
 | Code | Name | Reason |
 |------|------|--------|
 | Any | RequestError | Base class for all exceptions. Used to catch any error. |
-| 403 | Forbidden | Your API Key has been blocked by the API. |
 | 404 | InvalidTag | An incorrect player or band tag has been passed. |
+
+| 403 | Forbidden | Your API Key has been blocked by the API. |
 | 500 | UnexpectedError | An unexpected error has occured. Please [contact us.](https://github.com/SharpBit/abrawlpy/issues) |
 | 503 | ServerError | The API is down. Please be patient and try again later. |
 
