@@ -118,7 +118,7 @@ class Client:
                     raw_data = await resp.json()
                 elif resp.status == 403:
                     raise Forbidden(url)
-                elif resp.status == 404:
+                elif resp.status == 400:
                     raise InvalidTag(url)
                 elif resp.status == 503:
                     raise ServerError(url)
