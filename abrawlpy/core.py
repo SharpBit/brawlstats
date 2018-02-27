@@ -32,8 +32,8 @@ from json import JSONDecodeError
 
 
 class BaseBox(Box):
-    def __init__(*args, **kwargs):
-        super(BaseBox, self).__init__(*args, **kwargs, camel_killer_box=True)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs, camel_killer_box=True)
 
 
 class Client:
