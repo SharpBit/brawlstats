@@ -1,8 +1,12 @@
 BrawlStats
 ==========
 
-An async python wrapper for the `Brawl Stars API`_ ### Installation
-Install the latest stable version by typing this into your console
+An async python wrapper for the `Brawl Stars API`_
+
+Installation
+~~~~~~~~~~~~
+
+Install the latest stable version by typing this into your console:
 
 ::
 
@@ -19,10 +23,13 @@ Documentation
 ~~~~~~~~~~~~~
 
 Documentation is currently in the `docs folder`_. If you see a mistake,
-open a `pull request`_ with the correct fix. ### Misc If you come across
-an issue in the wrapper, please `create an issue`_ and I will look into
-it ASAP. If you need help or an API Key, join the API’s `discord
-server`_.
+open a `pull request`_ with the correct fix.
+
+Misc
+~~~~
+
+If you come across an issue in the wrapper, please `create an issue`_ and I will look into
+it ASAP. If you need help or an API Key, join the API’s `discord server`_.
 
 Examples
 ~~~~~~~~
