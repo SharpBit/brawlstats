@@ -23,8 +23,6 @@ Install the latest stable version by typing this into your console:
    member
    profile
 
-
-
 Indices
 =======
 

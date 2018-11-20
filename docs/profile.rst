@@ -19,8 +19,9 @@ A full profile of a player (all its statistics)
 Methods
 ~~~~~~~
 
-``get_band``\  full-\ ``bool``\  Returns: `Band`_ if ``full=True`` else
-`SimpleBand`_ or ``None`` if no band. Default=\ ``False``
+| ``get_band``\
+| full-\ ``bool``\ Default=\ ``False``
+| Returns: `Band`_ if ``full=True`` else `SimpleBand`_ or ``None`` if no band.
 
 Attributes
 ~~~~~~~~~~
@@ -48,6 +49,6 @@ Name                        Type
 ``band``                    `SimpleBand`_
 =========================== ==============================
 
-.. _Band: https://github.com/SharpBit/brawlstats/blob/master/docs/band.md
-.. _SimpleBand: https://github.com/SharpBit/brawlstats/blob/master/docs/band.md#simpleband
-.. _Brawler: https://github.com/SharpBit/brawlstats/blob/master/docs/brawler.md
+.. _Band: https://github.com/SharpBit/brawlstats/blob/master/docs/band.rst
+.. _SimpleBand: https://github.com/SharpBit/brawlstats/blob/master/docs/band.rst#simpleband
+.. _Brawler: https://github.com/SharpBit/brawlstats/blob/master/docs/brawler.rst

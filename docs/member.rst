@@ -26,4 +26,4 @@ Name           Type
 ``avatar_url`` str
 ============== ====
 
-.. _Band: https://github.com/SharpBit/brawlstats/blob/master/docs/band.md
+.. _Band: https://github.com/SharpBit/brawlstats/blob/master/docs/band.rst

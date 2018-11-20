@@ -63,5 +63,5 @@ Name                  Type
 ``online_members``    int
 ===================== ====
 
-.. _Member: https://github.com/SharpBit/brawlstats/blob/master/docs/member.md
-.. _Profile: https://github.com/SharpBit/brawlstats/blob/master/docs/profile.md
+.. _Member: https://github.com/SharpBit/brawlstats/blob/master/docs/member.rst
+.. _Profile: https://github.com/SharpBit/brawlstats/blob/master/docs/profile.rst

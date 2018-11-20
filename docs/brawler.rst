@@ -24,4 +24,4 @@ Name                 Type
 ``level``            int
 ==================== =============================
 
-.. _Profile: https://github.com/SharpBit/brawlstats/blob/master/docs/profile.md
+.. _Profile: https://github.com/SharpBit/brawlstats/blob/master/docs/profile.rst

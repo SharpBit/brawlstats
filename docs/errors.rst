@@ -9,18 +9,15 @@ issue.
 Errors
 ~~~~~~
 
-==== ===============
-=========================================================
+==== =============== ======
 Code Name            Reason
-==== ===============
-=========================================================
+==== =============== ======
 Any  RequestError    Base class for all exceptions. Used to catch any error.
 403  Unauthorized    Your API Key has been blocked by the API.
 404  InvalidTag      An incorrect player or band tag has been passed.
 500  UnexpectedError An unexpected error has occured. Please `open an issue.`_
 503  ServerError     The API is down. Please be patient and try again later.
-==== ===============
-=========================================================
+==== =============== ======
 
 How to Handle Exceptions
 ~~~~~~~~~~~~~~~~~~~~~~~~
