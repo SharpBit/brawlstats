@@ -1,0 +1,77 @@
+Exceptions and Error Handling
+=============================
+
+If something you did is incorrect, chances are this wrapper will send
+you an error saying what’s wrong. Here are the errors with their
+reasons, when they are raised, what is raised, and how to solve each
+issue.
+
+Errors
+~~~~~~
+
+==== ===============
+=========================================================
+Code Name            Reason
+==== ===============
+=========================================================
+Any  RequestError    Base class for all exceptions. Used to catch any error.
+403  Unauthorized    Your API Key has been blocked by the API.
+404  InvalidTag      An incorrect player or band tag has been passed.
+500  UnexpectedError An unexpected error has occured. Please `open an issue.`_
+503  ServerError     The API is down. Please be patient and try again later.
+==== ===============
+=========================================================
+
+How to Handle Exceptions
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+The first way to handle all exceptions in this library is to catch the
+base class, ``RequestError``. You can do this using a simple try and
+except statement. If you are unfamiliar with try and except statements,
+I recommend you watch this `tutorial`_. Example:
+
+.. code:: py
+
+   try:
+       profile = await client.get_profile('GGJVJLU2')
+   except brawlstats.RequestError as e:
+       print(e.code + ': ' + e.error)
+
+If the API was down, it would print:
+``503: The API is down. Please be patient and try again later. URL: {requested_url}``\
+If your API key in your Client was incorrect, it would print:
+``403: Your API Key is incorrect. URL: {requested_url}``\  However, if
+you only want to catch a specific error, you can do that as well. For
+example:
+
+.. code:: py
+
+   try:
+       tag = input('Enter a band tag:\n')
+       band = await client.get_band(tag) # user input may not be correct
+       # therefore, catch `InvalidTag`
+   except brawlstats.InvalidTag:
+       print('Invalid Tag.')
+
+If you don’t want to type ``brawlstats.RequestError`` every single time,
+you can fix this by simply typing
+
+.. code:: py
+
+   from brawlstats import RequestError
+
+Now, you can type this safely:
+
+.. code:: py
+
+   except RequestError as e:
+       print(e.code, e.error)
+
+I hope this helped you to run your program smoothly without getting it
+interrupted every time by errors! If you find an error in my errors
+(errorception) or a bug in the wrapper (possible
+``500: UnexcpectedError``), please create a new issue `here`_.
+
+.. _open an issue.: https://github.com/SharpBit/brawlstats/issues
+.. _tutorial: https://youtu.be/NIWwJbo-9_8
+.. _here: https://github.com/SharpBit/brawlstats/issues
