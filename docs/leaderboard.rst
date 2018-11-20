@@ -8,9 +8,9 @@ Player
 
 Attributes:
 
-========= ====
-Name      Type
-========= ====
+============= ====
+Name          Type
+============= ====
 ``id.high``   int
 ``id.low``    int
 ``tag``       str
@@ -19,16 +19,16 @@ Name      Type
 ``trophies``  int
 ``band_name`` str
 ``exp_level`` int
-========= ====
+============= ====
 
 Band
 ~~~~
 
 Attributes:
 
-============= ====
-Name          Type
-============= ====
+================= ====
+Name              Type
+================= ====
 ``id.high``       int
 ``id.low``        int
 ``tag``           str
@@ -36,4 +36,4 @@ Name          Type
 ``position``      int
 ``trophies``      int
 ``members_count`` int
-=================
+================= ====
