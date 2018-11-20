@@ -1,4 +1,4 @@
-# abrawlpy
+# BrawlStats
 An async python wrapper for the [Brawl Stars API](http://brawlapi.cf/api)
 ### Installation
 Install the latest stable version by typing this into your console
