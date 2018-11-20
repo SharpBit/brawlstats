@@ -2,15 +2,15 @@
 A full band object to get a band's statistics.
 In order to get this, you must get it from the client or a player object.
 ```py
-import abrawlpy
+import brawlstats
 import asyncio
 
-client = abrawlpy.Client('token')
+client = brawlstats.Client('token')
 async def main():
-    profile = await client.get_profile('UG99J2') # get a player profile
+    profile = await client.get_profile('GGJVJLU2') # get a player profile
     band = await profile.get_band(full=True) # full=True avoids a SimpleBand
     # OR
-    band = await client.get_band('P9829')
+    band = await client.get_band('QCGV8PG')
 
 loop = asyncio.get_event_loop()
 loop.run_until_complete(main())
@@ -29,10 +29,11 @@ loop.run_until_complete(main())
 | `trophies` | int |
 | `required_trophies` | int |
 | `description` | str |
-| `members` | List\[[Member](https://github.com/SharpBit/abrawlpy/blob/master/docs/member.md), [Member](https://github.com/SharpBit/abrawlpy/blob/master/docs/member.md)\] |
+| `members` | List\[[Member](https://github.com/SharpBit/brawlstats/blob/master/docs/member.md), [Member](https://github.com/SharpBit/brawlstats/blob/master/docs/member.md)\] |
 
 # Simple Band
-Only returns some statistics of the band.
+Only returns some statistics of the band. You are returned this via [Profile](https://github.com/SharpBit/brawlstats/blob/master/docs/profile.md).band<br />
+To get a full band, use await [Profile](https://github.com/SharpBit/brawlstats/blob/master/docs/profile.md).get_band()
 
 ### Attributes
 | Name | Type |
@@ -41,6 +42,9 @@ Only returns some statistics of the band.
 | `id.low` | int |
 | `name` | str |
 | `tag` | str |
+| `role` | str |
 | `trophies` | int |
 | `required_trophies` | int |
 | `members` | int |
+| `badge_id` | int |
+| `online_members` | int |

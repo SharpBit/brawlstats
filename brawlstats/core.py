@@ -1,31 +1,6 @@
-'''
-MIT License
-
-Copyright (c) 2018 SharpBit
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-'''
-
-
 import aiohttp
 from .utils import API
-from .errors import Forbidden, InvalidTag, UnexpectedError, ServerError
+from .errors import InvalidTag, Unauthorized, UnexpectedError, ServerError
 from box import Box
 import asyncio
 from json import JSONDecodeError
@@ -65,8 +40,8 @@ class Client:
 
         bot.session = aiohttp.ClientSession()
 
-        # get your token by joining our API server and typing #getToken at https://discord.gg/6FtGdX7
-        client = abrawlpy.Client(os.getenv('bstoken'), timeout=3, session=bot.session, loop=bot.loop)
+        # get your token by joining our API server and typing .getToken at https://discord.me/BrawlAPI
+        client = brawlstats.Client(os.getenv('bstoken'), session=bot.session, loop=bot.loop)
         # bot is something that Discord bots have, you can use something else
 
     Methods
@@ -90,22 +65,22 @@ class Client:
     '''
 
     def __init__(self, token, **options):
-        loop = options.get('loop')
+        loop = options.get('loop', asyncio.get_event_loop())
         self.session = options.get('session', aiohttp.ClientSession(loop=loop))
         self.timeout = options.get('timeout', 5)
         self.headers = {
             'Authorization': token,
-            'User-Agent': 'abrawlpy | Python'
+            'User-Agent': 'brawlstats | Python'
         }
 
     def __repr__(self):
-        return '<ABrawlPy-Client timeout={}>'.format(self.timeout)
+        return '<BrawlStats-Client timeout={}>'.format(self.timeout)
 
     def __del__(self):
-        self.session.close()
+        self.session.loop.run_until_complete(self.session.close())
 
     def check_tag(self, tag, endpoint):
-        tag = tag.upper().strip("#").replace('O', '0')
+        tag = tag.upper().replace('#', '').replace('O', '0')
         for c in tag:
             if c not in '0289PYLQGRJCUV':
                 raise InvalidTag(endpoint + '/' + tag)
@@ -118,8 +93,8 @@ class Client:
                 if resp.status == 200:
                     raw_data = await resp.json()
                 elif resp.status == 403:
-                    raise Forbidden(url)
-                elif resp.status == 400:
+                    raise Unauthorized(url)
+                elif resp.status == 404:
                     raise InvalidTag(url)
                 elif resp.status == 503:
                     raise ServerError(url)
@@ -132,6 +107,7 @@ class Client:
     async def get_profile(self, tag):
         tag = self.check_tag(tag, API.PROFILE)
         response = await self._aget(API.PROFILE + '/' + tag)
+        response['client'] = self
 
         return Profile(response)
 
@@ -146,12 +122,13 @@ class Client:
     async def get_leaderboard(self, p_or_b, count=200):
         if p_or_b not in ('players', 'bands') or count > 200:
             raise ValueError("Please enter 'players' or 'bands' or make sure 'count' is 200 or less.")
-        url = API.LEADERBOARD + '/' + p_or_b + '?count=' + count
+        url = API.LEADERBOARD + '/' + p_or_b + '/' + str(count)
         response = await self._aget(url)
 
         if p_or_b == 'players':
-            return Leaderboard(response.players, type=p_or_b, count=count)
-        return Leaderboard(response.bands, type=p_or_b, count=count)
+            return Leaderboard(response['players'])
+        else:
+            return Leaderboard(response['bands'])
 
 
 class Profile(BaseBox):
@@ -178,9 +155,10 @@ class Profile(BaseBox):
 
     async def get_band(self, full=False):
         if not full:
+            self.band['client'] = self.client
             band = SimpleBand(self.band)
         else:
-            band = Client.get_band(self.band.tag)
+            band = await self.client.get_band(self.band.tag)
         return band
 
 
@@ -202,7 +180,7 @@ class SimpleBand(BaseBox):
         return '{0.name} (#{0.tag})'.format(self)
 
     async def get_full(self):
-        return Client.get_band(self.tag)
+        return await self.client.get_band(self.tag)
 
 
 class Band(BaseBox):
@@ -218,26 +196,14 @@ class Band(BaseBox):
         return '{0.name} (#{0.tag})'.format(self)
 
 
-class Event(BaseBox):
-    '''
-    Returns a current, upcoming, or both events.
-    '''
-
-    def __repr__(self):
-        return "<Event object type='{}'>".format(self.type)  # TBD
-
-
 class Leaderboard(BaseBox):
     '''
     Returns a player or band leaderboard
     that contains a list of players or bands.
     '''
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs, type=None, count=200)
-
     def __repr__(self):
-        return "<Leaderboard object type='{}' count={}".format(self.type, self.count)
+        return '<Leaderboard object count={}'.format(len(self))
 
     def __str__(self):
-        return '{} Leaderboard containing {} items'.format(self.type, self.count)
+        return '{} Leaderboard containing {} items'.format(len(self))

@@ -1,13 +1,13 @@
 # Profile
 A full profile of a player (all its statistics)
 ```py
-import abrawlpy
+import brawlstats
 import asyncio
 
-client = abrawlpy.Client('token')
+client = brawlstats.Client('token')
 async def main():
-    profile = await client.get_profile('UG99J2') # get a player profile
-    print(profile.name) # prints 'joeycipp'
+    profile = await client.get_profile('GGJVJLU2') # get a player profile
+    print(profile.name) # prints 'SharpBit'
 
 loop = asyncio.get_event_loop()
 loop.run_until_complete(main())
@@ -17,7 +17,7 @@ loop.run_until_complete(main())
 
 `get_band`<br>
     full-`bool`<br>
-    Returns: [Band](https://github.com/SharpBit/abrawlpy/blob/master/docs/band.md) if `full=True` else [SimpleBand](https://github.com/SharpBit/abrawlpy/blob/master/docs/band.md#simpleband) or `None` if no band. Default=`False`
+    Returns: [Band](https://github.com/SharpBit/brawlstats/blob/master/docs/band.md) if `full=True` else [SimpleBand](https://github.com/SharpBit/brawlstats/blob/master/docs/band.md#simpleband) or `None` if no band. Default=`False`
 
 ### Attributes
 
@@ -28,9 +28,16 @@ loop.run_until_complete(main())
 | `id.low` | int |
 | `name` | str |
 | `brawlers_unlocked` | int |
-| `brawlers` | List\[[Brawler](https://github.com/SharpBit/abrawlpy/blob/master/docs/brawler.md), [Brawler](https://github.com/SharpBit/abrawlpy/blob/master/docs/brawler.md)\] |
+| `brawlers` | List\[[Brawler](https://github.com/SharpBit/brawlstats/blob/master/docs/brawler.md), [Brawler](https://github.com/SharpBit/brawlstats/blob/master/docs/brawler.md)\] |
 | `victories` | int |
-| `showdown_victories` | int |
+| `solo_showdown_victories` | int |
+| `duo_showdown_victories` | int |
+| `total_exp` | int |
 | `trophies` | int |
 | `highest_trophies` | int |
-| `band` | [SimpleBand](https://github.com/SharpBit/abrawlpy/blob/master/docs/band.md#simpleband) |
+| `account_age_in_days` | int |
+| `avatar_id` | int |
+| `best_time_as_boss` | str |
+| `best_robo_rumble_time` | str |
+| `has_skins` | bool |
+| `band` | [SimpleBand](https://github.com/SharpBit/brawlstats/blob/master/docs/band.md#simpleband) |

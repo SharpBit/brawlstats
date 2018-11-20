@@ -1,7 +1,7 @@
 # Member
-Returns some info about a band member. Get this by accessing the band's `band_members`
+Returns some info about a band member. Get this by accessing [Band](https://github.com/SharpBit/brawlstats/blob/master/docs/band.md).members
 ```py
-members = band.band_members
+members = band.members
 print(members[0].name, members[0].role) # prints best player's name and role (sorted by trophies)
 ```
 

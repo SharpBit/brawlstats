@@ -1,6 +1,6 @@
 # Brawler
 Returns a brawler object with the following attributes.
-You can retrieve a profile's brawler info by getting the player's brawler attribute.
+You can retrieve a profile's brawler info by getting [Profile](https://github.com/SharpBit/brawlstats/blob/master/docs/profile.md).brawlers
 ```py
 brawlers = profile.brawlers
 top_brawler = brawlers[0] # first index in list = highest trophies
@@ -11,9 +11,9 @@ print(top_brawler.name, top_brawler.trophies) # prints best brawler's name and t
 
 | Name | Type |
 |------|------|
-| `type` | int |
 | `name` | str |
-| `unk1` | int |
+| `has_skin` | bool |
+| `skin` | None if no skin otherwise str |
 | `trophies` | int |
 | `highest_trophies` | int |
-| `upgrades_power` | int |
+| `level` | int |
