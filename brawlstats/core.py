@@ -1,9 +1,11 @@
 import aiohttp
-from .utils import API
-from .errors import InvalidTag, Unauthorized, UnexpectedError, ServerError
-from box import Box
 import asyncio
+
+from box import Box
 from json import JSONDecodeError
+
+from .errors import InvalidTag, Unauthorized, UnexpectedError, ServerError
+from .utils import API
 
 
 class BaseBox(Box):
@@ -20,20 +22,20 @@ class Client:
     Using this client, you can get
         - Player profile statistics
         - Band statistics
-        - Current and upcoming events
+        - Player and band leaderboards
 
     Parameters
     ------------
 
         token: str
             The API Key that you can get from
-            https://discord.gg/r3rbf9U
+            https://discord.me/BrawlAPI
         **timeout: Optional[int]
             Quits requests to the API after a number of seconds. Default=5
         **session: Optional[session]
             Use a current aiohttp session or a new one
         **loop: Optional[loop]
-            Use a current loop or an new one
+            Use a current loop. Recommended to remove warnings when you run the program.
 
     Example:
     ---------
@@ -51,15 +53,12 @@ class Client:
             Get a brawl stars profile.
         get_band(tag):
             Get a brawl stars band.
-        get_events(timeframe):
-            Get current or upcoming events.
         get_leaderboard(p_or_b, count):
             Get a player or band leaderboard with count players/bands.
 
             Examples
             --------
-                current = await client.get_events('current')
-                # gets current events
+                profile = await client.get_profile('GGJVJLU2')
                 p_lb = await client.get_leaderboard('players', 5)
                 # gets top five players
     '''
