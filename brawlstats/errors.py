@@ -1,21 +1,21 @@
 class RequestError(Exception):
-    '''The base class for all errors.'''
+    """The base class for all errors."""
 
     def __init__(self, code, error):
         pass
 
 
 class Unauthorized(RequestError):
-    '''Raised when your API Key is incorrect.'''
+    """Raised if your API Key is invalid or blocked."""
 
     def __init__(self, url):
         self.code = 403
-        self.error = 'Your API Key is incorrect.\nURL: ' + url
+        self.error = 'Your API Key is invalid or blocked.\nURL: ' + url
         super().__init__(self.code, self.error)
 
 
 class InvalidTag(RequestError):
-    '''Raised when an invalid player or band tag has been passed.'''
+    """Raised if an invalid player tag or band tag has been passed."""
 
     def __init__(self, url):
         self.code = 404
@@ -24,7 +24,7 @@ class InvalidTag(RequestError):
 
 
 class UnexpectedError(RequestError):
-    '''Raised when an unknown error has occured.'''
+    """Raised if an unknown error has occured."""
 
     def __init__(self, url):
         self.code = 500
@@ -33,7 +33,7 @@ class UnexpectedError(RequestError):
 
 
 class ServerError(RequestError):
-    '''Raised when the API is down.'''
+    """Raised if the API is down."""
 
     def __init__(self, url):
         self.code = 503

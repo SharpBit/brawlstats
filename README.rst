@@ -5,10 +5,6 @@ BrawlStats
     :target: https://pypi.org/project/brawlstats/
     :alt: PyPi
 
-.. image:: https://img.shields.io/pypi/pyversions/brawlstats.svg
-    :target: https://pypi.org/project/brawlstats/
-    :alt: Supported Versions
-
 .. image:: https://img.shields.io/github/license/SharpBit/brawlstats.svg
     :target: https://github.com/SharpBit/brawlstats/blob/master/LICENSE
     :alt: MIT License
@@ -33,8 +29,7 @@ Install the development build:
 Documentation
 ~~~~~~~~~~~~~
 
-Documentation is currently in the `docs folder`_. If you see a mistake,
-open a `pull request`_ with the correct fix.
+Documentation is being hosted on `Read the Docs`_
 
 Misc
 ~~~~
@@ -83,7 +78,7 @@ Discord Bot Cog (discord.py v1.0.0a rewrite)
    import brawlstats # import the module
 
    class BrawlStars:
-       '''A simple cog for Brawl Stars commands'''
+       """A simple cog for Brawl Stars commands"""
 
        def __init__(self, bot):
            self.bot = bot
@@ -91,7 +86,7 @@ Discord Bot Cog (discord.py v1.0.0a rewrite)
 
        @commands.command()
        async def profile(self, ctx, tag):
-           '''Get a brawl stars profile'''
+           """Get a brawl stars profile"""
            try:
                player = await self.client.get_profile(tag)
            except brawlstats.RequestError as e: # catches all exceptions
@@ -107,3 +102,4 @@ Discord Bot Cog (discord.py v1.0.0a rewrite)
 .. _pull request: https://github.com/SharpBit/brawlstats/pulls
 .. _create an issue: https://github.com/SharpBit/brawlstats/issues
 .. _discord server: https://discord.me/BrawlAPI
+.. _Read the Docs: https://brawlstats.readthedocs.io/en/latest/
