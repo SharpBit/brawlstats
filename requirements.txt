@@ -1,2 +1,2 @@
-aiohttp>=3.0.0
-python-box>=3.2.0
+aiohttp
+python-box
