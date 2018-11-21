@@ -1,19 +1,30 @@
 BrawlStats
 ==========
 
-An async python wrapper for the `Brawl Stars API`_
+.. image:: https://img.shields.io/pypi/v/brawlstats.svg
+    :target: https://pypi.org/project/brawlstats/
+    :alt: PyPi
+
+.. image:: https://img.shields.io/pypi/pyversions/brawlstats.svg
+    :target: https://pypi.org/project/brawlstats/
+    :alt: Supported Versions
+
+.. image:: https://img.shields.io/github/license/SharpBit/brawlstats.svg
+    :target: https://github.com/SharpBit/brawlstats/blob/master/LICENSE
+    :alt: MIT License
+
+This library is an async wrapper `Brawl Stars API`_
 
 Installation
 ~~~~~~~~~~~~
 
-Install the latest stable version by typing this into your console:
+Install the latest stable build:
 
 ::
 
    pip install brawlstats
 
-Note: The wrapper and API are both still in beta If you would like to
-test the *beta* version, type in
+Install the development build:
 
 ::
 
