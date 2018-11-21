@@ -24,7 +24,7 @@ copyright = '2018, SharpBit'
 author = 'SharpBit'
 
 # The short X.Y version
-version = ''
+version = '2.0'
 # The full version, including alpha/beta/rc tags
 release = '2.0.4'
 

@@ -1,20 +1,23 @@
 API Reference
 =============
 
-.. autoclass brawlstats.core.Client
+.. autoclass:: brawlstats.core.Client
     :members:
 
 Data Models
 -----------
 
-.. autoclass brawlstats.core.Profile
+.. autoclass:: brawlstats.core.Profile
     :members:
 
-.. autoclass brawlstats.core.Band
+.. autoclass:: brawlstats.core.Band
+    :members:
 
-.. autoclass brawlstats.core.SimpleBand
+.. autoclass:: brawlstats.core.SimpleBand
+    :members:
 
-.. autoclass brawlstats.core.Leaderboard
+.. autoclass:: brawlstats.core.Leaderboard
+    :members:
 
 Profile
 -------
