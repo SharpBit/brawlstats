@@ -53,7 +53,6 @@ class Client:
         return tag
 
     async def _aget(self, url):
-        """Gets the response from the API."""
         try:
             async with self.session.get(url, timeout=self.timeout, headers=self.headers) as resp:
                 if resp.status == 200:
