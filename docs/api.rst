@@ -60,10 +60,6 @@ Name                        Type
 ``band``                    `SimpleBand`_
 =========================== ==============================
 
-.. _Band: https://github.com/SharpBit/brawlstats/blob/master/docs/band.rst
-.. _SimpleBand: https://github.com/SharpBit/brawlstats/blob/master/docs/band.rst#simpleband
-.. _Brawler: https://github.com/SharpBit/brawlstats/blob/master/docs/brawler.rst
-
 Band
 ----
 
@@ -122,9 +118,6 @@ Name                  Type
 ``online_members``    int
 ===================== ====
 
-.. _Member: https://github.com/SharpBit/brawlstats/blob/master/docs/member.rst
-.. _Profile: https://github.com/SharpBit/brawlstats/blob/master/docs/profile.rst
-
 Member
 ------
 
@@ -149,8 +142,6 @@ Name           Type
 ``avatar_id``  int
 ``avatar_url`` str
 ============== ====
-
-.. _Band: https://github.com/SharpBit/brawlstats/blob/master/docs/band.rst
 
 Leaderboard
 -----------
@@ -207,4 +198,8 @@ Name                 Type
 ``level``            int
 ==================== =============================
 
-.. _Profile: https://github.com/SharpBit/brawlstats/blob/master/docs/profile.rst
+.. _Band: https://brawlstats.readthedocs.io/en/latest/api.html#id1
+.. _SimpleBand: https://brawlstats.readthedocs.io/en/latest/api.html#id2
+.. _Brawler: https://brawlstats.readthedocs.io/en/latest/api.html#id6
+.. _Member: https://brawlstats.readthedocs.io/en/latest/api.html#id4
+.. _Profile: https://brawlstats.readthedocs.io/en/latest/api.html#profile
