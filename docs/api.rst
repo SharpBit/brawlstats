@@ -146,7 +146,7 @@ Name           Type
 Leaderboard
 -----------
 
-Returns a list of top players or bands.
+Returns a list of top players or bands. To access this, do ``lb.players[index]`` or ``lb.bands[index]``
 
 Player attributes:
 

@@ -123,10 +123,7 @@ class Client:
         url = API.LEADERBOARD + '/' + player_or_band + '/' + str(count)
         response = await self._aget(url)
 
-        if player_or_band == 'players':
-            return Leaderboard(response['players'])
-        else:
-            return Leaderboard(response['bands'])
+        return Leaderboard(response)
 
 
 class Profile(BaseBox):
