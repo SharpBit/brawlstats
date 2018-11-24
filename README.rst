@@ -39,7 +39,7 @@ it ASAP. If you need help or an API Key, join the API’s `discord server`_.
 
 Examples
 ~~~~~~~~
-Examples are in the `examples folder`_. `async.py` includes a basic usage using asyncio, and `discord_cog.py` shows an example Discord Bot cog using discord.py rewrite (v1.0.0a)
+Examples are in the `examples folder`_. ``async.py`` includes a basic usage using asyncio, and ``discord_cog.py`` shows an example Discord Bot cog using discord.py rewrite (v1.0.0a)
 
 .. _Brawl Stars API: http://brawlapi.cf/api
 .. _docs folder: https://github.com/SharpBit/brawlstats/tree/master/docs
