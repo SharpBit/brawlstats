@@ -2,9 +2,8 @@ import aiohttp
 import asyncio
 
 from box import Box
-from json import JSONDecodeError
 
-from .errors import InvalidTag, Unauthorized, UnexpectedError, ServerError
+from .errors import BadRequest, InvalidTag, NotFoundError, Unauthorized, UnexpectedError, ServerError
 from .utils import API
 
 
@@ -42,14 +41,16 @@ class Client:
     def __repr__(self):
         return '<BrawlStats-Client timeout={}>'.format(self.timeout)
 
-    def __del__(self):
-        self.session.loop.run_until_complete(self.session.close())
+    async def close(self):
+        return await self.session.close()
 
     def _check_tag(self, tag, endpoint):
         tag = tag.upper().replace('#', '').replace('O', '0')
+        if len(tag) < 3:
+            raise InvalidTag(endpoint + '/' + tag, 404)
         for c in tag:
             if c not in '0289PYLQGRJCUV':
-                raise InvalidTag(endpoint + '/' + tag)
+                raise InvalidTag(endpoint + '/' + tag, 404)
         return tag
 
     async def _aget(self, url):
@@ -57,19 +58,21 @@ class Client:
             async with self.session.get(url, timeout=self.timeout, headers=self.headers) as resp:
                 if resp.status == 200:
                     raw_data = await resp.json()
+                elif resp.status == 400:
+                    raise BadRequest(url, resp.status)
                 elif resp.status == 403:
-                    raise Unauthorized(url)
+                    raise Unauthorized(url, resp.status)
                 elif resp.status == 404:
-                    raise InvalidTag(url)
-                elif resp.status == 503:
-                    raise ServerError(url)
+                    raise InvalidTag(url, resp.status)
+                elif resp.status in (503, 520, 521):
+                    raise ServerError(url, resp.status)
                 else:
-                    raise UnexpectedError(url)
-        except (asyncio.TimeoutError, JSONDecodeError):
-            raise ServerError(url)
+                    raise UnexpectedError(url, resp.status)
+        except asyncio.TimeoutError:
+            raise NotFoundErrorurl, 400)
         return raw_data
 
-    async def get_profile(self, tag):
+    async def get_profile(self, tag: str):
         """Get a player's stats.
 
         Parameters
@@ -88,7 +91,7 @@ class Client:
 
     get_player = get_profile
 
-    async def get_band(self, tag):
+    async def get_band(self, tag: str):
         """Get a band's stats.
 
         Parameters
@@ -104,7 +107,7 @@ class Client:
 
         return Band(response)
 
-    async def get_leaderboard(self, player_or_band, count=200):
+    async def get_leaderboard(self, player_or_band: str, count: int=200):
         """Get the top count players/bands.
 
         Parameters
@@ -118,8 +121,10 @@ class Client:
 
         Returns Leaderboard
         """
-        if player_or_band not in ('players', 'bands') or count > 200:
-            raise ValueError("Please enter 'players' or 'bands' or make sure 'count' is 200 or less.")
+        if type(count) != int:
+            raise ValueError("Make sure 'count' is an int")
+        if player_or_band.lower() not in ('players', 'bands') or count > 200 or count < 1:
+            raise ValueError("Please enter 'players' or 'bands' or make sure 'count' is between 1 and 200.")
         url = API.LEADERBOARD + '/' + player_or_band + '/' + str(count)
         response = await self._aget(url)
 

@@ -3,6 +3,8 @@ docs/_build/
 docs/_static/
 docs/_templates/
 
+# Environment files
+tests/.env
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

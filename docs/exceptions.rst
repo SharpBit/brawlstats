@@ -3,6 +3,12 @@ Exceptions
 
 The possible exceptions thrown by the library.
 
+.. autoexception:: brawlstats.errors.BadRequest
+       :members:
+
+.. autoexception:: brawlstats.errors.NotFoundError
+       :members:
+
 .. autoexception:: brawlstats.errors.RequestError
        :members:
 
