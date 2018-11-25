@@ -14,3 +14,7 @@ install:
   - pip install .
 before_script: flake8
 script: tox
+
+notifications:
+  email:
+  - sharpbit3618@gmail.com
