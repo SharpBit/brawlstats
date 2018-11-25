@@ -69,7 +69,7 @@ class Client:
                 else:
                     raise UnexpectedError(url, resp.status)
         except asyncio.TimeoutError:
-            raise NotFoundErrorurl, 400)
+            raise NotFoundError(url, 400)
         return raw_data
 
     async def get_profile(self, tag: str):
