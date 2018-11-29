@@ -1,7 +1,7 @@
 import aiohttp
 import asyncio
 
-from box import Box
+from box import Box, BoxKeyError
 
 from .errors import BadRequest, InvalidTag, NotFoundError, Unauthorized, UnexpectedError, ServerError
 from .utils import API
@@ -60,7 +60,7 @@ class Client:
                     raw_data = await resp.json()
                 elif resp.status == 400:
                     raise BadRequest(url, resp.status)
-                elif resp.status == 403:
+                elif resp.status == 401:
                     raise Unauthorized(url, resp.status)
                 elif resp.status == 404:
                     raise InvalidTag(url, resp.status)
@@ -130,6 +130,13 @@ class Client:
 
         return Leaderboard(response)
 
+    async def get_events(self):
+        """Get current and upcoming events.
+
+        Returns Events"""
+        response = await self._aget(API.EVENTS)
+
+        return Events(response)
 
 class Profile(BaseBox):
     """
@@ -201,7 +208,24 @@ class Leaderboard(BaseBox):
     """
 
     def __repr__(self):
-        return '<Leaderboard object count={}'.format(len(self))
+        try:
+            return "<Leaderboard object type='players' count={}>".format(len(self.players))
+        except BoxKeyError:
+            return "<Leaderboard object type='bands' count={}>".format(len(self.bands))
 
     def __str__(self):
-        return '{} Leaderboard containing {} items'.format(len(self))
+        try:
+            return 'Player Leaderboard containing {} items'.format(len(self.players))
+        except BoxKeyError:
+            return 'Band Leaderboard containing {} items'.format(len(self.bands))
+
+class Events(BaseBox):
+    """
+    Returns current and upcoming events.
+    """
+
+    def __repr__(self):
+        return '<Events object>'
+
+    def __str__(self):
+        return 'Events object'

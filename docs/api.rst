@@ -19,6 +19,9 @@ Data Models
 .. autoclass:: brawlstats.core.Leaderboard
     :members:
 
+.. autoclass:: brawlstats.core.Events
+    :members:
+
 Profile
 -------
 
@@ -197,6 +200,33 @@ Name                 Type
 ``highest_trophies`` int
 ``level``            int
 ==================== =============================
+
+Events
+------
+
+Returns a result of current and upcoming events.
+
+Attributes:
+
+============ ===================
+Name         Type
+============ ===================
+``current``  List[\Event, Event]
+``upcoming`` List[\Event, Event]
+============ ===================
+
+Event Attributes:
+
+================= ====
+Name              Type
+================= ====
+``slot``          int
+``timeInSeconds`` int
+``mapId``         int
+================= ====
+
+
+
 
 .. _Band: https://brawlstats.readthedocs.io/en/latest/api.html#id1
 .. _SimpleBand: https://brawlstats.readthedocs.io/en/latest/api.html#id2

@@ -39,6 +39,10 @@ class TestAsyncClient(asynctest.TestCase):
         lb = await self.client.get_leaderboard('bands')
         self.assertTrue(isinstance(lb.bands, list))
 
+    async def test_get_events(self):
+        events = await self.client.get_events()
+        self.assertTrue(isinstance(events.current, list))
+
     # Other
     async def test_invalid_tag(self):
         async def request():
