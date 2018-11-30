@@ -18,10 +18,8 @@ BrawlStats is an easy to use async wrapper for the unofficial `Brawl Stars API`_
 Features
 ~~~~~~~~
 
-- Get a player's statistics
-- Get band statistics
-- Get the top 200 players and bands
-- Easy to use client
+- Cover the full API
+- Easy to use async or sync client
 
 Installation
 ~~~~~~~~~~~~

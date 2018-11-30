@@ -1,6 +1,14 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.1.0] - 11/29/18
+### Added
+- Synchronous support! You can now set if you want an async client by using `is_async=True`
+### Fixed
+- `asyncio.TimeoutError` now properly raises `ServerError`
+### Removed
+- `BadRequest` and `NotFoundError` (negates v2.0.6). These were found to not be needed
+
 ## [2.0.7] - 11/29/18
 ### Added
 - Support for the new `/events` endpoint for current and upcoming event rotations

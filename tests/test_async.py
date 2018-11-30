@@ -17,7 +17,7 @@ class TestAsyncClient(asynctest.TestCase):
     async def setUp(self):
         self.player_tag = 'GGJVJLU2'
         self.band_tag = 'QCGV8PG'
-        self.client = brawlstats.Client(TOKEN, loop=self.loop, timeout=30)
+        self.client = brawlstats.Client(TOKEN, is_async=True, timeout=30)
 
     async def tearDown(self):
         time.sleep(2)
@@ -51,8 +51,6 @@ class TestAsyncClient(asynctest.TestCase):
         self.assertAsyncRaises(brawlstats.InvalidTag, request)
         invalid_tag = 'AAA'
         self.assertAsyncRaises(brawlstats.InvalidTag, request)
-        invalid_tag = '2PP0PP0PP'
-        self.assertAsyncRaises(brawlstats.NotFoundError, request)
 
     async def test_invalid_lb(self):
         async def request():

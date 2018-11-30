@@ -1,8 +1,7 @@
 import brawlstats
 import asyncio
 
-loop = asyncio.get_event_loop() # do this if you don't want to get a bunch of warnings
-client = brawlstats.Client('token', loop=loop)
+client = brawlstats.Client('token', is_async=True)
 # Do not post your token on a public github
 
 # await only works in an async loop
@@ -21,5 +20,9 @@ async def main():
     for player in leaderboard:
         print(player.name, player.position)
 
+    events = await client.get_events()
+    print(events.current[0].time_in_seconds)
+
 # run the async loop
+loop = asyncio.get_event_loop()
 loop.run_until_complete(main())
