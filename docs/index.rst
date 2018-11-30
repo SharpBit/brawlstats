@@ -18,7 +18,7 @@ BrawlStats is an easy to use async wrapper for the unofficial `Brawl Stars API`_
 Features
 ~~~~~~~~
 
-- Cover the full API
+- Covers the full API
 - Easy to use async or sync client
 
 Installation

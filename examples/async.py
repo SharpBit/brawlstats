@@ -17,7 +17,7 @@ async def main():
         print(player.name, player.trophies) # prints name and trophies
 
     leaderboard = await client.get_leaderboard('players', 5) # gets top 5 players
-    for player in leaderboard:
+    for player in leaderboard.players:
         print(player.name, player.position)
 
     events = await client.get_events()

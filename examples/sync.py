@@ -14,7 +14,7 @@ for player in best_players:
     print(player.name, player.trophies) # prints name and trophies
 
 leaderboard = client.get_leaderboard('players', 5) # gets top 5 players
-for player in leaderboard:
+for player in leaderboard.players:
     print(player.name, player.position)
 
 events = client.get_events()
