@@ -21,7 +21,7 @@ async def main():
         print(player.name, player.position)
 
     events = await client.get_events()
-    print(events.current[0].time_in_seconds)
+    print(events.current[0].has_modifier)
 
 # run the async loop
 loop = asyncio.get_event_loop()

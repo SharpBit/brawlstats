@@ -18,4 +18,4 @@ for player in leaderboard.players:
     print(player.name, player.position)
 
 events = client.get_events()
-print(events.current[0].time_in_seconds)
+print(events.current[0].has_modifier)
