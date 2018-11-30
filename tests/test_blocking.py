@@ -3,7 +3,6 @@ import time
 import os
 
 import brawlstats
-import requests
 from dotenv import load_dotenv, find_dotenv
 
 load_dotenv(find_dotenv('./.env'))
