@@ -13,7 +13,13 @@ BrawlStats
     :target: https://github.com/SharpBit/brawlstats/blob/master/LICENSE
     :alt: MIT License
 
-This library is an async wrapper `Brawl Stars API`_
+This library is an async/sync wrapper `Brawl Stars API`_
+
+Features
+~~~~~~~~
+
+- Covers the full API
+- Easy to use async or sync client
 
 Installation
 ~~~~~~~~~~~~
@@ -43,7 +49,11 @@ it ASAP. If you need help or an API Key, join the API’s `discord server`_.
 
 Examples
 ~~~~~~~~
-Examples are in the `examples folder`_. ``async.py`` includes a basic usage using asyncio, and ``discord_cog.py`` shows an example Discord Bot cog using discord.py rewrite (v1.0.0a)
+Examples are in the `examples folder`_.
+
+- ``sync.py`` includes a basic sync usage
+- ``async.py`` includes a basic usage using asyncio
+- ``discord_cog.py`` shows an example Discord Bot cog using discord.py rewrite (v1.0.0a)
 
 .. _Brawl Stars API: http://brawlapi.cf/api
 .. _docs folder: https://github.com/SharpBit/brawlstats/tree/master/docs

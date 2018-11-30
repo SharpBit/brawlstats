@@ -217,13 +217,13 @@ Name         Type
 
 Event Attributes:
 
-================= ====
-Name              Type
-================= ====
-``slot``          int
-``timeInSeconds`` int
-``mapId``         int
-================= ====
+=================== ====
+Name                Type
+=================== ====
+``slot``            int
+``time_in_seconds`` int
+``map_id``          int
+=================== ====
 
 
 

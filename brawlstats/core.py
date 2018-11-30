@@ -1,48 +1,78 @@
 import aiohttp
 import asyncio
+import requests
 
-from box import Box, BoxKeyError
+import json
 
-from .errors import BadRequest, InvalidTag, NotFoundError, Unauthorized, UnexpectedError, ServerError
+from box import Box, BoxList
+
+from .errors import InvalidTag, Unauthorized, UnexpectedError, ServerError
 from .utils import API
 
 
-class BaseBox(Box):
-    def __init__(self, *args, **kwargs):
-        kwargs['camel_killer_box'] = True
-        super().__init__(*args, **kwargs)
+class BaseBox:
+    def __init__(self, client, data):
+        self.client = client
+        self.from_data(data)
+
+    def from_data(self, data):
+        self.raw_data = data
+        if isinstance(data, list):
+            self._boxed_data = BoxList(
+                data, camel_killer_box=True
+            )
+        else:
+            self._boxed_data = Box(
+                data, camel_killer_box=True
+            )
+        return self
+
+    def __getattr__(self, attr):
+        try:
+            return getattr(self._boxed_data, attr)
+        except AttributeError:
+            try:
+                return super().__getattr__(attr)
+            except AttributeError:
+                return None # makes it easier on the user's end
+
+    def __getitem__(self, item):
+        try:
+            return getattr(self._boxed_data, item)
+        except AttributeError:
+            raise KeyError('No such key: {}'.format(item))
 
 
 class Client:
     """
-    This is an async client class that lets you access the API.
+    This is a sync/async client class that lets you access the API.
 
     Parameters
     ------------
     token: str
         The API Key that you can get from https://discord.me/BrawlAPI
-    timeout: Optional[int] = 5
+    timeout: Optional[int] = 10
         A timeout for requests to the API.
-    session: Optional[Session] = aiohttp.ClientSession()
-        Use a current aiohttp session or a new one.
-    loop: Optional[Loop] = None
-        Use a current loop. Recommended to remove warnings when you run the program.
+    session: Optional[Session] = None
+        Use a current session or a make new one.
+    is_async: Optional[bool] = False
+        Makes the client async.
     """
 
     def __init__(self, token, **options):
-        loop = options.get('loop', asyncio.get_event_loop())
-        self.session = options.get('session', aiohttp.ClientSession(loop=loop))
-        self.timeout = options.get('timeout', 5)
+        self.is_async = options.get('is_async', False)
+        self.session = options.get('session', aiohttp.ClientSession() if self.is_async else requests.Session())
+        self.timeout = options.get('timeout', 10)
         self.headers = {
             'Authorization': token,
             'User-Agent': 'brawlstats | Python'
         }
 
     def __repr__(self):
-        return '<BrawlStats-Client timeout={}>'.format(self.timeout)
+        return '<BrawlStats-Client async={} timeout={}>'.format(self.is_async, self.timeout)
 
-    async def close(self):
-        return await self.session.close()
+    def close(self):
+        return self.session.close()
 
     def _check_tag(self, tag, endpoint):
         tag = tag.upper().replace('#', '').replace('O', '0')
@@ -53,26 +83,44 @@ class Client:
                 raise InvalidTag(endpoint + '/' + tag, 404)
         return tag
 
+    def _raise_for_status(self, resp, text, url):
+        try:
+            data = json.loads(text)
+        except json.JSONDecodeError:
+            data = text
+
+        code = getattr(resp, 'status', None) or getattr(resp, 'status_code')
+
+        if 300 > code >= 200:
+            return data
+        if code == 401:
+            raise Unauthorized(url, code)
+        if code in (400, 404):
+            raise InvalidTag(url, code)
+        if code >= 500:
+            raise ServerError(url, code)
+
+        raise UnexpectedError(url, code)
+
     async def _aget(self, url):
         try:
             async with self.session.get(url, timeout=self.timeout, headers=self.headers) as resp:
-                if resp.status == 200:
-                    raw_data = await resp.json()
-                elif resp.status == 400:
-                    raise BadRequest(url, resp.status)
-                elif resp.status == 401:
-                    raise Unauthorized(url, resp.status)
-                elif resp.status == 404:
-                    raise InvalidTag(url, resp.status)
-                elif resp.status in (503, 520, 521):
-                    raise ServerError(url, resp.status)
-                else:
-                    raise UnexpectedError(url, resp.status)
+                return self._raise_for_status(resp, await resp.text(), url)
         except asyncio.TimeoutError:
-            raise NotFoundError(url, 400)
-        return raw_data
+            raise ServerError(url, 503)
 
-    async def get_profile(self, tag: str):
+    def _get(self, url):
+        try:
+            with self.session.get(url, timeout=self.timeout, headers=self.headers) as resp:
+                return self._raise_for_status(resp, resp.text, url)
+        except requests.Timeout:
+            raise ServerError(url, 503)
+
+    async def _get_profile_async(self, tag: str):
+        response = await self._aget(API.PROFILE + '/' + tag)
+        return Profile(self, response)
+
+    def get_profile(self, tag: str):
         """Get a player's stats.
 
         Parameters
@@ -84,14 +132,19 @@ class Client:
         Returns Profile
         """
         tag = self._check_tag(tag, API.PROFILE)
-        response = await self._aget(API.PROFILE + '/' + tag)
-        response['client'] = self
+        if self.is_async:
+            return self._get_profile_async(tag)
+        response = self._get(API.PROFILE + '/' + tag)
 
-        return Profile(response)
+        return Profile(self, response)
 
     get_player = get_profile
 
-    async def get_band(self, tag: str):
+    async def _get_band_async(self, tag: str):
+        response = await self._aget(API.BAND + '/' + tag)
+        return Band(self, response)
+
+    def get_band(self, tag: str):
         """Get a band's stats.
 
         Parameters
@@ -103,11 +156,17 @@ class Client:
         Returns Band
         """
         tag = self._check_tag(tag, API.BAND)
-        response = await self._aget(API.BAND + '/' + tag)
+        if self.is_async:
+            return self._get_band_async(tag)
+        response = self._get(API.BAND + '/' + tag)
 
-        return Band(response)
+        return Band(self, response)
 
-    async def get_leaderboard(self, player_or_band: str, count: int=200):
+    async def _get_leaderboard_async(self, url):
+        response = await self._aget(url)
+        return Leaderboard(self, response)
+
+    def get_leaderboard(self, player_or_band: str, count: int=200):
         """Get the top count players/bands.
 
         Parameters
@@ -126,17 +185,25 @@ class Client:
         if player_or_band.lower() not in ('players', 'bands') or count > 200 or count < 1:
             raise ValueError("Please enter 'players' or 'bands' or make sure 'count' is between 1 and 200.")
         url = API.LEADERBOARD + '/' + player_or_band + '/' + str(count)
-        response = await self._aget(url)
+        if self.is_async:
+            return self._get_leaderboard_async(url)
+        response = self._get(url)
 
-        return Leaderboard(response)
+        return Leaderboard(self, response)
 
-    async def get_events(self):
+    async def _get_events_async(self):
+        response = await self._aget(API.EVENTS)
+        return Events(self, response)
+
+    def get_events(self):
         """Get current and upcoming events.
 
         Returns Events"""
-        response = await self._aget(API.EVENTS)
+        if self.is_async:
+            return self._get_events_async()
+        response = self._get(API.EVENTS)
 
-        return Events(response)
+        return Events(self, response)
 
 class Profile(BaseBox):
     """
@@ -149,7 +216,7 @@ class Profile(BaseBox):
     def __str__(self):
         return '{0.name} (#{0.tag})'.format(self)
 
-    async def get_band(self, full=False):
+    def get_band(self, full=False):
         """
         Gets the player's band.
 
@@ -163,10 +230,9 @@ class Profile(BaseBox):
         if not self.band:
             return None
         if not full:
-            self.band['client'] = self.client
-            band = SimpleBand(self.band)
+            band = SimpleBand(self, self.band)
         else:
-            band = await self.client.get_band(self.band.tag)
+            band = self.client.get_band(self.band.tag)
         return band
 
 
@@ -181,13 +247,13 @@ class SimpleBand(BaseBox):
     def __str__(self):
         return '{0.name} (#{0.tag})'.format(self)
 
-    async def get_full(self):
+    def get_full(self):
         """
         Gets the full band statistics.
 
         Returns Band
         """
-        return await self.client.get_band(self.tag)
+        return self.client.get_band(self.tag)
 
 
 class Band(BaseBox):
@@ -208,16 +274,14 @@ class Leaderboard(BaseBox):
     """
 
     def __repr__(self):
-        try:
-            return "<Leaderboard object type='players' count={}>".format(len(self.players))
-        except BoxKeyError:
-            return "<Leaderboard object type='bands' count={}>".format(len(self.bands))
+        lb_type = 'player' if self.players else 'band'
+        count = len(self.players) if self.players else len(self.bands)
+        return "<Leaderboard object type='{}' count={}>".format(lb_type, count)
 
     def __str__(self):
-        try:
-            return 'Player Leaderboard containing {} items'.format(len(self.players))
-        except BoxKeyError:
-            return 'Band Leaderboard containing {} items'.format(len(self.bands))
+        lb_type = 'Player' if self.players else 'Band'
+        count = len(self.players) if self.players else len(self.bands)
+        return '{} Leaderboard containing {} items'.format(lb_type, count)
 
 class Events(BaseBox):
     """

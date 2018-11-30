@@ -1,13 +1,13 @@
 import discord
 from discord.ext import commands
-import brawlstats # import the module
+import brawlstats
 
 class BrawlStars:
     """A simple cog for Brawl Stars commands using discord.py rewrite (v1.0.0a)"""
 
     def __init__(self, bot):
         self.bot = bot
-        self.client = brawlstats.Client('token', loop=bot.loop) # Initiliaze the client using the bot loop
+        self.client = brawlstats.Client('token', is_async=True)
 
     @commands.command()
     async def profile(self, ctx, tag: str):
