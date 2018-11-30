@@ -23,7 +23,7 @@ class TestBlockingClient(unittest.TestCase):
 
     def tearDown(self):
         time.sleep(2)
-        await self.client.close()
+        self.client.close()
 
     def test_get_player(self):
         player = self.client.get_player(self.player_tag)
