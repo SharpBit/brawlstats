@@ -1,6 +1,7 @@
 class API:
-    BASE = 'https://brawlapi.cf/api'
-    PROFILE = BASE + '/players'
-    BAND = BASE + '/bands'
-    LEADERBOARD = BASE + '/leaderboards'
-    EVENTS = BASE + '/events'
+    def __init__(self, base_url):
+        self.base = base_url or 'https://brawlapi.cf/api'
+        self.profile = self.base + '/players'
+        self.band = self.base + '/bands'
+        self.leaderboard = self.base + '/leaderboards'
+        self.events = self.base + '/events'

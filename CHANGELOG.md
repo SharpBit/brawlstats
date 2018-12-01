@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.1.1] - 12/1/18
+### Added
+- Allows developers to change the base URL to make request to. This addresses [issue #6](https://github.com/SharpBit/brawlstats/issues/6)
+
 ## [2.1.0] - 11/29/18
 ### Added
 - Synchronous support! You can now set if you want an async client by using `is_async=True`

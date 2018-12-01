@@ -56,13 +56,16 @@ class Client:
     session: Optional[Session] = None
         Use a current session or a make new one.
     is_async: Optional[bool] = False
-        Makes the client async.
+        Setting this to ``True`` the client async.
+    url: Optional[str] = None
+        Sets a different base URL to make request to. Only use this if you know what you are doing.
     """
 
     def __init__(self, token, **options):
         self.is_async = options.get('is_async', False)
         self.session = options.get('session', aiohttp.ClientSession() if self.is_async else requests.Session())
         self.timeout = options.get('timeout', 10)
+        self.api = API(options.get('url'))
         self.headers = {
             'Authorization': token,
             'User-Agent': 'brawlstats | Python'
@@ -117,7 +120,7 @@ class Client:
             raise ServerError(url, 503)
 
     async def _get_profile_async(self, tag: str):
-        response = await self._aget(API.PROFILE + '/' + tag)
+        response = await self._aget(self.api.profile + '/' + tag)
         return Profile(self, response)
 
     def get_profile(self, tag: str):
@@ -131,17 +134,17 @@ class Client:
 
         Returns Profile
         """
-        tag = self._check_tag(tag, API.PROFILE)
+        tag = self._check_tag(tag, self.api.profile)
         if self.is_async:
             return self._get_profile_async(tag)
-        response = self._get(API.PROFILE + '/' + tag)
+        response = self._get(self.api.profile + '/' + tag)
 
         return Profile(self, response)
 
     get_player = get_profile
 
     async def _get_band_async(self, tag: str):
-        response = await self._aget(API.BAND + '/' + tag)
+        response = await self._aget(self.api.band + '/' + tag)
         return Band(self, response)
 
     def get_band(self, tag: str):
@@ -155,10 +158,10 @@ class Client:
 
         Returns Band
         """
-        tag = self._check_tag(tag, API.BAND)
+        tag = self._check_tag(tag, self.api.band)
         if self.is_async:
             return self._get_band_async(tag)
-        response = self._get(API.BAND + '/' + tag)
+        response = self._get(self.api.band + '/' + tag)
 
         return Band(self, response)
 
@@ -184,7 +187,7 @@ class Client:
             raise ValueError("Make sure 'count' is an int")
         if player_or_band.lower() not in ('players', 'bands') or count > 200 or count < 1:
             raise ValueError("Please enter 'players' or 'bands' or make sure 'count' is between 1 and 200.")
-        url = API.LEADERBOARD + '/' + player_or_band + '/' + str(count)
+        url = self.api.leaderboard + '/' + player_or_band + '/' + str(count)
         if self.is_async:
             return self._get_leaderboard_async(url)
         response = self._get(url)
@@ -192,7 +195,7 @@ class Client:
         return Leaderboard(self, response)
 
     async def _get_events_async(self):
-        response = await self._aget(API.EVENTS)
+        response = await self._aget(self.api.events)
         return Events(self, response)
 
     def get_events(self):
@@ -201,7 +204,7 @@ class Client:
         Returns Events"""
         if self.is_async:
             return self._get_events_async()
-        response = self._get(API.EVENTS)
+        response = self._get(self.api.events)
 
         return Events(self, response)
 
