@@ -3,10 +3,11 @@ import asyncio
 import requests
 
 import json
+import time
 
 from box import Box, BoxList
 
-from .errors import NotFoundError, Unauthorized, UnexpectedError, ServerError
+from .errors import NotFoundError, Unauthorized, UnexpectedError, RateLimitError, ServerError
 from .utils import API
 
 
@@ -101,6 +102,8 @@ class Client:
             raise Unauthorized(url, code)
         if code in (400, 404):
             raise NotFoundError(url, code)
+        if code == 429:
+            raise RateLimitError(url, code, resp.headers.get('x-ratelimit-reset') - time.time())
         if code >= 500:
             raise ServerError(url, code)
 

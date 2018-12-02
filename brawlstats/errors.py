@@ -1,7 +1,7 @@
 class RequestError(Exception):
     """The base class for all errors."""
 
-    def __init__(self, code, error):
+    def __init__(self, code, error, retry_after=None):
         pass
 
 
@@ -21,6 +21,15 @@ class NotFoundError(RequestError):
         self.code = code
         self.error = 'An incorrect tag has been passed.\nURL: ' + url
         super().__init__(self.code, self.error)
+
+
+class RateLimitError(RequestError):
+    """Raised when the rate limit is reached."""
+    def __init__(self, url, code, retry_after):
+        self.code = code
+        self.retry_after = retry_after
+        self.error = 'The rate limit has been reached.\nURL: ' + url
+        super().__init__(self.code, self.error, retry_after=self.retry_after)
 
 
 class UnexpectedError(RequestError):

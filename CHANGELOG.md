@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.1.4] - 12/2/18
+### Added
+- `RateLimitError` to handle the 2 requests/sec ratelimit of the API.
+
 ## [2.1.3] - 12/2/18
 ### Added
 - Remove warnings and stuff to prevent memory leaks and fix session initialization (PR from Kyber)
