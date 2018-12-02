@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.1.3] - 12/2/18
+### Added
+- Remove warnings and stuff to prevent memory leaks and fix session initialization (PR from Kyber)
+
 ## [2.1.2] - 12/2/18
 ### Added
 - Resp accessible in data models via `Model.resp`
