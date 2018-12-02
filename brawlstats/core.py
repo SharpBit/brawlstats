@@ -6,13 +6,14 @@ import json
 
 from box import Box, BoxList
 
-from .errors import InvalidTag, Unauthorized, UnexpectedError, ServerError
+from .errors import NotFoundError, Unauthorized, UnexpectedError, ServerError
 from .utils import API
 
 
 class BaseBox:
-    def __init__(self, client, data):
+    def __init__(self, client, resp, data):
         self.client = client
+        self.resp = resp
         self.from_data(data)
 
     def from_data(self, data):
@@ -80,10 +81,10 @@ class Client:
     def _check_tag(self, tag, endpoint):
         tag = tag.upper().replace('#', '').replace('O', '0')
         if len(tag) < 3:
-            raise InvalidTag(endpoint + '/' + tag, 404)
+            raise NotFoundError(endpoint + '/' + tag, 404)
         for c in tag:
             if c not in '0289PYLQGRJCUV':
-                raise InvalidTag(endpoint + '/' + tag, 404)
+                raise NotFoundError(endpoint + '/' + tag, 404)
         return tag
 
     def _raise_for_status(self, resp, text, url):
@@ -95,11 +96,11 @@ class Client:
         code = getattr(resp, 'status', None) or getattr(resp, 'status_code')
 
         if 300 > code >= 200:
-            return data
+            return data, resp
         if code == 401:
             raise Unauthorized(url, code)
         if code in (400, 404):
-            raise InvalidTag(url, code)
+            raise NotFoundError(url, code)
         if code >= 500:
             raise ServerError(url, code)
 
@@ -120,8 +121,8 @@ class Client:
             raise ServerError(url, 503)
 
     async def _get_profile_async(self, tag: str):
-        response = await self._aget(self.api.profile + '/' + tag)
-        return Profile(self, response)
+        data, resp = await self._aget(self.api.profile + '/' + tag)
+        return Profile(self, resp, data)
 
     def get_profile(self, tag: str):
         """Get a player's stats.
@@ -137,15 +138,15 @@ class Client:
         tag = self._check_tag(tag, self.api.profile)
         if self.is_async:
             return self._get_profile_async(tag)
-        response = self._get(self.api.profile + '/' + tag)
+        data, resp = self._get(self.api.profile + '/' + tag)
 
-        return Profile(self, response)
+        return Profile(self, resp, data)
 
     get_player = get_profile
 
     async def _get_band_async(self, tag: str):
-        response = await self._aget(self.api.band + '/' + tag)
-        return Band(self, response)
+        data, resp = await self._aget(self.api.band + '/' + tag)
+        return Band(self, resp, data)
 
     def get_band(self, tag: str):
         """Get a band's stats.
@@ -161,13 +162,13 @@ class Client:
         tag = self._check_tag(tag, self.api.band)
         if self.is_async:
             return self._get_band_async(tag)
-        response = self._get(self.api.band + '/' + tag)
+        data, resp = self._get(self.api.band + '/' + tag)
 
-        return Band(self, response)
+        return Band(self, resp, data)
 
     async def _get_leaderboard_async(self, url):
-        response = await self._aget(url)
-        return Leaderboard(self, response)
+        data, resp = await self._aget(url)
+        return Leaderboard(self, resp, data)
 
     def get_leaderboard(self, player_or_band: str, count: int=200):
         """Get the top count players/bands.
@@ -190,13 +191,13 @@ class Client:
         url = self.api.leaderboard + '/' + player_or_band + '/' + str(count)
         if self.is_async:
             return self._get_leaderboard_async(url)
-        response = self._get(url)
+        data, resp = self._get(url)
 
-        return Leaderboard(self, response)
+        return Leaderboard(self, resp, data)
 
     async def _get_events_async(self):
-        response = await self._aget(self.api.events)
-        return Events(self, response)
+        data, resp = await self._aget(self.api.events)
+        return Events(self, resp, data)
 
     def get_events(self):
         """Get current and upcoming events.
@@ -204,9 +205,9 @@ class Client:
         Returns Events"""
         if self.is_async:
             return self._get_events_async()
-        response = self._get(self.api.events)
+        data, resp = self._get(self.api.events)
 
-        return Events(self, response)
+        return Events(self, resp, data)
 
 class Profile(BaseBox):
     """
@@ -233,7 +234,7 @@ class Profile(BaseBox):
         if not self.band:
             return None
         if not full:
-            band = SimpleBand(self, self.band)
+            band = SimpleBand(self.client, self.resp, self.band)
         else:
             band = self.client.get_band(self.band.tag)
         return band

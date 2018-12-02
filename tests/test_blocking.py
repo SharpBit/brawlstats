@@ -48,9 +48,11 @@ class TestBlockingClient(unittest.TestCase):
     def test_invalid_tag(self):
         get_profile = self.client.get_profile
         invalid_tag = 'P'
-        self.assertRaises(brawlstats.InvalidTag, get_profile, invalid_tag)
+        self.assertRaises(brawlstats.NotFoundError, get_profile, invalid_tag)
         invalid_tag = 'AAA'
-        self.assertRaises(brawlstats.InvalidTag, get_profile, invalid_tag)
+        self.assertRaises(brawlstats.NotFoundError, get_profile, invalid_tag)
+        invalid_tag = '2PPPPPPP'
+        self.assertRaises(brawlstats.NotFoundError, get_profile, invalid_tag)
 
     def test_invalid_lb(self):
         get_lb = self.client.get_leaderboard

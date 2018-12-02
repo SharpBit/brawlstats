@@ -1,6 +1,13 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.1.2] - 12/2/18
+### Added
+- Resp accessible in data models via `Model.resp`
+- Added documentation for below change and new attributes that the API introduced.
+### Changed
+- `InvalidTag` changed to `NotFoundError`
+
 ## [2.1.1] - 12/1/18
 ### Added
 - Allows developers to change the base URL to make request to. This addresses [issue #6](https://github.com/SharpBit/brawlstats/issues/6)

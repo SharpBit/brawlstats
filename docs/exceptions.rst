@@ -9,7 +9,7 @@ The possible exceptions thrown by the library.
 .. autoexception:: brawlstats.errors.Unauthorized
        :members:
 
-.. autoexception:: brawlstats.errors.InvalidTag
+.. autoexception:: brawlstats.errors.NotFoundError
        :members:
 
 .. autoexception:: brawlstats.errors.UnexpectedError

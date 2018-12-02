@@ -48,9 +48,11 @@ class TestAsyncClient(asynctest.TestCase):
         async def request():
             await self.client.get_player(invalid_tag)
         invalid_tag = 'P'
-        self.assertAsyncRaises(brawlstats.InvalidTag, request)
+        self.assertAsyncRaises(brawlstats.NotFoundError, request)
         invalid_tag = 'AAA'
-        self.assertAsyncRaises(brawlstats.InvalidTag, request)
+        self.assertAsyncRaises(brawlstats.NotFoundError, request)
+        invalid_tag = '2PPPPPPP'
+        self.assertAsyncRaises(brawlstats.NotFoundError, request)
 
     async def test_invalid_lb(self):
         async def request():

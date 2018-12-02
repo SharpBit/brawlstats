@@ -53,10 +53,13 @@ Name                        Type
 ``solo_showdown_victories`` int
 ``duo_showdown_victories``  int
 ``total_exp``               int
+``exp_level``               int
+``exp_fmt``                 str
 ``trophies``                int
 ``highest_trophies``        int
 ``account_age_in_days``     int
 ``avatar_id``               int
+``avatar_url``              str
 ``best_time_as_boss``       str
 ``best_robo_rumble_time``   str
 ``has_skins``               bool
@@ -93,9 +96,12 @@ Name                  Type
 ``name``              str
 ``status``            str
 ``members_count``     int
+``online_members``    int
 ``trophies``          int
 ``required_trophies`` int
 ``description``       str
+``badge_id``          int
+``badge_url``         str
 ``members``           List[\ `Member`_, `Member`_]
 ===================== ============================
 
@@ -118,6 +124,8 @@ Name                  Type
 ``required_trophies`` int
 ``members``           int
 ``badge_id``          int
+``badge_url``         str
+``members``           int
 ``online_members``    int
 ===================== ====
 
@@ -153,16 +161,18 @@ Returns a list of top players or bands. To access this, do ``lb.players[index]``
 
 Player attributes:
 
-============= ====
-Name          Type
-============= ====
-``tag``       str
-``name``      str
-``position``  int
-``trophies``  int
-``band_name`` str
-``exp_level`` int
-============= ====
+============== ====
+Name           Type
+============== ====
+``tag``        str
+``name``       str
+``position``   int
+``trophies``   int
+``band_name``  str
+``exp_level``  int
+``avatar_id``  int
+``avatar_url`` str
+============== ====
 
 Band attributes:
 
@@ -174,6 +184,8 @@ Name              Type
 ``position``      int
 ``trophies``      int
 ``members_count`` int
+``badge_id``      int
+``badge_url``     str
 ================= ====
 
 Brawler

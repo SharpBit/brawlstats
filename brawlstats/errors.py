@@ -14,7 +14,7 @@ class Unauthorized(RequestError):
         super().__init__(self.code, self.error)
 
 
-class InvalidTag(RequestError):
+class NotFoundError(RequestError):
     """Raised if an invalid player tag or band tag has been passed."""
 
     def __init__(self, url, code):
