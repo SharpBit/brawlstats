@@ -1,10 +1,7 @@
-# Documentation files
+# Sphinx Documentation files
 docs/_build/
 docs/_static/
 docs/_templates/
-
-# Environment files
-tests/.env
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -90,6 +87,7 @@ celerybeat-schedule
 
 # dotenv
 .env
+tests/.env
 
 # virtualenv
 .venv
