@@ -10,10 +10,10 @@ Data Models
 .. autoclass:: brawlstats.core.Profile
     :members:
 
-.. autoclass:: brawlstats.core.Band
+.. autoclass:: brawlstats.core.Club
     :members:
 
-.. autoclass:: brawlstats.core.SimpleBand
+.. autoclass:: brawlstats.core.PartialClub
     :members:
 
 .. autoclass:: brawlstats.core.Leaderboard
@@ -63,13 +63,13 @@ Name                        Type
 ``best_time_as_boss``       str
 ``best_robo_rumble_time``   str
 ``has_skins``               bool
-``band``                    `SimpleBand`_
+``club``                    `PartialClub`_
 =========================== ==============================
 
-Band
+Club
 ----
 
-A full band object to get a band’s statistics. In order to get this, you
+A full club object to get a club's statistics. In order to get this, you
 must get it from the client or a player object.
 
 .. code:: py
@@ -80,9 +80,9 @@ must get it from the client or a player object.
    client = brawlstats.Client('token')
    async def main():
        profile = await client.get_profile('GGJVJLU2') # get a player profile
-       band = await profile.get_band(full=True) # full=True avoids a SimpleBand
+       club = await profile.get_club()
        # OR
-       band = await client.get_band('QCGV8PG')
+       club = await client.get_club('QCGV8PG')
 
    loop = asyncio.get_event_loop()
    loop.run_until_complete(main())
@@ -105,11 +105,11 @@ Name                  Type
 ``members``           List[\ `Member`_, `Member`_]
 ===================== ============================
 
-SimpleBand
+PartialClub
 ----------
 
-Only returns some statistics of the band. You are returned this via
-`Profile`_.band To get a full band, use await `Profile`_.get_band()
+Only returns some statistics of the club. You are returned this via
+`Profile`_.club To get a full club, use await `Profile`_.get_club()
 
 
 Attributes
@@ -132,12 +132,12 @@ Name                  Type
 Member
 ------
 
-Returns some info about a band member. Get this by accessing
-`Band`_.members
+Returns some info about a club member. Get this by accessing
+`Club`_.members
 
 .. code:: py
 
-   members = band.members
+   members = club.members
    print(members[0].name, members[0].role) # prints best player's name and role (sorted by trophies)
 
 Attributes:
@@ -157,7 +157,7 @@ Name           Type
 Leaderboard
 -----------
 
-Returns a list of top players or bands. To access this, do ``lb.players[index]`` or ``lb.bands[index]``
+Returns a list of top players or clubs. To access this, do ``lb.players[index]`` or ``lb.clubs[index]``
 
 Player attributes:
 
@@ -168,13 +168,13 @@ Name           Type
 ``name``       str
 ``position``   int
 ``trophies``   int
-``band_name``  str
+``club_name``  str
 ``exp_level``  int
 ``avatar_id``  int
 ``avatar_url`` str
 ============== ====
 
-Band attributes:
+Club attributes:
 
 ================= ====
 Name              Type
@@ -243,8 +243,8 @@ Name                      Type
 
 
 
-.. _Band: https://brawlstats.readthedocs.io/en/latest/api.html#id1
-.. _SimpleBand: https://brawlstats.readthedocs.io/en/latest/api.html#id2
+.. _Club: https://brawlstats.readthedocs.io/en/latest/api.html#id1
+.. _PartialClub: https://brawlstats.readthedocs.io/en/latest/api.html#id2
 .. _Brawler: https://brawlstats.readthedocs.io/en/latest/api.html#id6
 .. _Member: https://brawlstats.readthedocs.io/en/latest/api.html#id4
 .. _Profile: https://brawlstats.readthedocs.io/en/latest/api.html#profile

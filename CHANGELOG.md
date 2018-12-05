@@ -1,6 +1,14 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.1.5] - 12/5/18
+### Changed
+- `Band` has been changed to `Club`
+- `SimpleBand` has been changed to `PartialClub`
+- Documentation has been updated for this
+- All methods that originally had "band" in them have been changed to "club"
+- All attributes that originally had "band" in them have been changed to "club"
+
 ## [2.1.4] - 12/2/18
 ### Added
 - `RateLimitError` to handle the 2 requests/sec ratelimit of the API.

@@ -17,7 +17,7 @@ class TestBlockingClient(unittest.TestCase):
 
     def setUp(self):
         self.player_tag = 'GGJVJLU2'
-        self.band_tag = 'QCGV8PG'
+        self.club_tag = 'QCGV8PG'
         self.client = brawlstats.Client(TOKEN, is_async=False, timeout=30)
 
     def tearDown(self):
@@ -28,17 +28,17 @@ class TestBlockingClient(unittest.TestCase):
         player = self.client.get_player(self.player_tag)
         self.assertEqual(player.tag, self.player_tag)
 
-    def test_get_band(self):
-        band = self.client.get_band(self.band_tag)
-        self.assertEqual(band.tag, self.band_tag)
+    def test_get_club(self):
+        club = self.client.get_club(self.club_tag)
+        self.assertEqual(club.tag, self.club_tag)
 
     def test_get_leaderboard_player(self):
         lb = self.client.get_leaderboard('players')
         self.assertTrue(isinstance(lb.players, list))
 
-    def test_get_leaderboard_band(self):
-        lb = self.client.get_leaderboard('bands')
-        self.assertTrue(isinstance(lb.bands, list))
+    def test_get_leaderboard_club(self):
+        lb = self.client.get_leaderboard('clubs')
+        self.assertTrue(isinstance(lb.clubs, list))
 
     def test_get_events(self):
         events = self.client.get_events()

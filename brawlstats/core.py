@@ -148,51 +148,51 @@ class Client:
 
     get_player = get_profile
 
-    async def _get_band_async(self, tag: str):
-        data, resp = await self._aget(self.api.band + '/' + tag)
-        return Band(self, resp, data)
+    async def _get_club_async(self, tag: str):
+        data, resp = await self._aget(self.api.club + '/' + tag)
+        return Club(self, resp, data)
 
-    def get_band(self, tag: str):
-        """Get a band's stats.
+    def get_club(self, tag: str):
+        """Get a club's stats.
 
         Parameters
         ----------
         tag: str
-            A valid band tag.
+            A valid club tag.
             Valid characters: 0289PYLQGRJCUV
 
-        Returns Band
+        Returns Club
         """
-        tag = self._check_tag(tag, self.api.band)
+        tag = self._check_tag(tag, self.api.club)
         if self.is_async:
-            return self._get_band_async(tag)
-        data, resp = self._get(self.api.band + '/' + tag)
+            return self._get_club_async(tag)
+        data, resp = self._get(self.api.club + '/' + tag)
 
-        return Band(self, resp, data)
+        return Club(self, resp, data)
 
     async def _get_leaderboard_async(self, url):
         data, resp = await self._aget(url)
         return Leaderboard(self, resp, data)
 
-    def get_leaderboard(self, player_or_band: str, count: int=200):
-        """Get the top count players/bands.
+    def get_leaderboard(self, player_or_club: str, count: int=200):
+        """Get the top count players/clubs.
 
         Parameters
         ----------
-        player_or_band: str
-            The string must be 'players' or 'bands'.
+        player_or_club: str
+            The string must be 'players' or 'clubs'.
             Anything else will return a ValueError.
         count: Optional[int] = 200
-            The number of top players or bands to fetch.
+            The number of top players or clubs to fetch.
             If count > 200, it will return a ValueError.
 
         Returns Leaderboard
         """
         if type(count) != int:
             raise ValueError("Make sure 'count' is an int")
-        if player_or_band.lower() not in ('players', 'bands') or count > 200 or count < 1:
-            raise ValueError("Please enter 'players' or 'bands' or make sure 'count' is between 1 and 200.")
-        url = self.api.leaderboard + '/' + player_or_band + '/' + str(count)
+        if player_or_club.lower() not in ('players', 'clubs') or count > 200 or count < 1:
+            raise ValueError("Please enter 'players' or 'clubs' or make sure 'count' is between 1 and 200.")
+        url = self.api.leaderboard + '/' + player_or_club + '/' + str(count)
         if self.is_async:
             return self._get_leaderboard_async(url)
         data, resp = self._get(url)
@@ -224,53 +224,53 @@ class Profile(BaseBox):
     def __str__(self):
         return '{0.name} (#{0.tag})'.format(self)
 
-    def get_band(self, full=False):
+    def get_club(self, full=True):
         """
-        Gets the player's band.
+        Gets the player's club.
 
         Parameters
         ----------
-        full: Optional[bool] = False
-            Whether or not to get the player's full band stats or not.
+        full: Optional[bool] = True
+            Whether or not to get the player's full club stats or not.
 
-        Returns None, SimpleBand, or Band
+        Returns None, PartialClub, or Club
         """
-        if not self.band:
+        if not self.club:
             return None
         if not full:
-            band = SimpleBand(self.client, self.resp, self.band)
+            club = PartialClub(self.client, self.resp, self.club)
         else:
-            band = self.client.get_band(self.band.tag)
-        return band
+            club = self.client.get_club(self.club.tag)
+        return club
 
 
-class SimpleBand(BaseBox):
+class PartialClub(BaseBox):
     """
-    Returns a simple band object with some of its attributes.
+    Returns a simple club object with some of its attributes.
     """
 
     def __repr__(self):
-        return "<SimpleBand object name='{0.name}' tag='{0.tag}'>".format(self)
+        return "<PartialClub object name='{0.name}' tag='{0.tag}'>".format(self)
 
     def __str__(self):
         return '{0.name} (#{0.tag})'.format(self)
 
     def get_full(self):
         """
-        Gets the full band statistics.
+        Gets the full club statistics.
 
-        Returns Band
+        Returns club
         """
-        return self.client.get_band(self.tag)
+        return self.client.get_club(self.tag)
 
 
-class Band(BaseBox):
+class Club(BaseBox):
     """
-    Returns a full band object with all of its attributes.
+    Returns a full club object with all of its attributes.
     """
 
     def __repr__(self):
-        return "<Band object name='{0.name}' tag='{0.tag}'>".format(self)
+        return "<Club object name='{0.name}' tag='{0.tag}'>".format(self)
 
     def __str__(self):
         return '{0.name} (#{0.tag})'.format(self)
@@ -278,17 +278,17 @@ class Band(BaseBox):
 
 class Leaderboard(BaseBox):
     """
-    Returns a player or band leaderboard that contains a list of players or bands.
+    Returns a player or club leaderboard that contains a list of players or clubs.
     """
 
     def __repr__(self):
-        lb_type = 'player' if self.players else 'band'
-        count = len(self.players) if self.players else len(self.bands)
+        lb_type = 'player' if self.players else 'clubs'
+        count = len(self.players) if self.players else len(self.clubs)
         return "<Leaderboard object type='{}' count={}>".format(lb_type, count)
 
     def __str__(self):
-        lb_type = 'Player' if self.players else 'Band'
-        count = len(self.players) if self.players else len(self.bands)
+        lb_type = 'Player' if self.players else 'Club'
+        count = len(self.players) if self.players else len(self.clubs)
         return '{} Leaderboard containing {} items'.format(lb_type, count)
 
 class Events(BaseBox):

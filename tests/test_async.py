@@ -16,7 +16,7 @@ class TestAsyncClient(asynctest.TestCase):
     """
     async def setUp(self):
         self.player_tag = 'GGJVJLU2'
-        self.band_tag = 'QCGV8PG'
+        self.club_tag = 'QCGV8PG'
         self.client = brawlstats.Client(TOKEN, is_async=True, timeout=30)
 
     async def tearDown(self):
@@ -27,17 +27,17 @@ class TestAsyncClient(asynctest.TestCase):
         player = await self.client.get_player(self.player_tag)
         self.assertEqual(player.tag, self.player_tag)
 
-    async def test_get_band(self):
-        band = await self.client.get_band(self.band_tag)
-        self.assertEqual(band.tag, self.band_tag)
+    async def test_get_club(self):
+        club = await self.client.get_club(self.club_tag)
+        self.assertEqual(club.tag, self.club_tag)
 
     async def test_get_leaderboard_player(self):
         lb = await self.client.get_leaderboard('players')
         self.assertTrue(isinstance(lb.players, list))
 
-    async def test_get_leaderboard_band(self):
-        lb = await self.client.get_leaderboard('bands')
-        self.assertTrue(isinstance(lb.bands, list))
+    async def test_get_leaderboard_club(self):
+        lb = await self.client.get_leaderboard('clubs')
+        self.assertTrue(isinstance(lb.clubs, list))
 
     async def test_get_events(self):
         events = await self.client.get_events()

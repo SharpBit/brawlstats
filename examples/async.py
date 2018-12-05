@@ -10,9 +10,9 @@ async def main():
     print(player.trophies) # access attributes using dot notation.
     print(player.solo_showdown_victories) # access using snake_case instead of camelCase
 
-    band = await player.get_band(full=True) # full=True gets the full Band object
-    print(band.tag)
-    best_players = band.members[0:3] # members sorted by trophies, gets best 3 players
+    club = await player.get_club()
+    print(club.tag)
+    best_players = club.members[0:3] # members sorted by trophies, gets best 3 players
     for player in best_players:
         print(player.name, player.trophies) # prints name and trophies
 
