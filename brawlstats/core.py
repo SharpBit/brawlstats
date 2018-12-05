@@ -64,7 +64,6 @@ class Client:
     """
 
     def __init__(self, token, **options):
-        connector = aiohttp.TCPConnector(verify_ssl=False)
         self.is_async = options.get('is_async', False)
         self.session = options.get('session') or (aiohttp.ClientSession(connector=connector) if self.is_async else requests.Session())
         self.timeout = options.get('timeout', 10)
