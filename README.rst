@@ -44,8 +44,7 @@ Documentation is being hosted on `Read the Docs`_
 Misc
 ~~~~
 
-| If you come across an issue in the wrapper, please `create an issue`_ and I will look into
-it ASAP.
+| If you come across an issue in the wrapper, please `create an issue`_ and I will look into it ASAP.
 | If you need help or an API Key, join the API’s `discord server`_.
 | If you are currently using this wrapper, feel free to star this repository :)
 
@@ -55,7 +54,7 @@ Examples are in the `examples folder`_.
 
 - ``sync.py`` shows you basic sync usage
 - ``async.py`` shows you basic async usage
-- ``discord_cog.py`` shows an example Discord Bot cog using ``discord.py rewrite``_
+- ``discord_cog.py`` shows an example Discord Bot cog using `discord.py rewrite`_
 
 .. _Brawl Stars API: http://brawlapi.cf/api
 .. _docs folder: https://github.com/SharpBit/brawlstats/tree/master/docs
