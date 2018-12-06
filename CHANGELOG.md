@@ -2,6 +2,7 @@
 All notable changes to this project will be documented in this file.
 
 ## [2.1.5] - 12/5/18
+BREAKING CHANGES: Brawl Stars dev team changed "Band" to "Club". This update fixes all of that.
 ### Changed
 - `Band` has been changed to `Club`
 - `SimpleBand` has been changed to `PartialClub`

@@ -1,5 +1,5 @@
-Welcome to BrawlStats's documentation!
-======================================
+Welcome to BrawlStats' documentation!
+=====================================
 
 .. image:: https://img.shields.io/pypi/v/brawlstats.svg
     :target: https://pypi.org/project/brawlstats/
@@ -37,7 +37,7 @@ Install the latest stable version:
    exceptions
 
 Indices
-=======
+~~~~~~~
 
 * :ref:`genindex`
 * :ref:`search`
