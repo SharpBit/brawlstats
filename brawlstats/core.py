@@ -53,10 +53,10 @@ class Client:
     ------------
     token: str
         The API Key that you can get from https://discord.me/BrawlAPI
-    timeout: Optional[int] = 10
-        A timeout for requests to the API.
     session: Optional[Session] = None
         Use a current session or a make new one.
+    timeout: Optional[int] = 10
+        A timeout for requests to the API.
     is_async: Optional[bool] = False
         Setting this to ``True`` the client async.
     url: Optional[str] = None
