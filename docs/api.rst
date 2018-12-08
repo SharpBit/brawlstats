@@ -22,6 +22,9 @@ Data Models
 .. autoclass:: brawlstats.core.Events
     :members:
 
+.. autoclass:: brawlstats.core.Constants
+    :members:
+
 Profile
 -------
 

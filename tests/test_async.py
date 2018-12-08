@@ -43,6 +43,17 @@ class TestAsyncClient(asynctest.TestCase):
         events = await self.client.get_events()
         self.assertTrue(isinstance(events.current, list))
 
+    async def test_get_constants(self):
+        default = await self.client.get_constants()
+        self.assertEqual(default.info, 'This data is updated hourly.')
+        loc = await self.client.get_constants('location')
+        self.assertTrue(isinstance(loc, list))
+
+        async def request():
+            await self.get_constants(invalid_key)
+        invalid_key = 'invalid'
+        self.assertAsyncRaises(KeyError, request)
+
     # Other
     async def test_invalid_tag(self):
         async def request():

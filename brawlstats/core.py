@@ -189,7 +189,7 @@ class Client:
         """
         if type(count) != int:
             raise ValueError("Make sure 'count' is an int")
-        if player_or_club.lower() not in ('players', 'clubs') or count > 200 or count < 1:
+        if player_or_club.lower() not in ('players', 'clubs') or not 0 < count <= 200:
             raise ValueError("Please enter 'players' or 'clubs' or make sure 'count' is between 1 and 200.")
         url = self.api.leaderboard + '/' + player_or_club + '/' + str(count)
         if self.is_async:
@@ -211,6 +211,34 @@ class Client:
         data, resp = self._get(self.api.events)
 
         return Events(self, resp, data)
+
+    async def _get_constants_async(self, key):
+        data, resp = await self._aget(self.api.constants)
+        if key and not data.get(key):
+            raise KeyError('No such key for Brawl Stars constants "{}"'.format(key))
+        if key and data.get(key):
+            return Constants(self, resp, data.get(key))
+        return Constants(self, resp, data)
+
+    def get_constants(self, key=None):
+        """Gets Brawl Stars constants extracted from the app.
+
+        Parameters
+        ----------
+        key: Optional[str] = None
+            Any key to get specific data.
+
+        Returns Constants
+        """
+        if self.is_async:
+            return self._get_constants_async(key)
+        data, resp = await self._get(self.api.constants)
+        if key and not data.get(key):
+            raise KeyError('No such key for Brawl Stars constants "{}"'.format(key))
+        if key and data.get(key):
+            return Constants(self, resp, data.get(key))
+        return Constants(self, resp, data)
+
 
 class Profile(BaseBox):
     """
@@ -298,5 +326,11 @@ class Events(BaseBox):
     def __repr__(self):
         return '<Events object>'
 
-    def __str__(self):
-        return 'Events object'
+
+class Constants(BaseBox):
+    """
+    Returns some Brawl Stars constants.
+    """
+
+    def __repr__(self):
+        return '<Constants object>'

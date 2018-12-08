@@ -44,6 +44,15 @@ class TestBlockingClient(unittest.TestCase):
         events = self.client.get_events()
         self.assertTrue(isinstance(events.current, list))
 
+    def test_get_constants(self):
+        default = self.client.get_constants()
+        self.assertEqual(default.info, 'This data is updated hourly.')
+        loc = self.client.get_constants('location')
+        self.assertTrue(isinstance(loc, list))
+        get_constants = self.client.get_constants
+        invalid_key = 'invalid'
+        self.assertRaises(KeyError, get_constants, invalid_key)
+
     # Other
     def test_invalid_tag(self):
         get_profile = self.client.get_profile

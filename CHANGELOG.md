@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.1.6] - 12/8/18
+### Added
+- Constants extracted from the Brawl Stars App using `Client.get_constants`
+
 ## [2.1.5] - 12/5/18
 BREAKING CHANGES: Brawl Stars dev team changed "Band" to "Club". This update fixes all of that.
 ### Changed

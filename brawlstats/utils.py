@@ -5,3 +5,4 @@ class API:
         self.club = self.base + '/clubs'
         self.leaderboard = self.base + '/leaderboards'
         self.events = self.base + '/events'
+        self.constants = 'https://fourjr.herokuapp.com/bs/constants/'

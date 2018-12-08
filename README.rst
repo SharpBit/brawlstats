@@ -44,9 +44,9 @@ Documentation is being hosted on `Read the Docs`_
 Misc
 ~~~~
 
+| If you are currently using this wrapper, feel free to star this repository :)
 | If you come across an issue in the wrapper, please `create an issue`_ and I will look into it ASAP.
 | If you need help or an API Key, join the API’s `discord server`_.
-| If you are currently using this wrapper, feel free to star this repository :)
 
 Examples
 ~~~~~~~~
