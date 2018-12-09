@@ -232,7 +232,7 @@ class Client:
         """
         if self.is_async:
             return self._get_constants_async(key)
-        data, resp = await self._get(self.api.constants)
+        data, resp = self._get(self.api.constants)
         if key and not data.get(key):
             raise KeyError('No such key for Brawl Stars constants "{}"'.format(key))
         if key and data.get(key):

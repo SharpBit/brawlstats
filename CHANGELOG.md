@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.1.7] - 12/9/18
+### Fixed
+- Fixed a bug in the sync version of `get_constants()` where there was an extra `await`
+
 ## [2.1.6] - 12/8/18
 ### Added
 - Constants extracted from the Brawl Stars App using `Client.get_constants`
