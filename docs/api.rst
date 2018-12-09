@@ -236,9 +236,13 @@ Event Attributes:
 Name                      Type
 ========================= ====
 ``slot``                  int
+``slot_name``             str
 ``start_time_in_seconds`` int
 ``end_time_in_seconds``   int
+``map_name``              str
+``map_image_url``         str
 ``map_id``                int
+``game_mode``             str
 ``free_keys``             int
 ``has_modifier``          bool
 ========================= ====
