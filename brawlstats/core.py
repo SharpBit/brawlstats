@@ -309,14 +309,10 @@ class Leaderboard(BaseBox):
     """
 
     def __repr__(self):
-        lb_type = 'player' if self.players else 'clubs'
-        count = len(self.players) if self.players else len(self.clubs)
-        return "<Leaderboard object type='{}' count={}>".format(lb_type, count)
+        return "<Leaderboard object count={}>".format(len(self))
 
     def __str__(self):
-        lb_type = 'Player' if self.players else 'Club'
-        count = len(self.players) if self.players else len(self.clubs)
-        return '{} Leaderboard containing {} items'.format(lb_type, count)
+        return 'Leaderboard containing {} items'.format(len(self))
 
 class Events(BaseBox):
     """

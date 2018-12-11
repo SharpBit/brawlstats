@@ -160,7 +160,7 @@ Name           Type
 Leaderboard
 -----------
 
-Returns a list of top players or clubs. To access this, do ``lb.players[index]`` or ``lb.clubs[index]``
+Returns a list of top players or clubs. To access this, do ``lb[index]``
 
 Player attributes:
 
@@ -237,6 +237,8 @@ Name                      Type
 ========================= ====
 ``slot``                  int
 ``slot_name``             str
+``start_time``            str
+``end_time``              str
 ``start_time_in_seconds`` int
 ``end_time_in_seconds``   int
 ``map_name``              str
@@ -245,6 +247,8 @@ Name                      Type
 ``game_mode``             str
 ``free_keys``             int
 ``has_modifier``          bool
+``modifier_name``         str
+``modifier_id``           int
 ========================= ====
 
 

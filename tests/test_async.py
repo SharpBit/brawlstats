@@ -33,11 +33,11 @@ class TestAsyncClient(asynctest.TestCase):
 
     async def test_get_leaderboard_player(self):
         lb = await self.client.get_leaderboard('players')
-        self.assertTrue(isinstance(lb.players, list))
+        self.assertTrue(isinstance(lb, list))
 
     async def test_get_leaderboard_club(self):
         lb = await self.client.get_leaderboard('clubs')
-        self.assertTrue(isinstance(lb.clubs, list))
+        self.assertTrue(isinstance(lb, list))
 
     async def test_get_events(self):
         events = await self.client.get_events()

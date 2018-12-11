@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.1.8] - 12/10/18
+### Changed
+- No longer need to access a players or clubs attribute when getting a leaderboard
+
 ## [2.1.7] - 12/9/18
 ### Fixed
 - Fixed a bug in the sync version of `get_constants()` where there was an extra `await`
