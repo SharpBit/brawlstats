@@ -1,5 +1,5 @@
-Welcome to BrawlStats' documentation!
-=====================================
+Welcome to Brawl Stats' documentation!
+======================================
 
 .. image:: https://img.shields.io/pypi/v/brawlstats.svg
     :target: https://pypi.org/project/brawlstats/
@@ -13,13 +13,15 @@ Welcome to BrawlStats' documentation!
     :target: https://github.com/SharpBit/brawlstats/blob/master/LICENSE
     :alt: MIT License
 
-BrawlStats is an easy to use async wrapper for the unofficial `Brawl Stars API`_
+| Brawl Stats is an easy to use async wrapper for the unofficial `Brawl Stars API`_.
+| Please note that both this API and wrapper are both still in beta, so there will be frequent breaking changes.
 
 Features
 ~~~~~~~~
 
 - Covers the full API
 - Easy to use async or sync client
+- Helper functions to access other game files
 
 Installation
 ~~~~~~~~~~~~

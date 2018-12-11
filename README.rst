@@ -1,5 +1,8 @@
-BrawlStats
-==========
+.. image:: https://i.imgur.com/5uUkTrn.png
+    :alt: Brawl Stats
+
+Brawl Stats
+===========
 
 .. image:: https://img.shields.io/pypi/v/brawlstats.svg
     :target: https://pypi.org/project/brawlstats/
@@ -13,13 +16,15 @@ BrawlStats
     :target: https://github.com/SharpBit/brawlstats/blob/master/LICENSE
     :alt: MIT License
 
-This library is a sync and async wrapper `Brawl Stars API`_
+| This library is a sync and async wrapper the unofficial `Brawl Stars API`_.
+| Please note that both this API and wrapper are both still in beta, so there will be frequent breaking changes.
 
 Features
 ~~~~~~~~
 
 - Covers the full API
 - Easy to use async or sync client
+- Helper functions for access to other game files
 
 Installation
 ~~~~~~~~~~~~
