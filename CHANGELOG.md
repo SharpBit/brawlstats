@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.1.9] - 12/11/18
+## Added
+- `get_datetime` function for easier date and time conversions
+
 ## [2.1.8] - 12/10/18
 ### Changed
 - No longer need to access a players or clubs attribute when getting a leaderboard
