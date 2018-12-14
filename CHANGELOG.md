@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.1.10] - 12/13/18
+- Fix any data that involves a list (Leaderboard)
+
 ## [2.1.9] - 12/11/18
 ## Added
 - `get_datetime` function for easier date and time conversions

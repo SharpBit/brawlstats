@@ -41,9 +41,9 @@ class BaseBox:
 
     def __getitem__(self, item):
         try:
-            return getattr(self._boxed_data, item)
-        except AttributeError:
-            raise KeyError('No such key: {}'.format(item))
+            return self._boxed_data[item]
+        except IndexError:
+            raise IndexError('No such index: {}'.format(item))
 
 
 class Client:
@@ -305,7 +305,7 @@ class PartialClub(BaseBox):
         """
         Gets the full club statistics.
 
-        Returns club
+        Returns Club
         """
         return self.client.get_club(self.tag)
 
@@ -326,6 +326,9 @@ class Leaderboard(BaseBox):
     """
     Returns a player or club leaderboard that contains a list of players or clubs.
     """
+
+    def __len__(self):
+        return sum(1 for i in self)
 
     def __repr__(self):
         return "<Leaderboard object count={}>".format(len(self))
