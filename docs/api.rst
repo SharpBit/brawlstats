@@ -60,7 +60,6 @@ Name                        Type
 ``exp_fmt``                 str
 ``trophies``                int
 ``highest_trophies``        int
-``account_age_in_days``     int
 ``avatar_id``               int
 ``avatar_url``              str
 ``best_time_as_boss``       str
