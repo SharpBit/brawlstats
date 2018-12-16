@@ -12,6 +12,10 @@ Brawl Stats
     :target: https://travis-ci.com/SharpBit/brawlstats
     :alt: Travis-CI build
 
+.. image:: https://img.shields.io/pypi/pyversions/brawlstats.svg
+    :target: https://pypi.org/project/brawlstats/
+    :alt: Supported Versions
+
 .. image:: https://img.shields.io/github/license/SharpBit/brawlstats.svg
     :target: https://github.com/SharpBit/brawlstats/blob/master/LICENSE
     :alt: MIT License
