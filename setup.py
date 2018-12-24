@@ -26,7 +26,7 @@ setup(
         'Documentation': 'https://brawlstats.readthedocs.io/',
     },
     classifiers=[
-        'Development Status :: 4 - Production/Mostly Stable',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'Topic :: Games/Entertainment :: Real Time Strategy and Action',
         'License :: OSI Approved :: MIT License',
