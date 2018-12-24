@@ -48,3 +48,12 @@ class ServerError(RequestError):
         self.code = code
         self.error = 'The API is down. Please be patient and try again later.\nURL: ' + url
         super().__init__(self.code, self.error)
+
+
+class MaintenanceError(RequestError):
+    """Raised if there is a maintenance break."""
+
+    def __init__(self, url, code):
+        self.code = code
+        self.error = 'There is currently a maintenance break. Please be patient and try again later.\nURL: ' + url
+        super().__init__(self.code, self.error)

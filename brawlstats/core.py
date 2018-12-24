@@ -8,7 +8,7 @@ import time
 
 from box import Box, BoxList
 
-from .errors import NotFoundError, Unauthorized, UnexpectedError, RateLimitError, ServerError
+from .errors import MaintenanceError, NotFoundError, Unauthorized, UnexpectedError, RateLimitError, ServerError
 from .utils import API
 
 
@@ -106,6 +106,8 @@ class Client:
         if code == 429:
             raise RateLimitError(url, code, resp.headers.get('x-ratelimit-reset') - time.time())
         if code >= 500:
+            if data.get('maintenance'):
+                raise MaintenanceError(url, code)
             raise ServerError(url, code)
 
         raise UnexpectedError(url, code)

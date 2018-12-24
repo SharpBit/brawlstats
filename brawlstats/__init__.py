@@ -7,7 +7,7 @@ from .errors import *
 ############
 
 
-__version__ = 'v2.1.10'
+__version__ = 'v2.1.11'
 __title__ = 'brawlstats'
 __license__ = 'MIT'
 __author__ = 'SharpBit'

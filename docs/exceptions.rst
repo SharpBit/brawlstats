@@ -20,3 +20,6 @@ The possible exceptions thrown by the library.
 
 .. autoexception:: brawlstats.errors.ServerError
        :members:
+
+.. autoexception:: brawlstats.errors.MaintenanceError
+       :members:

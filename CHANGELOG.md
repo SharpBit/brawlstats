@@ -1,11 +1,16 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.1.11] - 12/24/18
+### Added
+- MaintenanceError raised when the game is undergoing maintenance.
+
 ## [2.1.10] - 12/13/18
+### Fixed
 - Fix any data that involves a list (Leaderboard)
 
 ## [2.1.9] - 12/11/18
-## Added
+### Added
 - `get_datetime` function for easier date and time conversions
 
 ## [2.1.8] - 12/10/18
