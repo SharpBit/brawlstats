@@ -66,7 +66,8 @@ class Client:
 
     def __init__(self, token, **options):
         self.is_async = options.get('is_async', False)
-        self.session = options.get('session') or (aiohttp.ClientSession() if self.is_async else requests.Session())
+        self.loop = options.get('loop')
+        self.session = options.get('session') or (aiohttp.ClientSession(loop=loop) if self.is_async else requests.Session())
         self.timeout = options.get('timeout', 10)
         self.api = API(options.get('url'))
         self.headers = {
