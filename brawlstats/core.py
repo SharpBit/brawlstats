@@ -65,6 +65,7 @@ class Client:
     loop : Optional[event loop]
         The ``event loop`` to use for asynchronous operations. Defaults to ``None``,
         in which case the default event loop is used via ``asyncio.get_event_loop()``.
+        If you are passing in an aiohttp session, using this will not work. You must set it when initializing the session.
     """
 
     def __init__(self, token, **options):

@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.1.12] - 1/5/19
+### Added
+- Loop parameter for the client for aiohttp sessions if one has not yet been specified. If you specify a session, you must set the loop to that session before you pass it in otherwise the loop will not be applied.
+
 ## [2.1.11] - 12/24/18
 ### Added
 - MaintenanceError raised when the game is undergoing maintenance.
