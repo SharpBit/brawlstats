@@ -269,6 +269,7 @@ Name                                  Type
 ``time_until_shop_reset``             str
 ``server_date_year``                  int
 ``server_date_day_of_year``           int
+===================================== ====
 
 
 
