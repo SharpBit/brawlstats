@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.1.13] - 1/18/19
+### Added
+- Search Clubs (`search_club()`)
+- Season and Shop Data (`get_misc()`)
+
 ## [2.1.12] - 1/5/19
 ### Added
 - Loop parameter for the client for aiohttp sessions if one has not yet been specified. If you specify a session, you must set the loop to that session before you pass it in otherwise the loop will not be applied.

@@ -1,4 +1,5 @@
 import asynctest
+import datetime
 import os
 import time
 
@@ -53,6 +54,14 @@ class TestAsyncClient(asynctest.TestCase):
             await self.get_constants(invalid_key)
         invalid_key = 'invalid'
         self.assertAsyncRaises(KeyError, request)
+
+    async def test_get_misc(self):
+        misc = await self.client.get_misc()
+        self.assertEqual(misc.server_date_year, datetime.date.year)
+
+    async def test_club_search(self):
+        search = await self.client.search_club('Penguin Raft')
+        self.assertTrue(isinstance(search, list))
 
     # Other
     async def test_invalid_tag(self):

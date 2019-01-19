@@ -25,6 +25,9 @@ Data Models
 .. autoclass:: brawlstats.core.Constants
     :members:
 
+.. autoclass: brawlstats.core.MiscData
+    :members:
+
 Profile
 -------
 
@@ -250,6 +253,22 @@ Name                      Type
 ``modifier_id``           int
 ========================= ====
 
+Misc Data
+---------
+
+Returns misc data such as shop and season info.
+
+Attributes:
+
+===================================== ====
+Name                                  Type
+===================================== ====
+``time_until_season_ends_in_seconds`` int
+``time_until_season_ends``            str
+``time_until_shop_reset_in_seconds``  int
+``time_until_shop_reset``             str
+``server_date_year``                  int
+``server_date_day_of_year``           int
 
 
 

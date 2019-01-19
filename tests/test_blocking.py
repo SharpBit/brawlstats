@@ -1,3 +1,4 @@
+import datetime
 import unittest
 import time
 import os
@@ -52,6 +53,14 @@ class TestBlockingClient(unittest.TestCase):
         get_constants = self.client.get_constants
         invalid_key = 'invalid'
         self.assertRaises(KeyError, get_constants, invalid_key)
+
+    def test_get_misc(self):
+        misc = self.client.get_misc()
+        self.assertEqual(misc.server_date_year, datetime.date.year)
+
+    def test_club_search(self):
+        search = self.client.search_club('Penguin Raft')
+        self.assertTrue(isinstance(search, list))
 
     # Other
     def test_invalid_tag(self):

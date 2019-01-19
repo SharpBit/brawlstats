@@ -247,6 +247,42 @@ class Client:
             return Constants(self, resp, data.get(key))
         return Constants(self, resp, data)
 
+    async def _get_misc_async(self):
+        data, resp = await self._aget(self.api.misc)
+        return MiscData(self, resp, data)
+
+    def get_misc(self):
+        """Gets misc data such as shop and season info.
+
+        Returns MiscData
+        """
+
+        if self.is_async:
+            return self._get_misc_async()
+        data, resp = self._get(self.api.misc)
+        return MiscData(self, resp, data)
+
+    async def _search_club_async(self, url):
+        data, resp = await self._aget(url)
+        return PartialClub(self, resp, data)
+
+    def search_club(self, club_name: str):
+        """Searches for bands of the provided club name.
+
+        Parameters
+        ----------
+        club_name: str
+            The query for the club search.
+
+        Returns List\[PartialClub, ..., PartialClub\]
+        """
+        url = self.api.club_search + '/' + club_name
+        if self.is_async:
+            return self._search_club_async(url)
+
+        data, resp = self._get(url)
+        return PartialClub(self, resp, data)
+
     def get_datetime(self, timestamp: str, unix=True):
         """Converts a %Y%m%dT%H%M%S.%fZ to a UNIX timestamp
         or a datetime.datetime object
@@ -359,3 +395,10 @@ class Constants(BaseBox):
 
     def __repr__(self):
         return '<Constants object>'
+
+
+class MiscData(BaseBox):
+    """
+    Misc data such as shop and season info.
+    """
+    pass
