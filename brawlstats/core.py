@@ -88,10 +88,10 @@ class Client:
     def _check_tag(self, tag, endpoint):
         tag = tag.upper().replace('#', '').replace('O', '0')
         if len(tag) < 3:
-            raise NotFoundError(endpoint + '/' + tag, 404)
+            raise NotFoundError(endpoint + '?tag=' + tag, 404)
         for c in tag:
             if c not in '0289PYLQGRJCUV':
-                raise NotFoundError(endpoint + '/' + tag, 404)
+                raise NotFoundError(endpoint + '?tag=' + tag, 404)
         return tag
 
     def _raise_for_status(self, resp, text, url):
@@ -132,7 +132,7 @@ class Client:
             raise ServerError(url, 503)
 
     async def _get_profile_async(self, tag: str):
-        data, resp = await self._aget(self.api.profile + '/' + tag)
+        data, resp = await self._aget(self.api.profile + '?tag=' + tag)
         return Profile(self, resp, data)
 
     def get_profile(self, tag: str):
@@ -149,14 +149,14 @@ class Client:
         tag = self._check_tag(tag, self.api.profile)
         if self.is_async:
             return self._get_profile_async(tag)
-        data, resp = self._get(self.api.profile + '/' + tag)
+        data, resp = self._get(self.api.profile + '?tag=' + tag)
 
         return Profile(self, resp, data)
 
     get_player = get_profile
 
     async def _get_club_async(self, tag: str):
-        data, resp = await self._aget(self.api.club + '/' + tag)
+        data, resp = await self._aget(self.api.club + '?tag=' + tag)
         return Club(self, resp, data)
 
     def get_club(self, tag: str):
@@ -173,7 +173,7 @@ class Client:
         tag = self._check_tag(tag, self.api.club)
         if self.is_async:
             return self._get_club_async(tag)
-        data, resp = self._get(self.api.club + '/' + tag)
+        data, resp = self._get(self.api.club + '/?tag=' + tag)
 
         return Club(self, resp, data)
 
@@ -181,7 +181,7 @@ class Client:
         data, resp = await self._aget(url)
         return Leaderboard(self, resp, data)
 
-    def get_leaderboard(self, player_or_club: str, count: int=200):
+    def get_leaderboard(self, player_or_club: str, count: int=200, brawler: str=None):
         """Get the top count players/clubs.
 
         Parameters
@@ -192,6 +192,8 @@ class Client:
         count: Optional[int] = 200
             The number of top players or clubs to fetch.
             If count > 200, it will return a ValueError.
+        brawler: Optional[str] = None
+            Gets a brawler leaderboard. Only if the type of leaderboard requested is players.
 
         Returns Leaderboard
         """
@@ -199,7 +201,11 @@ class Client:
             raise ValueError("Make sure 'count' is an int")
         if player_or_club.lower() not in ('players', 'clubs') or not 0 < count <= 200:
             raise ValueError("Please enter 'players' or 'clubs' or make sure 'count' is between 1 and 200.")
-        url = self.api.leaderboard + '/' + player_or_club + '/' + str(count)
+        url = self.api.leaderboard + '/' + player_or_club + '?count=' + str(count)
+        if player_or_club.lower() == 'players' and brawler:
+            if brawler.lower() not in self.api.brawlers:
+                raise ValueError('Invalid Brawler.')
+            url += '&brawler={}'.format(brawler.lower())
         if self.is_async:
             return self._get_leaderboard_async(url)
         data, resp = self._get(url)
@@ -276,7 +282,7 @@ class Client:
 
         Returns List\[PartialClub, ..., PartialClub\]
         """
-        url = self.api.club_search + '/' + club_name
+        url = self.api.club_search + '?query=' + club_name
         if self.is_async:
             return self._search_club_async(url)
 
