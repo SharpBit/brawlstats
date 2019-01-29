@@ -40,6 +40,10 @@ class TestAsyncClient(asynctest.TestCase):
         lb = await self.client.get_leaderboard('clubs')
         self.assertTrue(isinstance(lb, list))
 
+    async def test_get_leaderboard_brawler(self):
+        lb = await self.client.get_leaderboard('shelly')
+        self.assertTrue(isinstance(lb, list))
+
     async def test_get_events(self):
         events = await self.client.get_events()
         self.assertTrue(isinstance(events.current, list))

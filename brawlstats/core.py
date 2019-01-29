@@ -181,31 +181,28 @@ class Client:
         data, resp = await self._aget(url)
         return Leaderboard(self, resp, data)
 
-    def get_leaderboard(self, player_or_club: str, count: int=200, brawler: str=None):
-        """Get the top count players/clubs.
+    def get_leaderboard(self, type: str, count: int=200):
+        """Get the top count players/clubs/brawlers.
 
         Parameters
         ----------
-        player_or_club: str
-            The string must be 'players' or 'clubs'.
+        type: str
+            The type of leaderboard. Must be "players", "clubs", or the brawler leaderboard you are trying to access.
             Anything else will return a ValueError.
         count: Optional[int] = 200
             The number of top players or clubs to fetch.
             If count > 200, it will return a ValueError.
-        brawler: Optional[str] = None
-            Gets a brawler leaderboard. Only if the type of leaderboard requested is players.
 
         Returns Leaderboard
         """
         if type(count) != int:
             raise ValueError("Make sure 'count' is an int")
-        if player_or_club.lower() not in ('players', 'clubs') or not 0 < count <= 200:
-            raise ValueError("Please enter 'players' or 'clubs' or make sure 'count' is between 1 and 200.")
-        url = self.api.leaderboard + '/' + player_or_club + '?count=' + str(count)
-        if player_or_club.lower() == 'players' and brawler:
-            if brawler.lower() not in self.api.brawlers:
-                raise ValueError('Invalid Brawler.')
-            url += '&brawler={}'.format(brawler.lower())
+        if type.lower() not in ('players', 'clubs') or not 0 < count <= 200:
+            if type.lower() not in self.api.brawlers:
+                raise ValueError("Please enter 'players', 'clubs' or a brawler or make sure 'count' is between 1 and 200.")
+        url = '{}/{}?count={}'.format(self.api.leaderboard, type.lower(), count)
+        if type.lower() in self.api.brawlers:
+            url = '{}/players?count={}&brawler={}'.format(self.api.leaderboard, count, type.lower())
         if self.is_async:
             return self._get_leaderboard_async(url)
         data, resp = self._get(url)

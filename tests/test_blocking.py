@@ -41,6 +41,10 @@ class TestBlockingClient(unittest.TestCase):
         lb = self.client.get_leaderboard('clubs')
         self.assertTrue(isinstance(lb, list))
 
+    def test_get_leaderboard_brawler(self):
+        lb = self.client.get_leaderboard('shelly')
+        self.assertTrue(isinstance(lb, list))
+
     def test_get_events(self):
         events = self.client.get_events()
         self.assertTrue(isinstance(events.current, list))

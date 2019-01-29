@@ -48,28 +48,28 @@ A full profile of a player (all its statistics)
 
 Attributes:
 
-=========================== ==============================
-Name                        Type
-=========================== ==============================
-``tag``                     str
-``name``                    str
-``brawlers_unlocked``       int
-``brawlers``                List[\ `Brawler`_, `Brawler`_]
-``victories``               int
-``solo_showdown_victories`` int
-``duo_showdown_victories``  int
-``total_exp``               int
-``exp_level``               int
-``exp_fmt``                 str
-``trophies``                int
-``highest_trophies``        int
-``avatar_id``               int
-``avatar_url``              str
-``best_time_as_boss``       str
-``best_robo_rumble_time``   str
-``has_skins``               bool
-``club``                    `PartialClub`_
-=========================== ==============================
+===========================  ==============================
+Name                         Type
+===========================  ==============================
+``tag``                      str
+``name``                     str
+``brawlers_unlocked``        int
+``brawlers``                 List[\ `Brawler`_, `Brawler`_]
+``victories``                int
+``solo_showdown_victories``  int
+``duo_showdown_victories``   int
+``total_exp``                int
+``exp_level``                int
+``exp_fmt``                  str
+``trophies``                 int
+``highest_trophies``         int
+``avatar_id``                int
+``avatar_url``               str
+``best_time_as_big_brawler`` str
+``best_robo_rumble_time``    str
+``has_skins``                bool
+``club``                     `PartialClub`_
+============================ ==============================
 
 Club
 ----
@@ -162,7 +162,7 @@ Name           Type
 Leaderboard
 -----------
 
-Returns a list of top players or clubs. To access this, do ``lb[index]``
+Returns a list of top players, clubs, or brawlers. To access this, do ``lb[index]``
 
 Player attributes:
 
@@ -193,6 +193,20 @@ Name              Type
 ``badge_url``     str
 ================= ====
 
+Brawler attributes:
+
+================= ====
+Name              Type
+================= ====
+``tag``           str
+``name``          str
+``position``      int
+``trophies``      int
+``club_name``     str
+``exp_level``     int
+``avatar_id`      int
+``avatar_url``    str
+
 Brawler
 -------
 
@@ -215,7 +229,7 @@ Name                 Type
 ``skin``             None if no skin otherwise str
 ``trophies``         int
 ``highest_trophies`` int
-``level``            int
+``power``            int
 ==================== =============================
 
 Events

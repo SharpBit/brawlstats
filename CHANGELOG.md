@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.2.0] - 1/29/19
+### Changed
+- Change the way you get a brawler with `get_leaderboard()`
+- Updated documentation for added keys
+
 ## [2.1.13] - 1/18/19
 ### Added
 - Search Clubs (`search_club()`)
