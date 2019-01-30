@@ -1,6 +1,13 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.2.1] - 1/30/19
+### Fixed
+- Providing no loop while setting `is_async` to `True` now correctly defaults to `asyncio.get_event_loop()`
+- Fixed the URL for `get_club()`
+- Fixed some typos in docs
+- Fixed attribute charts in docs
+
 ## [2.2.0] - 1/29/19
 ### Changed
 - Change the way you get a brawler with `get_leaderboard()`

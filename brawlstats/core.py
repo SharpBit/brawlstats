@@ -70,7 +70,7 @@ class Client:
 
     def __init__(self, token, **options):
         self.is_async = options.get('is_async', False)
-        self.loop = options.get('loop')
+        self.loop = options.get('loop', asyncio.get_event_loop())
         self.session = options.get('session') or (aiohttp.ClientSession(loop=self.loop) if self.is_async else requests.Session())
         self.timeout = options.get('timeout', 10)
         self.api = API(options.get('url'))
@@ -117,23 +117,30 @@ class Client:
 
         raise UnexpectedError(url, code)
 
-    async def _aget(self, url):
+    async def _arequest(self, url):
         try:
             async with self.session.get(url, timeout=self.timeout, headers=self.headers) as resp:
                 return self._raise_for_status(resp, await resp.text(), url)
         except asyncio.TimeoutError:
             raise ServerError(url, 503)
 
-    def _get(self, url):
+    def _request(self, url):
         try:
             with self.session.get(url, timeout=self.timeout, headers=self.headers) as resp:
                 return self._raise_for_status(resp, resp.text, url)
         except requests.Timeout:
             raise ServerError(url, 503)
 
-    async def _get_profile_async(self, tag: str):
-        data, resp = await self._aget(self.api.profile + '?tag=' + tag)
-        return Profile(self, resp, data)
+    async def _aget_model(self, url, model, key=None):
+        if not model:
+            model = BaseBox
+        data, resp = await self._arequest(url)
+        if model == Constants:
+            if key and not data.get(key):
+                raise KeyError('No such key for Brawl Stars constants "{}"'.format(key))
+            if key and data.get(key):
+                return model(self, resp, data.get(key))
+        return model(self, resp, data)
 
     def get_profile(self, tag: str):
         """Get a player's stats.
@@ -147,17 +154,14 @@ class Client:
         Returns Profile
         """
         tag = self._check_tag(tag, self.api.profile)
+        url = '{}?tag={}'.format(self.api.profile, tag)
         if self.is_async:
-            return self._get_profile_async(tag)
-        data, resp = self._get(self.api.profile + '?tag=' + tag)
+            return self._aget_model(url, model=Profile)
+        data, resp = self._request(url)
 
         return Profile(self, resp, data)
 
     get_player = get_profile
-
-    async def _get_club_async(self, tag: str):
-        data, resp = await self._aget(self.api.club + '?tag=' + tag)
-        return Club(self, resp, data)
 
     def get_club(self, tag: str):
         """Get a club's stats.
@@ -171,17 +175,14 @@ class Client:
         Returns Club
         """
         tag = self._check_tag(tag, self.api.club)
+        url = '{}?tag={}'.format(self.api.club, tag)
         if self.is_async:
-            return self._get_club_async(tag)
-        data, resp = self._get(self.api.club + '/?tag=' + tag)
+            return self._aget_model(url, model=Club)
+        data, resp = self._request(url)
 
         return Club(self, resp, data)
 
-    async def _get_leaderboard_async(self, url):
-        data, resp = await self._aget(url)
-        return Leaderboard(self, resp, data)
-
-    def get_leaderboard(self, type: str, count: int=200):
+    def get_leaderboard(self, _type: str, count: int=200):
         """Get the top count players/clubs/brawlers.
 
         Parameters
@@ -197,39 +198,27 @@ class Client:
         """
         if type(count) != int:
             raise ValueError("Make sure 'count' is an int")
-        if type.lower() not in ('players', 'clubs') or not 0 < count <= 200:
-            if type.lower() not in self.api.brawlers:
+        if _type.lower() not in ('players', 'clubs') or not 0 < count <= 200:
+            if _type.lower() not in self.api.brawlers:
                 raise ValueError("Please enter 'players', 'clubs' or a brawler or make sure 'count' is between 1 and 200.")
-        url = '{}/{}?count={}'.format(self.api.leaderboard, type.lower(), count)
-        if type.lower() in self.api.brawlers:
-            url = '{}/players?count={}&brawler={}'.format(self.api.leaderboard, count, type.lower())
+        url = '{}/{}?count={}'.format(self.api.leaderboard, _type.lower(), count)
+        if _type.lower() in self.api.brawlers:
+            url = '{}/players?count={}&brawler={}'.format(self.api.leaderboard, count, _type.lower())
         if self.is_async:
-            return self._get_leaderboard_async(url)
-        data, resp = self._get(url)
+            return self._aget_model(url, model=Leaderboard)
+        data, resp = self._request(url)
 
         return Leaderboard(self, resp, data)
-
-    async def _get_events_async(self):
-        data, resp = await self._aget(self.api.events)
-        return Events(self, resp, data)
 
     def get_events(self):
         """Get current and upcoming events.
 
         Returns Events"""
         if self.is_async:
-            return self._get_events_async()
-        data, resp = self._get(self.api.events)
+            return self._aget_model(self.api.events, model=Events)
+        data, resp = self._request(self.api.events)
 
         return Events(self, resp, data)
-
-    async def _get_constants_async(self, key):
-        data, resp = await self._aget(self.api.constants)
-        if key and not data.get(key):
-            raise KeyError('No such key for Brawl Stars constants "{}"'.format(key))
-        if key and data.get(key):
-            return Constants(self, resp, data.get(key))
-        return Constants(self, resp, data)
 
     def get_constants(self, key=None):
         """Gets Brawl Stars constants extracted from the app.
@@ -242,17 +231,13 @@ class Client:
         Returns Constants
         """
         if self.is_async:
-            return self._get_constants_async(key)
-        data, resp = self._get(self.api.constants)
+            return self._aget_model(self.api.constants, model=Constants, key=key)
+        data, resp = self._request(self.api.constants)
         if key and not data.get(key):
             raise KeyError('No such key for Brawl Stars constants "{}"'.format(key))
         if key and data.get(key):
             return Constants(self, resp, data.get(key))
         return Constants(self, resp, data)
-
-    async def _get_misc_async(self):
-        data, resp = await self._aget(self.api.misc)
-        return MiscData(self, resp, data)
 
     def get_misc(self):
         """Gets misc data such as shop and season info.
@@ -261,13 +246,9 @@ class Client:
         """
 
         if self.is_async:
-            return self._get_misc_async()
-        data, resp = self._get(self.api.misc)
+            return self._aget_model(self.api.misc, model=MiscData)
+        data, resp = self._request(self.api.misc)
         return MiscData(self, resp, data)
-
-    async def _search_club_async(self, url):
-        data, resp = await self._aget(url)
-        return PartialClub(self, resp, data)
 
     def search_club(self, club_name: str):
         """Searches for bands of the provided club name.
@@ -281,9 +262,8 @@ class Client:
         """
         url = self.api.club_search + '?query=' + club_name
         if self.is_async:
-            return self._search_club_async(url)
-
-        data, resp = self._get(url)
+            return self._aget_model(url, model=PartialClub)
+        data, resp = self._request(url)
         return PartialClub(self, resp, data)
 
     def get_datetime(self, timestamp: str, unix=True):
@@ -292,8 +272,8 @@ class Client:
         Parameters
         ---------
         timestamp: str
-            A timstamp in the %Y-%m-%dT%H:%M:%S.%fZ format, usually returned by the API
-            in the ``created_time`` field for example (eg. 20180718T145906.000Z)
+            A timestamp in the %Y-%m-%dT%H:%M:%S.%fZ format, usually returned by the API
+            in the ``created_time`` field for example (eg. 2018-07-18T14:59:06.000Z)
         unix: Optional[bool] = True
             Whether to return a POSIX timestamp (seconds since epoch) or not
         Returns int or datetime.datetime

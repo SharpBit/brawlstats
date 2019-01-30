@@ -33,24 +33,12 @@ Profile
 
 A full profile of a player (all its statistics)
 
-.. code:: py
-
-   import brawlstats
-   import asyncio
-
-   client = brawlstats.Client('token')
-   async def main():
-       profile = await client.get_profile('GGJVJLU2') # get a player profile
-       print(profile.name) # prints 'SharpBit'
-
-   loop = asyncio.get_event_loop()
-   loop.run_until_complete(main())
 
 Attributes:
 
-===========================  ==============================
+============================ ==============================
 Name                         Type
-===========================  ==============================
+============================ ==============================
 ``tag``                      str
 ``name``                     str
 ``brawlers_unlocked``        int
@@ -77,20 +65,6 @@ Club
 A full club object to get a club's statistics. In order to get this, you
 must get it from the client or a player object.
 
-.. code:: py
-
-   import brawlstats
-   import asyncio
-
-   client = brawlstats.Client('token')
-   async def main():
-       profile = await client.get_profile('GGJVJLU2') # get a player profile
-       club = await profile.get_club()
-       # OR
-       club = await client.get_club('QCGV8PG')
-
-   loop = asyncio.get_event_loop()
-   loop.run_until_complete(main())
 
 Attributes:
 
@@ -195,17 +169,18 @@ Name              Type
 
 Brawler attributes:
 
-================= ====
-Name              Type
-================= ====
-``tag``           str
-``name``          str
-``position``      int
-``trophies``      int
-``club_name``     str
-``exp_level``     int
-``avatar_id`      int
-``avatar_url``    str
+============== ====
+Name           Type
+============== ====
+``tag``        str
+``name``       str
+``position``   int
+``trophies``   int
+``club_name``  str
+``exp_level``  int
+``avatar_id`   int
+``avatar_url`` str
+============== ====
 
 Brawler
 -------
