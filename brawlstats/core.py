@@ -62,7 +62,7 @@ class Client:
         Setting this to ``True`` the client async.
     url: Optional[str] = None
         Sets a different base URL to make request to. Only use this if you know what you are doing.
-    loop : Optional[event loop]
+    loop: Optional[event loop]
         The ``event loop`` to use for asynchronous operations. Defaults to ``None``,
         in which case the default event loop is used via ``asyncio.get_event_loop()``.
         If you are passing in an aiohttp session, using this will not work. You must set it when initializing the session.
