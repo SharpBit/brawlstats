@@ -6,44 +6,9 @@ from datetime import datetime
 import json
 import time
 
-from box import Box, BoxList
-
 from .errors import MaintenanceError, NotFoundError, Unauthorized, UnexpectedError, RateLimitError, ServerError
-from .utils import API
-
-
-class BaseBox:
-    def __init__(self, client, resp, data):
-        self.client = client
-        self.resp = resp
-        self.from_data(data)
-
-    def from_data(self, data):
-        self.raw_data = data
-        if isinstance(data, list):
-            self._boxed_data = BoxList(
-                data, camel_killer_box=True
-            )
-        else:
-            self._boxed_data = Box(
-                data, camel_killer_box=True
-            )
-        return self
-
-    def __getattr__(self, attr):
-        try:
-            return getattr(self._boxed_data, attr)
-        except AttributeError:
-            try:
-                return super().__getattr__(attr)
-            except AttributeError:
-                return None # makes it easier on the user's end
-
-    def __getitem__(self, item):
-        try:
-            return self._boxed_data[item]
-        except IndexError:
-            raise IndexError('No such index: {}'.format(item))
+from .models import Club, Constants, Events, Leaderboard, MiscData, PartialClub, Profile
+from .utils import API, bstag
 
 
 class Client:
@@ -85,15 +50,6 @@ class Client:
     def close(self):
         return self.session.close()
 
-    def _check_tag(self, tag, endpoint):
-        tag = tag.upper().replace('#', '').replace('O', '0')
-        if len(tag) < 3:
-            raise NotFoundError(endpoint + '?tag=' + tag, 404)
-        for c in tag:
-            if c not in '0289PYLQGRJCUV':
-                raise NotFoundError(endpoint + '?tag=' + tag, 404)
-        return tag
-
     def _raise_for_status(self, resp, text, url):
         try:
             data = json.loads(text)
@@ -132,8 +88,6 @@ class Client:
             raise ServerError(url, 503)
 
     async def _aget_model(self, url, model, key=None):
-        if not model:
-            model = BaseBox
         data, resp = await self._arequest(url)
         if model == Constants:
             if key and not data.get(key):
@@ -142,7 +96,18 @@ class Client:
                 return model(self, resp, data.get(key))
         return model(self, resp, data)
 
-    def get_profile(self, tag: str):
+    def _get_model(self, url, model, key=None):
+        if self.is_async:
+            return self._aget_model(url, model=model, key=key)
+        data, resp = self._request(url)
+        if model == Constants:
+            if key and not data.get(key):
+                raise KeyError('No such key for Brawl Stars constants "{}"'.format(key))
+            if key and data.get(key):
+                return model(self, resp, data.get(key))
+        return model(self, resp, data)
+
+    def get_profile(self, tag: bstag):
         """Get a player's stats.
 
         Parameters
@@ -153,17 +118,13 @@ class Client:
 
         Returns Profile
         """
-        tag = self._check_tag(tag, self.api.profile)
         url = '{}?tag={}'.format(self.api.profile, tag)
-        if self.is_async:
-            return self._aget_model(url, model=Profile)
-        data, resp = self._request(url)
 
-        return Profile(self, resp, data)
+        return self._get_model(url, model=Profile)
 
     get_player = get_profile
 
-    def get_club(self, tag: str):
+    def get_club(self, tag: bstag):
         """Get a club's stats.
 
         Parameters
@@ -174,15 +135,11 @@ class Client:
 
         Returns Club
         """
-        tag = self._check_tag(tag, self.api.club)
         url = '{}?tag={}'.format(self.api.club, tag)
-        if self.is_async:
-            return self._aget_model(url, model=Club)
-        data, resp = self._request(url)
 
-        return Club(self, resp, data)
+        return self._get_model(url, model=Club)
 
-    def get_leaderboard(self, _type: str, count: int=200):
+    def get_leaderboard(self, lb_type: str, count: int=200):
         """Get the top count players/clubs/brawlers.
 
         Parameters
@@ -196,29 +153,22 @@ class Client:
 
         Returns Leaderboard
         """
+        lb_type = lb_type.lower()
         if type(count) != int:
             raise ValueError("Make sure 'count' is an int")
-        if _type.lower() not in ('players', 'clubs') or not 0 < count <= 200:
-            if _type.lower() not in self.api.brawlers:
-                raise ValueError("Please enter 'players', 'clubs' or a brawler or make sure 'count' is between 1 and 200.")
-        url = '{}/{}?count={}'.format(self.api.leaderboard, _type.lower(), count)
-        if _type.lower() in self.api.brawlers:
-            url = '{}/players?count={}&brawler={}'.format(self.api.leaderboard, count, _type.lower())
-        if self.is_async:
-            return self._aget_model(url, model=Leaderboard)
-        data, resp = self._request(url)
+        if lb_type not in self.api.brawlers + ['players', 'clubs'] or not 0 < count <= 200:
+            raise ValueError("Please enter 'players', 'clubs' or a brawler or make sure 'count' is between 1 and 200.")
+        url = '{}/{}?count={}'.format(self.api.leaderboard, lb_type, count)
+        if lb_type in self.api.brawlers:
+            url = '{}/players?count={}&brawler={}'.format(self.api.leaderboard, count, lb_type)
 
-        return Leaderboard(self, resp, data)
+        return self._get_model(url, model=Leaderboard)
 
     def get_events(self):
         """Get current and upcoming events.
 
         Returns Events"""
-        if self.is_async:
-            return self._aget_model(self.api.events, model=Events)
-        data, resp = self._request(self.api.events)
-
-        return Events(self, resp, data)
+        return self._get_model(self.api.events, model=Events)
 
     def get_constants(self, key=None):
         """Gets Brawl Stars constants extracted from the app.
@@ -230,14 +180,7 @@ class Client:
 
         Returns Constants
         """
-        if self.is_async:
-            return self._aget_model(self.api.constants, model=Constants, key=key)
-        data, resp = self._request(self.api.constants)
-        if key and not data.get(key):
-            raise KeyError('No such key for Brawl Stars constants "{}"'.format(key))
-        if key and data.get(key):
-            return Constants(self, resp, data.get(key))
-        return Constants(self, resp, data)
+        return self._get_model(self.api.constants, model=Constants, key=key)
 
     def get_misc(self):
         """Gets misc data such as shop and season info.
@@ -245,10 +188,7 @@ class Client:
         Returns MiscData
         """
 
-        if self.is_async:
-            return self._aget_model(self.api.misc, model=MiscData)
-        data, resp = self._request(self.api.misc)
-        return MiscData(self, resp, data)
+        return self._get_model(self.api.misc, model=MiscData)
 
     def search_club(self, club_name: str):
         """Searches for bands of the provided club name.
@@ -261,10 +201,7 @@ class Client:
         Returns List\[PartialClub, ..., PartialClub\]
         """
         url = self.api.club_search + '?query=' + club_name
-        if self.is_async:
-            return self._aget_model(url, model=PartialClub)
-        data, resp = self._request(url)
-        return PartialClub(self, resp, data)
+        return self._get_model(url, model=PartialClub)
 
     def get_datetime(self, timestamp: str, unix=True):
         """Converts a %Y%m%dT%H%M%S.%fZ to a UNIX timestamp
@@ -284,104 +221,3 @@ class Client:
         else:
             return time
 
-
-class Profile(BaseBox):
-    """
-    Returns a full player object with all of its attributes.
-    """
-
-    def __repr__(self):
-        return "<Profile object name='{0.name}' tag='{0.tag}'>".format(self)
-
-    def __str__(self):
-        return '{0.name} (#{0.tag})'.format(self)
-
-    def get_club(self, full=True):
-        """
-        Gets the player's club.
-
-        Parameters
-        ----------
-        full: Optional[bool] = True
-            Whether or not to get the player's full club stats or not.
-
-        Returns None, PartialClub, or Club
-        """
-        if not self.club:
-            return None
-        if not full:
-            club = PartialClub(self.client, self.resp, self.club)
-        else:
-            club = self.client.get_club(self.club.tag)
-        return club
-
-
-class PartialClub(BaseBox):
-    """
-    Returns a simple club object with some of its attributes.
-    """
-
-    def __repr__(self):
-        return "<PartialClub object name='{0.name}' tag='{0.tag}'>".format(self)
-
-    def __str__(self):
-        return '{0.name} (#{0.tag})'.format(self)
-
-    def get_full(self):
-        """
-        Gets the full club statistics.
-
-        Returns Club
-        """
-        return self.client.get_club(self.tag)
-
-
-class Club(BaseBox):
-    """
-    Returns a full club object with all of its attributes.
-    """
-
-    def __repr__(self):
-        return "<Club object name='{0.name}' tag='{0.tag}'>".format(self)
-
-    def __str__(self):
-        return '{0.name} (#{0.tag})'.format(self)
-
-
-class Leaderboard(BaseBox):
-    """
-    Returns a player or club leaderboard that contains a list of players or clubs.
-    """
-
-    def __len__(self):
-        return sum(1 for i in self)
-
-    def __repr__(self):
-        return "<Leaderboard object count={}>".format(len(self))
-
-    def __str__(self):
-        return 'Leaderboard containing {} items'.format(len(self))
-
-class Events(BaseBox):
-    """
-    Returns current and upcoming events.
-    """
-
-    def __repr__(self):
-        return '<Events object>'
-
-
-class Constants(BaseBox):
-    """
-    Returns some Brawl Stars constants.
-    """
-
-    def __repr__(self):
-        return '<Constants object>'
-
-
-class MiscData(BaseBox):
-    """
-    Misc data such as shop and season info.
-    """
-    pass

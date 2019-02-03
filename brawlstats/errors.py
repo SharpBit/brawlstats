@@ -17,9 +17,9 @@ class Unauthorized(RequestError):
 class NotFoundError(RequestError):
     """Raised if an invalid player tag or club tag has been passed."""
 
-    def __init__(self, url, code):
+    def __init__(self, invalid_chars, code):
         self.code = code
-        self.error = 'An incorrect tag has been passed.\nURL: ' + url
+        self.error = 'An incorrect tag has been passed.\nInvalid Characters: ' + ', '.join(invalid_chars)
         super().__init__(self.code, self.error)
 
 

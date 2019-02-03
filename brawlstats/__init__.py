@@ -1,5 +1,6 @@
-from .core import *
+from .core import Client
 from .errors import *
+from .models import *
 
 
 ############
@@ -7,7 +8,7 @@ from .errors import *
 ############
 
 
-__version__ = 'v2.2.1'
+__version__ = 'v2.2.2'
 __title__ = 'brawlstats'
 __license__ = 'MIT'
 __author__ = 'SharpBit'
