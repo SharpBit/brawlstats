@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.2.2] - 2/3/19
+### Fixed
+- Fixed `search_club()`
+- Fixed some attribute typos in docs for the Misc category
+
 ## [2.2.1] - 1/30/19
 ### Fixed
 - Providing no loop while setting `is_async` to `True` now correctly defaults to `asyncio.get_event_loop()`
