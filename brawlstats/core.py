@@ -67,6 +67,8 @@ class Client:
         if code == 429:
             raise RateLimitError(url, code, resp.headers.get('x-ratelimit-reset') - time.time())
         if code >= 500:
+            if type(data) == str:  # Cloudflare error
+                raise ServerError(url, code)
             if data.get('maintenance'):
                 raise MaintenanceError(url, code)
             raise ServerError(url, code)
@@ -220,4 +222,3 @@ class Client:
             return int(time.timestamp())
         else:
             return time
-

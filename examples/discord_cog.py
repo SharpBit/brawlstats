@@ -14,10 +14,10 @@ class BrawlStars:
         """Get a brawl stars profile"""
         try:
             player = await self.client.get_profile(tag)
-        except brawlstats.RequestError as e: # catches all exceptions
-            return await ctx.send('```\n{}: {}\n```'.format(e.code, e.error)) # sends code and error message
+        except brawlstats.RequestError as e:  # catches all exceptions
+            return await ctx.send('```\n{}: {}\n```'.format(e.code, e.error))  # sends code and error message
         em = discord.Embed(title='{0.name} ({0.tag})'.format(player))
-        em.description = 'Trophies: {}'.format(player.trophies) # you could make this better by using embed fields
+        em.description = 'Trophies: {}'.format(player.trophies)  # you could make this better by using embed fields
         await ctx.send(embed=em)
 
 

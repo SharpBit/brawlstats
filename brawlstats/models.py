@@ -26,7 +26,7 @@ class BaseBox:
             try:
                 return super().__getattr__(attr)
             except AttributeError:
-                return None # makes it easier on the user's end
+                return None  # makes it easier on the user's end
 
     def __getitem__(self, item):
         try:
