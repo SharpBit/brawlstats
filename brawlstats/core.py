@@ -20,17 +20,19 @@ class Client:
     token: str
         The API Key that you can get from https://discord.me/BrawlAPI
     session: Optional[Session] = None
-        Use a current session or a make new one.
+        Use a current session or a make new one. Can be ``aiohttp.ClientSession()`` or ``requests.Session()``
     timeout: Optional[int] = 10
-        A timeout for requests to the API.
+        A timeout in seconds for requests to the API.
     is_async: Optional[bool] = False
-        Setting this to ``True`` the client async.
+        Setting this to ``True`` makes the client async.
     url: Optional[str] = None
         Sets a different base URL to make request to. Only use this if you know what you are doing.
     loop: Optional[event loop]
         The ``event loop`` to use for asynchronous operations. Defaults to ``None``,
         in which case the default event loop is used via ``asyncio.get_event_loop()``.
         If you are passing in an aiohttp session, using this will not work. You must set it when initializing the session.
+    debug: Optional[bool] = False
+        Whether or not to give you more info to debug easily.
     """
 
     def __init__(self, token, **options):
@@ -39,6 +41,7 @@ class Client:
         self.session = options.get('session') or (aiohttp.ClientSession(loop=self.loop) if self.is_async else requests.Session())
         self.timeout = options.get('timeout', 10)
         self.api = API(options.get('url'))
+        self.debug = options.get('debug', False)
         self.headers = {
             'Authorization': token,
             'User-Agent': 'brawlstats | Python'
@@ -67,7 +70,7 @@ class Client:
         if code == 429:
             raise RateLimitError(url, code, resp.headers.get('x-ratelimit-reset') - time.time())
         if code >= 500:
-            if type(data) == str:  # Cloudflare error
+            if isinstance(data, str):  # Cloudflare error
                 raise ServerError(url, code)
             if data.get('maintenance'):
                 raise MaintenanceError(url, code)

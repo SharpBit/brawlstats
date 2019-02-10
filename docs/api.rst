@@ -178,8 +178,9 @@ Name           Type
 ``trophies``   int
 ``club_name``  str
 ``exp_level``  int
-``avatar_id``   int
+``avatar_id``  int
 ``avatar_url`` str
+``rank``       int
 ============== ====
 
 Brawler
