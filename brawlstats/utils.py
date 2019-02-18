@@ -31,6 +31,7 @@ class API:
             'piper',
             'mortis',
             'tara',
+            'gene',
             'spike',
             'crow',
             'leon'

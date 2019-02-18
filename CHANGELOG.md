@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.2.3] - 2/18/19
+### Added
+- Added gene to the list of brawlers to get for the brawler leaderboard.
+
 ## [2.2.2] - 2/3/19
 ### Fixed
 - Fixed `search_club()`
