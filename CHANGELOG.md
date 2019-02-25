@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+
+## [2.2.4] - 2/24/19
+### Fixed
+- Fixed [installation error](https://github.com/SharpBit/brawlstats/issues/17) where the constants.json info key was removed.
+
 ## [2.2.3] - 2/18/19
 ### Added
 - Added gene to the list of brawlers to get for the brawler leaderboard.

@@ -8,7 +8,7 @@ with open('README.rst', encoding='utf8') as f:
 
 setup(
     name='brawlstats',
-    version='2.2.3',
+    version='2.2.4',
     description='An async Python API wrapper for the unofficial Brawl Stars API',
     long_description=long_description,
     long_description_content_type='text/x-rst',
@@ -45,6 +45,5 @@ except (TypeError, urllib.error.HTTPError, urllib.error.URLError):
     pass
 else:
     if data:
-        del data['info']
         with open('brawlstats/constants.json', 'w') as f:
             json.dump(data, f)
