@@ -66,10 +66,8 @@ Examples are in the `examples folder`_.
 - ``discord_cog.py`` shows an example Discord Bot cog using `discord.py rewrite`_
 
 .. _Brawl Stars API: http://brawlapi.cf/api
-.. _docs folder: https://github.com/SharpBit/brawlstats/tree/master/docs
-.. _pull request: https://github.com/SharpBit/brawlstats/pulls
 .. _create an issue: https://github.com/SharpBit/brawlstats/issues
 .. _discord server: https://discord.me/BrawlAPI
-.. _Read the Docs: https://brawlstats.readthedocs.io/en/latest/
+.. _Read the Docs: https://brawlstats.rtfd.io/
 .. _examples folder: https://github.com/SharpBit/brawlstats/tree/master/examples
 .. _discord.py rewrite: https://github.com/rapptz/discord.py/tree/rewrite

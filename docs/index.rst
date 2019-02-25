@@ -37,6 +37,7 @@ Install the latest stable version:
 
    api
    exceptions
+   logging
 
 Indices
 ~~~~~~~

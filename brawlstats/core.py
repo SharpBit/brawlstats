@@ -1,5 +1,6 @@
 import aiohttp
 import asyncio
+import logging
 import requests
 from datetime import datetime
 
@@ -9,6 +10,8 @@ import time
 from .errors import MaintenanceError, NotFoundError, Unauthorized, UnexpectedError, RateLimitError, ServerError
 from .models import Club, Constants, Events, Leaderboard, MiscData, PartialClub, Profile
 from .utils import API, bstag
+
+log = logging.getLogger(__name__)
 
 
 class Client:
@@ -35,6 +38,8 @@ class Client:
         Whether or not to give you more info to debug easily.
     """
 
+    REQUEST_LOG = '{method} {url} recieved {text} and returned status code {status}'
+
     def __init__(self, token, **options):
         self.is_async = options.get('is_async', False)
         self.loop = options.get('loop', asyncio.get_event_loop())
@@ -60,6 +65,9 @@ class Client:
             data = text
 
         code = getattr(resp, 'status', None) or getattr(resp, 'status_code')
+
+        if self.debug:
+            log.debug(self.REQUEST_LOG.format(method=resp.request_info.method, url=resp.url, text=text, status=code))
 
         if 300 > code >= 200:
             return data, resp
