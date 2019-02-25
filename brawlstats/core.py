@@ -5,6 +5,7 @@ import requests
 from datetime import datetime
 
 import json
+import sys
 import time
 
 from .errors import MaintenanceError, NotFoundError, Unauthorized, UnexpectedError, RateLimitError, ServerError
@@ -49,7 +50,7 @@ class Client:
         self.debug = options.get('debug', False)
         self.headers = {
             'Authorization': token,
-            'User-Agent': 'brawlstats | Python'
+            'User-Agent': 'brawlstats v{} - Python {}'.format(self.api.VERSION, sys.version[:3])
         }
 
     def __repr__(self):

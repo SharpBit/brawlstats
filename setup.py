@@ -1,14 +1,18 @@
 from setuptools import setup, find_packages
 
 import json
+import re
 import urllib.request
 
 with open('README.rst', encoding='utf8') as f:
     long_description = f.read()
 
+with open('brawlstats/__init__.py') as f:
+    version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE).group(1)
+
 setup(
     name='brawlstats',
-    version='2.2.5',
+    version=version,
     description='An async Python API wrapper for the unofficial Brawl Stars API',
     long_description=long_description,
     long_description_content_type='text/x-rst',

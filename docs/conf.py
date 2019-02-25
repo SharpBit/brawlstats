@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import re
+
 #
 # Configuration file for the Sphinx documentation builder.
 #
@@ -16,6 +18,8 @@
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
+with open('../brawlstats/__init__.py') as f:
+    version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE).group(1)
 
 # -- Project information -----------------------------------------------------
 
@@ -23,10 +27,8 @@ project = 'BrawlStats'
 copyright = '2018, SharpBit'
 author = 'SharpBit'
 
-# The short X.Y version
-version = '2.2'
 # The full version, including alpha/beta/rc tags
-release = '2.2.5'
+release = version
 
 
 # -- General configuration ---------------------------------------------------

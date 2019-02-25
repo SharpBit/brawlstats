@@ -1,5 +1,7 @@
 from .errors import NotFoundError
 
+import re
+
 
 class API:
     def __init__(self, base_url):
@@ -36,6 +38,9 @@ class API:
             'crow',
             'leon'
         ]
+
+        with open('./__init__.py') as f:
+            self.VERSION = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE).group(1)
 
 
 def bstag(tag):
