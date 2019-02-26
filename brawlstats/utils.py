@@ -23,7 +23,7 @@ class API:
             'spike', 'crow', 'leon'                      # legendary
         ]
 
-        with open('./__init__.py') as f:
+        with open('../brawlstats/__init__.py') as f:
             self.VERSION = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE).group(1)
 
 
