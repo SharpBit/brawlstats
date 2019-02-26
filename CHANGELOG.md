@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.5.6] - Unknown
+## [2.5.6] - 2/26/19
 ### Fixed
 - Club search actually returns a list now.
 ### Changed
