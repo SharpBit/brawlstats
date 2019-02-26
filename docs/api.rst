@@ -85,7 +85,7 @@ Name                  Type
 ===================== ============================
 
 PartialClub
-----------
+-----------
 
 Only returns some statistics of the club. You are returned this via
 `Profile`_.club To get a full club, use await `Profile`_.get_club()
@@ -253,8 +253,8 @@ Attributes:
 ===================================== ====
 Name                                  Type
 ===================================== ====
-``time_until_season_end_in_seconds`` int
-``time_until_season_end``            str
+``time_until_season_end_in_seconds``  int
+``time_until_season_end``             str
 ``time_until_shop_reset_in_seconds``  int
 ``time_until_shop_reset``             str
 ``server_date_year``                  int
