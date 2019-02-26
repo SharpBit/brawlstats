@@ -10,19 +10,23 @@ with open('README.rst', encoding='utf8') as f:
 with open('brawlstats/__init__.py') as f:
     version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE).group(1)
 
+requirements = []
+with open('requirements.txt') as f:
+    requirements = f.read().splitlines()
+
 setup(
     name='brawlstats',
     version=version,
-    description='An async Python API wrapper for the unofficial Brawl Stars API',
+    description='An easy-to-use wrapper for the unofficial Brawl Stars API',
     long_description=long_description,
     long_description_content_type='text/x-rst',
     url='https://github.com/SharpBit/brawlstats',
     author='SharpBit',
     author_email='sharpbit3618@gmail.com',
     license='MIT',
-    keywords=['brawl stars, brawlstats, api-wrapper, async'],
+    keywords=['brawl stars, brawlstats, supercell'],
     packages=find_packages(),
-    install_requires=['aiohttp', 'python-box', 'requests'],
+    install_requires=requirements,
     python_requires='>=3.5',
     project_urls={
         'Source Code': 'https://github.com/SharpBit/brawlstats',

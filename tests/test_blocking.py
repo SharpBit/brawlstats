@@ -35,15 +35,15 @@ class TestBlockingClient(unittest.TestCase):
 
     def test_get_leaderboard_player(self):
         lb = self.client.get_leaderboard('players')
-        self.assertTrue(isinstance(lb, list))
+        self.assertTrue(isinstance(lb, brawlstats.Leaderboard))
 
     def test_get_leaderboard_club(self):
         lb = self.client.get_leaderboard('clubs')
-        self.assertTrue(isinstance(lb, list))
+        self.assertTrue(isinstance(lb, brawlstats.Leaderboard))
 
     def test_get_leaderboard_brawler(self):
         lb = self.client.get_leaderboard('shelly')
-        self.assertTrue(isinstance(lb, list))
+        self.assertTrue(isinstance(lb, brawlstats.Leaderboard))
 
     def test_get_events(self):
         events = self.client.get_events()
@@ -51,16 +51,16 @@ class TestBlockingClient(unittest.TestCase):
 
     def test_get_constants(self):
         default = self.client.get_constants()
-        self.assertEqual(default.info, 'This data is updated hourly.')
-        loc = self.client.get_constants('location')
-        self.assertTrue(isinstance(loc, list))
+        self.assertTrue(isinstance(default, brawlstats.Constants))
+        maps = self.client.get_constants('maps')
+        self.assertTrue(isinstance(maps, brawlstats.Constants))
         get_constants = self.client.get_constants
         invalid_key = 'invalid'
         self.assertRaises(KeyError, get_constants, invalid_key)
 
     def test_get_misc(self):
         misc = self.client.get_misc()
-        self.assertEqual(misc.server_date_year, datetime.date.year)
+        self.assertEqual(misc.server_date_year, datetime.date.today().year)
 
     def test_club_search(self):
         search = self.client.search_club('Penguin Raft')

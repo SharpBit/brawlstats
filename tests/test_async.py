@@ -34,15 +34,15 @@ class TestAsyncClient(asynctest.TestCase):
 
     async def test_get_leaderboard_player(self):
         lb = await self.client.get_leaderboard('players')
-        self.assertTrue(isinstance(lb, list))
+        self.assertTrue(isinstance(lb, brawlstats.Leaderboard))
 
     async def test_get_leaderboard_club(self):
         lb = await self.client.get_leaderboard('clubs')
-        self.assertTrue(isinstance(lb, list))
+        self.assertTrue(isinstance(lb, brawlstats.Leaderboard))
 
     async def test_get_leaderboard_brawler(self):
         lb = await self.client.get_leaderboard('shelly')
-        self.assertTrue(isinstance(lb, list))
+        self.assertTrue(isinstance(lb, brawlstats.Leaderboard))
 
     async def test_get_events(self):
         events = await self.client.get_events()
@@ -50,9 +50,9 @@ class TestAsyncClient(asynctest.TestCase):
 
     async def test_get_constants(self):
         default = await self.client.get_constants()
-        self.assertEqual(default.info, 'This data is updated hourly.')
-        loc = await self.client.get_constants('location')
-        self.assertTrue(isinstance(loc, list))
+        self.assertTrue(isinstance(default, brawlstats.Constants))
+        maps = await self.client.get_constants('maps')
+        self.assertTrue(isinstance(maps, brawlstats.Constants))
 
         async def request():
             await self.get_constants(invalid_key)
@@ -61,7 +61,7 @@ class TestAsyncClient(asynctest.TestCase):
 
     async def test_get_misc(self):
         misc = await self.client.get_misc()
-        self.assertEqual(misc.server_date_year, datetime.date.year)
+        self.assertEqual(misc.server_date_year, datetime.date.today().year)
 
     async def test_club_search(self):
         search = await self.client.search_club('Penguin Raft')

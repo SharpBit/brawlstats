@@ -19,9 +19,10 @@ Welcome to Brawl Stats' documentation!
 Features
 ~~~~~~~~
 
-- Covers the full API
-- Easy to use async or sync client
-- Helper functions to access other game files
+- Covers all of the API endpoints.
+- Use the same client for sync and async usage.
+- Helper functions to access other game files such as maps and audio files.
+- Easy to use with an object oriented design.
 
 Installation
 ~~~~~~~~~~~~

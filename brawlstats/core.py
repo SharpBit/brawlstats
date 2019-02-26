@@ -29,14 +29,14 @@ class Client:
         A timeout in seconds for requests to the API.
     is_async: Optional[bool] = False
         Setting this to ``True`` makes the client async.
-    url: Optional[str] = None
-        Sets a different base URL to make request to. Only use this if you know what you are doing.
     loop: Optional[event loop]
         The ``event loop`` to use for asynchronous operations. Defaults to ``None``,
         in which case the default event loop is used via ``asyncio.get_event_loop()``.
         If you are passing in an aiohttp session, using this will not work. You must set it when initializing the session.
     debug: Optional[bool] = False
         Whether or not to give you more info to debug easily.
+    base_url: Optional[str] = None
+        Sets a different base URL to make request to. Only use this if you know what you are doing.
     """
 
     REQUEST_LOG = '{method} {url} recieved {text} and returned status code {status}'
@@ -46,7 +46,7 @@ class Client:
         self.loop = options.get('loop', asyncio.get_event_loop())
         self.session = options.get('session') or (aiohttp.ClientSession(loop=self.loop) if self.is_async else requests.Session())
         self.timeout = options.get('timeout', 10)
-        self.api = API(options.get('url'))
+        self.api = API(options.get('base_url'))
         self.debug = options.get('debug', False)
         self.headers = {
             'Authorization': token,
@@ -108,6 +108,8 @@ class Client:
                 raise KeyError('No such key for Brawl Stars constants "{}"'.format(key))
             if key and data.get(key):
                 return model(self, resp, data.get(key))
+        if model == PartialClub and isinstance(data, list):
+            return [model(self, resp, data) for club in data]
         return model(self, resp, data)
 
     def _get_model(self, url, model, key=None):
@@ -132,7 +134,7 @@ class Client:
 
         Returns Profile
         """
-        url = '{}?tag={}'.format(self.api.profile, tag)
+        url = '{}?tag={}'.format(self.api.PROFILE, tag)
 
         return self._get_model(url, model=Profile)
 
@@ -149,7 +151,7 @@ class Client:
 
         Returns Club
         """
-        url = '{}?tag={}'.format(self.api.club, tag)
+        url = '{}?tag={}'.format(self.api.CLUB, tag)
 
         return self._get_model(url, model=Club)
 
@@ -170,11 +172,11 @@ class Client:
         lb_type = lb_type.lower()
         if type(count) != int:
             raise ValueError("Make sure 'count' is an int")
-        if lb_type not in self.api.brawlers + ['players', 'clubs'] or not 0 < count <= 200:
+        if lb_type not in self.api.BRAWLERS + ['players', 'clubs'] or not 0 < count <= 200:
             raise ValueError("Please enter 'players', 'clubs' or a brawler or make sure 'count' is between 1 and 200.")
-        url = '{}/{}?count={}'.format(self.api.leaderboard, lb_type, count)
-        if lb_type in self.api.brawlers:
-            url = '{}/players?count={}&brawler={}'.format(self.api.leaderboard, count, lb_type)
+        url = '{}/{}?count={}'.format(self.api.LEADERBOARD, lb_type, count)
+        if lb_type in self.api.BRAWLERS:
+            url = '{}/players?count={}&brawler={}'.format(self.api.LEADERBOARD, count, lb_type)
 
         return self._get_model(url, model=Leaderboard)
 
@@ -182,7 +184,7 @@ class Client:
         """Get current and upcoming events.
 
         Returns Events"""
-        return self._get_model(self.api.events, model=Events)
+        return self._get_model(self.api.EVENTS, model=Events)
 
     def get_constants(self, key=None):
         """Gets Brawl Stars constants extracted from the app.
@@ -194,7 +196,7 @@ class Client:
 
         Returns Constants
         """
-        return self._get_model(self.api.constants, model=Constants, key=key)
+        return self._get_model(self.api.CONSTANTS, model=Constants, key=key)
 
     def get_misc(self):
         """Gets misc data such as shop and season info.
@@ -202,7 +204,7 @@ class Client:
         Returns MiscData
         """
 
-        return self._get_model(self.api.misc, model=MiscData)
+        return self._get_model(self.api.MISC, model=MiscData)
 
     def search_club(self, club_name: str):
         """Searches for bands of the provided club name.
@@ -214,7 +216,7 @@ class Client:
 
         Returns List\[PartialClub, ..., PartialClub\]
         """
-        url = self.api.club_search + '?query=' + club_name
+        url = self.api.CLUB_SEARCH + '?query=' + club_name
         return self._get_model(url, model=PartialClub)
 
     def get_datetime(self, timestamp: str, unix=True):

@@ -1,3 +1,4 @@
-aiohttp
+aiohttp>=2.3.0
 requests
 python-box
+pytest

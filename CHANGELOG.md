@@ -1,10 +1,15 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.5.6] - Unknown
+### Fixed
+- Club search actually returns a list now.
+### Changed
+- Added wrapper and python version numbers to the User Agent when making API requests.
+
 ## [2.2.5] - 2/25/19
 ### Added
 - `debug` option to pass in when intializing `brawlstats.core.Client` to log requests.
-
 
 ## [2.2.4] - 2/24/19
 ### Fixed
