@@ -1,7 +1,13 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.5.6] - 2/26/19
+## [2.2.7] - 2/27/19
+### Fixed
+- Fixed issue [#20](https://github.com/SharpBit/brawlstats/issues/20)
+### Changed
+- Removed `pytest` from the package requirements.
+
+## [2.2.6] - 2/26/19
 ### Fixed
 - Club search actually returns a list now.
 ### Changed
