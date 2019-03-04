@@ -1,7 +1,7 @@
 class RequestError(Exception):
     """The base class for all errors."""
 
-    def __init__(self, code, error, retry_after=None):
+    def __init__(self, code, error, text=None, retry_after=None):
         pass
 
 
@@ -35,10 +35,11 @@ class RateLimitError(RequestError):
 class UnexpectedError(RequestError):
     """Raised if an unknown error has occured."""
 
-    def __init__(self, url, code):
+    def __init__(self, url, code, data):
         self.code = code
         self.error = 'An unexpected error has occured.\nURL: ' + url
-        super().__init__(self.code, self.error)
+        self.text = data
+        super().__init__(self.code, self.error, text=self.data)
 
 
 class ServerError(RequestError):

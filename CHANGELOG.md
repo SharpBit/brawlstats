@@ -1,10 +1,17 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.2.8] - 3/4/19
+### Added
+- Added the text that the API returns when an `UnexpectedError` is raised. If you see this, you should report the error to the [discord server](https://discord.me/BrawlAPI)
+### Fixed
+- Fixed the club search request URL
+- Fixed sync `search_club`
+
 ## [2.2.7] - 2/27/19
 ### Fixed
 - Fixed issue [#20](https://github.com/SharpBit/brawlstats/issues/20)
-### Changed
+### Removed
 - Removed `pytest` from the package requirements.
 
 ## [2.2.6] - 2/26/19

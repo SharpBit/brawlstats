@@ -63,9 +63,9 @@ class TestAsyncClient(asynctest.TestCase):
         misc = await self.client.get_misc()
         self.assertEqual(misc.server_date_year, datetime.date.today().year)
 
-    # async def test_club_search(self):
-    #     search = await self.client.search_club('Penguin Raft')
-    #     self.assertTrue(isinstance(search, list))
+    async def test_club_search(self):
+        search = await self.client.search_club('Penguin Raft')
+        self.assertTrue(isinstance(search, list))
 
     # Other
     async def test_invalid_tag(self):

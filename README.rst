@@ -22,13 +22,15 @@ Brawl Stats
 
 | This library is a sync and async wrapper the unofficial `Brawl Stars API`_.
 | Please note that both this API and wrapper are both still in beta, so there will be frequent breaking changes.
+| To keep up with API changes, discussions, and status, I recommend you join the `discord server`_.
 
 Features
 ~~~~~~~~
 
-- Covers the full API
-- Easy to use async or sync client
-- Helper functions for access to other game files
+- Covers all of the API endpoints.
+- Use the same client for sync and async usage.
+- Helper functions to access other game files such as maps and audio files.
+- Easy to use with an object oriented design.
 
 Installation
 ~~~~~~~~~~~~
@@ -48,14 +50,7 @@ Install the development build:
 Documentation
 ~~~~~~~~~~~~~
 
-Documentation is being hosted on `Read the Docs`_
-
-Misc
-~~~~
-
-| If you are currently using this wrapper, feel free to star this repository :)
-| If you come across an issue in the wrapper, please `create an issue`_ and I will look into it ASAP.
-| If you need help or an API Key, join the API’s `discord server`_.
+Documentation is being hosted on `Read the Docs`_.
 
 Examples
 ~~~~~~~~
@@ -65,9 +60,21 @@ Examples are in the `examples folder`_.
 - ``async.py`` shows you basic async usage
 - ``discord_cog.py`` shows an example Discord Bot cog using `discord.py rewrite`_
 
+Misc
+~~~~
+
+| If you are currently using this wrapper, feel free to star this repository :)
+| If you come across an issue in the wrapper, please `create an issue`_. Do **not** PM me on Discord for help.
+| If you need an API Key, join the API’s `discord server`_.
+
+Contributing
+~~~~~~~~~~~~
+If you want to contribute, whether it be a bug fix or new feature, make sure to follow the `contributing guidelines`_.
+
 .. _Brawl Stars API: http://brawlapi.cf/api
 .. _create an issue: https://github.com/SharpBit/brawlstats/issues
 .. _discord server: https://discord.me/BrawlAPI
 .. _Read the Docs: https://brawlstats.rtfd.io/
 .. _examples folder: https://github.com/SharpBit/brawlstats/tree/master/examples
 .. _discord.py rewrite: https://github.com/rapptz/discord.py/tree/rewrite
+.. _contributing guidelines: https://github.com/SharpBit/brawlstats/blob/master/CONTRIBUTING.md

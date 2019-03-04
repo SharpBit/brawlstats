@@ -50,7 +50,7 @@ class Client:
         self.debug = options.get('debug', False)
         self.headers = {
             'Authorization': token,
-            'User-Agent': 'brawlstats v{} - Python {}'.format(self.api.VERSION, sys.version[:3])
+            'User-Agent': 'brawlstats/{} (Python {})'.format(self.api.VERSION, sys.version[:3])
         }
 
     def __repr__(self):
@@ -85,7 +85,7 @@ class Client:
                 raise MaintenanceError(url, code)
             raise ServerError(url, code)
 
-        raise UnexpectedError(url, code)
+        raise UnexpectedError(url, code, data)
 
     async def _arequest(self, url):
         try:
@@ -121,6 +121,8 @@ class Client:
                 raise KeyError('No such key for Brawl Stars constants "{}"'.format(key))
             if key and data.get(key):
                 return model(self, resp, data.get(key))
+        if model == PartialClub and isinstance(data, list):
+            return [model(self, resp, data) for club in data]
         return model(self, resp, data)
 
     def get_profile(self, tag: bstag):
@@ -216,7 +218,7 @@ class Client:
 
         Returns List\[PartialClub, ..., PartialClub\]
         """
-        url = self.api.CLUB_SEARCH + '?query=' + club_name
+        url = self.api.CLUB_SEARCH + '?name=' + club_name
         return self._get_model(url, model=PartialClub)
 
     def get_datetime(self, timestamp: str, unix=True):
