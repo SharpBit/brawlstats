@@ -2,6 +2,7 @@ import aiohttp
 import asyncio
 import logging
 import requests
+from cachetools import TTLCache
 from datetime import datetime
 
 import json
@@ -48,6 +49,7 @@ class Client:
         self.timeout = options.get('timeout', 10)
         self.api = API(options.get('base_url'))
         self.debug = options.get('debug', False)
+        self.cache = TTLCache(900, 180)  # 5 requests/sec
         self.headers = {
             'Authorization': token,
             'User-Agent': 'brawlstats/{} (Python {})'.format(self.api.VERSION, sys.version[:3])
@@ -68,10 +70,10 @@ class Client:
         code = getattr(resp, 'status', None) or getattr(resp, 'status_code')
 
         if self.debug:
-            log.debug(self.REQUEST_LOG.format(method=resp.request_info.method, url=resp.url, text=text, status=code))
+            log.debug(self.REQUEST_LOG.format(method='GET', url=resp.url, text=text, status=code))
 
         if 300 > code >= 200:
-            return data, resp
+            return (data, resp)
         if code == 401:
             raise Unauthorized(url, code)
         if code in (400, 404):
@@ -87,19 +89,40 @@ class Client:
 
         raise UnexpectedError(url, code, data)
 
+    def _resolve_cache(self, url):
+        data = self.cache.get(url)
+        if not data:
+            return None
+        resp = 'Cached Data'
+        if self.debug:
+            log.debug('GET {} got result from cache.'.format(url))
+        return (data, resp)
+
     async def _arequest(self, url):
-        try:
-            async with self.session.get(url, timeout=self.timeout, headers=self.headers) as resp:
-                return self._raise_for_status(resp, await resp.text(), url)
-        except asyncio.TimeoutError:
-            raise ServerError(url, 503)
+        data = self._resolve_cache(url)
+        if not data:
+            try:
+                async with self.session.get(url, timeout=self.timeout, headers=self.headers) as resp:
+                    data = self._raise_for_status(resp, await resp.text(), url)
+            except asyncio.TimeoutError:
+                raise ServerError(url, 503)
+            else:
+                self.cache[url] = data[0]
+
+        return data
 
     def _request(self, url):
-        try:
-            with self.session.get(url, timeout=self.timeout, headers=self.headers) as resp:
-                return self._raise_for_status(resp, resp.text, url)
-        except requests.Timeout:
-            raise ServerError(url, 503)
+        data = self._resolve_cache(url)
+        if not data:
+            try:
+                with self.session.get(url, timeout=self.timeout, headers=self.headers) as resp:
+                    data = self._raise_for_status(resp, resp.text, url)
+            except requests.Timeout:
+                raise ServerError(url, 503)
+            else:
+                self.cache[url] = data[0]
+
+        return data
 
     async def _aget_model(self, url, model, key=None):
         data, resp = await self._arequest(url)

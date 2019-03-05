@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.3.0] - 3/4/19
+### Added
+- Added caching that clears after 180 seconds to not spam the API with the same requests.
+### Fixed
+- Fixed debug on the sync client.
+
 ## [2.2.8] - 3/4/19
 ### Added
 - Added the text that the API returns when an `UnexpectedError` is raised. If you see this, you should report the error to the [discord server](https://discord.me/BrawlAPI)
@@ -19,6 +25,7 @@ All notable changes to this project will be documented in this file.
 - Club search actually returns a list now.
 ### Changed
 - Added wrapper and python version numbers to the User Agent when making API requests.
+- `url` param in the client changed to `base_url`
 
 ## [2.2.5] - 2/25/19
 ### Added
@@ -26,7 +33,7 @@ All notable changes to this project will be documented in this file.
 
 ## [2.2.4] - 2/24/19
 ### Fixed
-- Fixed [installation error](https://github.com/SharpBit/brawlstats/issues/17) where the constants.json info key was removed.
+- Fixed [installation error](https://github.com/SharpBit/brawlstats/issues/17) where the `constants.json` info key was removed.
 
 ## [2.2.3] - 2/18/19
 ### Added
