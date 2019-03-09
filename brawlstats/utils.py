@@ -1,8 +1,7 @@
-from .errors import NotFoundError
-
-import brawlstats
 import os
 import re
+
+from .errors import NotFoundError
 
 
 class API:
@@ -25,9 +24,9 @@ class API:
             'spike', 'crow', 'leon'                      # legendary
         ]
 
-        path = os.path.dirname(brawlstats.__file__)
+        path = os.path.dirname(__file__)
         with open(os.path.join(path, '__init__.py')) as f:
-            self.VERSION = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE).group(1)
+            self.VERSION = re.search(r'^__version__ = [\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE).group(1)
 
 
 def bstag(tag):

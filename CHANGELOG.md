@@ -1,6 +1,13 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.3.1] - 3/9/19
+### Added
+- Creates requests with gzip encoding enabled (Results vary, but can cut request times by between 15-40%).
+### Changed
+- Changed the request log.
+- No longer imports itself in `utils.py` for the version number.
+
 ## [2.3.0] - 3/4/19
 ### Added
 - Added caching that clears after 180 seconds to not spam the API with the same requests.

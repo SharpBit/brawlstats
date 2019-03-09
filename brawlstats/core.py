@@ -1,16 +1,17 @@
 import aiohttp
+import requests
 import asyncio
 import logging
-import requests
+
+import json
+import time
+import sys
+
 from cachetools import TTLCache
 from datetime import datetime
 
-import json
-import sys
-import time
-
-from .errors import MaintenanceError, NotFoundError, Unauthorized, UnexpectedError, RateLimitError, ServerError
-from .models import Club, Constants, Events, Leaderboard, MiscData, PartialClub, Profile
+from .errors import NotFoundError, Unauthorized, ServerError, RateLimitError, MaintenanceError, UnexpectedError
+from .models import Profile, Club, PartialClub, Events, Leaderboard, Constants, MiscData
 from .utils import API, bstag
 
 log = logging.getLogger(__name__)
@@ -40,19 +41,20 @@ class Client:
         Sets a different base URL to make request to. Only use this if you know what you are doing.
     """
 
-    REQUEST_LOG = '{method} {url} recieved {text} and returned status code {status}'
+    REQUEST_LOG = '{method} {url} recieved {text} has returned {status}'
 
-    def __init__(self, token, **options):
-        self.is_async = options.get('is_async', False)
+    def __init__(self, token, session=None, timeout=10, is_async=False, **options):
+        self.is_async = is_async
         self.loop = options.get('loop', asyncio.get_event_loop())
-        self.session = options.get('session') or (aiohttp.ClientSession(loop=self.loop) if self.is_async else requests.Session())
-        self.timeout = options.get('timeout', 10)
+        self.session = session or (aiohttp.ClientSession(loop=self.loop) if self.is_async else requests.Session())
+        self.timeout = timeout
         self.api = API(options.get('base_url'))
         self.debug = options.get('debug', False)
         self.cache = TTLCache(900, 180)  # 5 requests/sec
         self.headers = {
             'Authorization': token,
-            'User-Agent': 'brawlstats/{} (Python {})'.format(self.api.VERSION, sys.version[:3])
+            'User-Agent': 'brawlstats/{0} (Python {1[0]}.{1[1]})'.format(self.api.VERSION, sys.version_info),
+            'Accept-Encoding': 'gzip'
         }
 
     def __repr__(self):

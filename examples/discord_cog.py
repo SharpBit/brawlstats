@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 import brawlstats
 
-class BrawlStars:
+class BrawlStars(commands.Cog, name='Brawl Stars'):
     """A simple cog for Brawl Stars commands using discord.py rewrite (v1.0.0a)"""
 
     def __init__(self, bot):
