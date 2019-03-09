@@ -51,6 +51,7 @@ class Client:
         self.api = API(options.get('base_url'))
         self.debug = options.get('debug', False)
         self.cache = TTLCache(900, 180)  # 5 requests/sec
+        self.ratelimit = [5, 5, 0]  # per second, remaining, time until reset
         self.headers = {
             'Authorization': token,
             'User-Agent': 'brawlstats/{0} (Python {1[0]}.{1[1]})'.format(self.api.VERSION, sys.version_info),
@@ -75,6 +76,12 @@ class Client:
             log.debug(self.REQUEST_LOG.format(method='GET', url=resp.url, text=text, status=code))
 
         if 300 > code >= 200:
+            if resp.headers.get('x-ratelimit-limit'):
+                self.ratelimit = [
+                    int(resp.headers['x-ratelimit-limit']),
+                    int(resp.headers['x-ratelimit-remaining']),
+                    int(resp.headers.get('x-ratelimit-reset', 0))
+                ]
             return (data, resp)
         if code == 401:
             raise Unauthorized(url, code)
@@ -101,28 +108,36 @@ class Client:
         return (data, resp)
 
     async def _arequest(self, url):
-        data = self._resolve_cache(url)
-        if not data:
-            try:
-                async with self.session.get(url, timeout=self.timeout, headers=self.headers) as resp:
-                    data = self._raise_for_status(resp, await resp.text(), url)
-            except asyncio.TimeoutError:
-                raise ServerError(url, 503)
-            else:
-                self.cache[url] = data[0]
+        cache = self._resolve_cache(url)
+        if cache is not None:
+            return cache
+        if self.ratelimit[1] == 0 and time() < self.ratelimit[2] / 1000:
+            raise RateLimitError(url, 429, self.ratelimit[2] / 1000 - time())
+
+        try:
+            async with self.session.get(url, timeout=self.timeout, headers=self.headers) as resp:
+                data = self._raise_for_status(resp, await resp.text(), url)
+        except asyncio.TimeoutError:
+            raise ServerError(url, 503)
+        else:
+            self.cache[url] = data[0]
 
         return data
 
     def _request(self, url):
-        data = self._resolve_cache(url)
-        if not data:
-            try:
-                with self.session.get(url, timeout=self.timeout, headers=self.headers) as resp:
-                    data = self._raise_for_status(resp, resp.text, url)
-            except requests.Timeout:
-                raise ServerError(url, 503)
-            else:
-                self.cache[url] = data[0]
+        cache = self._resolve_cache(url)
+        if cache is not None:
+            return cache
+        if self.ratelimit[1] == 0 and time() < self.ratelimit[2] / 1000:
+            raise RateLimitError(url, 429, self.ratelimit[2] / 1000 - time())
+
+        try:
+            with self.session.get(url, timeout=self.timeout, headers=self.headers) as resp:
+                data = self._raise_for_status(resp, resp.text, url)
+        except requests.Timeout:
+            raise ServerError(url, 503)
+        else:
+            self.cache[url] = data[0]
 
         return data
 
