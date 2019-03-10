@@ -35,6 +35,9 @@ class Client:
         The ``event loop`` to use for asynchronous operations. Defaults to ``None``,
         in which case the default event loop is used via ``asyncio.get_event_loop()``.
         If you are passing in an aiohttp session, using this will not work. You must set it when initializing the session.
+    connector: Optional[aiohttp.TCPConnector]
+        Pass in a TCPConnector for the client. Defaults to ``None``,
+        If you are passing in an aiohttp session, using this will not work. You must set it when initializing the session.
     debug: Optional[bool] = False
         Whether or not to give you more info to debug easily.
     base_url: Optional[str] = None
@@ -46,7 +49,10 @@ class Client:
     def __init__(self, token, session=None, timeout=10, is_async=False, **options):
         self.is_async = is_async
         self.loop = options.get('loop', asyncio.get_event_loop())
-        self.session = session or (aiohttp.ClientSession(loop=self.loop) if self.is_async else requests.Session())
+        self.connector = options.get('connector')
+        self.session = session or (
+            aiohttp.ClientSession(loop=self.loop, connector=self.connector) if self.is_async else requests.Session()
+        )
         self.timeout = timeout
         self.api = API(options.get('base_url'))
         self.debug = options.get('debug', False)
