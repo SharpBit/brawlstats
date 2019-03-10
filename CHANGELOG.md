@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.3.2] - 3/10/19
+### Fixed
+- Allows users to pass in a connector for the async client which fixes issue #19.
+
 ## [2.3.1] - 3/9/19
 ### Added
 - Creates requests with gzip encoding enabled to cut request times.
