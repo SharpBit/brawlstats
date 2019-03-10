@@ -46,7 +46,10 @@ class Client:
     def __init__(self, token, session=None, timeout=10, is_async=False, **options):
         self.is_async = is_async
         self.loop = options.get('loop', asyncio.get_event_loop())
-        self.session = session or (aiohttp.ClientSession(loop=self.loop) if self.is_async else requests.Session())
+        self.connector = options.get('connector')
+        self.session = session or (
+            aiohttp.ClientSession(loop=self.loop, connector=self.connector) if self.is_async else requests.Session()
+        )
         self.timeout = timeout
         self.api = API(options.get('base_url'))
         self.debug = options.get('debug', False)
