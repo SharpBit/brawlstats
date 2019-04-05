@@ -11,7 +11,7 @@ from cachetools import TTLCache
 from datetime import datetime
 
 from .errors import NotFoundError, Unauthorized, ServerError, RateLimitError, MaintenanceError, UnexpectedError
-from .models import Profile, Club, PartialClub, Events, Leaderboard, Constants, MiscData
+from .models import Player, Club, PartialClub, Events, Leaderboard, Constants, MiscData
 from .utils import API, bstag
 
 log = logging.getLogger(__name__)
@@ -171,7 +171,7 @@ class Client:
             return [model(self, resp, data) for club in data]
         return model(self, resp, data)
 
-    def get_profile(self, tag: bstag):
+    def get_player(self, tag: bstag):
         """Get a player's stats.
 
         Parameters
@@ -180,13 +180,13 @@ class Client:
             A valid player tag.
             Valid characters: 0289PYLQGRJCUV
 
-        Returns Profile
+        Returns Player
         """
         url = '{}?tag={}'.format(self.api.PROFILE, tag)
 
-        return self._get_model(url, model=Profile)
+        return self._get_model(url, model=Player)
 
-    get_player = get_profile
+    get_profile = get_player
 
     def get_club(self, tag: bstag):
         """Get a club's stats.

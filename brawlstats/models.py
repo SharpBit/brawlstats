@@ -35,13 +35,13 @@ class BaseBox:
             raise IndexError('No such index: {}'.format(item))
 
 
-class Profile(BaseBox):
+class Player(BaseBox):
     """
     Returns a full player object with all of its attributes.
     """
 
     def __repr__(self):
-        return "<Profile object name='{0.name}' tag='{0.tag}'>".format(self)
+        return "<Player object name='{0.name}' tag='{0.tag}'>".format(self)
 
     def __str__(self):
         return '{0.name} (#{0.tag})'.format(self)
@@ -59,10 +59,10 @@ class Profile(BaseBox):
         """
         if not self.club:
             return None
-        if not full:
-            club = PartialClub(self.client, self.resp, self.club)
-        else:
+        if full:
             club = self.client.get_club(self.club.tag)
+        else:
+            club = PartialClub(self.client, self.resp, self.club)
         return club
 
 
@@ -116,18 +116,14 @@ class Events(BaseBox):
     """
     Returns current and upcoming events.
     """
-
-    def __repr__(self):
-        return '<Events object>'
+    pass
 
 
 class Constants(BaseBox):
     """
     Returns some Brawl Stars constants.
     """
-
-    def __repr__(self):
-        return '<Constants object>'
+    pass
 
 
 class MiscData(BaseBox):
