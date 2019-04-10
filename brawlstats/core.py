@@ -117,8 +117,8 @@ class Client:
         cache = self._resolve_cache(url)
         if cache is not None:
             return cache
-        if self.ratelimit[1] == 0 and time() < self.ratelimit[2] / 1000:
-            raise RateLimitError(url, 429, self.ratelimit[2] / 1000 - time())
+        if self.ratelimit[1] == 0 and time.time() < self.ratelimit[2] / 1000:
+            raise RateLimitError(url, 429, self.ratelimit[2] / 1000 - time.time())
 
         try:
             async with self.session.get(url, timeout=self.timeout, headers=self.headers) as resp:
@@ -134,8 +134,8 @@ class Client:
         cache = self._resolve_cache(url)
         if cache is not None:
             return cache
-        if self.ratelimit[1] == 0 and time() < self.ratelimit[2] / 1000:
-            raise RateLimitError(url, 429, self.ratelimit[2] / 1000 - time())
+        if self.ratelimit[1] == 0 and time.time() < self.ratelimit[2] / 1000:
+            raise RateLimitError(url, 429, self.ratelimit[2] / 1000 - time.time())
 
         try:
             with self.session.get(url, timeout=self.timeout, headers=self.headers) as resp:
