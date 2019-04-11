@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.3.4] - 4/10/19
+### Fixed
+- Fixed a [mistake](https://github.com/SharpBit/brawlstats/pull/24) where `time()` was being called directly (instead of `time.time()`)
+
 ## [2.3.3] - 4/5/19
 ### Added
 - Added carl to the brawler list
