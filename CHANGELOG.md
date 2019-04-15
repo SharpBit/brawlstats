@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.3.5] - 4/15/19
+### Fixed
+- Fixed the rate limit handler when error code 429 was returned by the API.
+
 ## [2.3.4] - 4/10/19
 ### Fixed
 - Fixed a [mistake](https://github.com/SharpBit/brawlstats/pull/24) where `time()` was being called directly (instead of `time.time()`)

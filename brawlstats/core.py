@@ -94,7 +94,7 @@ class Client:
         if code in (400, 404):
             raise NotFoundError(url, code)
         if code == 429:
-            raise RateLimitError(url, code, resp.headers.get('x-ratelimit-reset') - time.time())
+            raise RateLimitError(url, code, int(resp.headers.get('x-ratelimit-reset')) - time.time())
         if code >= 500:
             if isinstance(data, str):  # Cloudflare error
                 raise ServerError(url, code)

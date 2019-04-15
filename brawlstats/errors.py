@@ -28,7 +28,7 @@ class RateLimitError(RequestError):
     def __init__(self, url, code, retry_after):
         self.code = code
         self.retry_after = retry_after
-        self.error = 'The rate limit has been reached.\nURL: ' + url
+        self.error = 'The rate limit has been reached.\nURL:{}\nRetry after: {}s'.format(url, retry_after)
         super().__init__(self.code, self.error, retry_after=self.retry_after)
 
 
