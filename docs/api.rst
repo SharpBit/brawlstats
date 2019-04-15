@@ -7,31 +7,31 @@ API Reference
 Data Models
 -----------
 
-.. autoclass:: brawlstats.core.Profile
+.. autoclass:: brawlstats.models.Player
     :members:
 
-.. autoclass:: brawlstats.core.Club
+.. autoclass:: brawlstats.models.Club
     :members:
 
-.. autoclass:: brawlstats.core.PartialClub
+.. autoclass:: brawlstats.models.PartialClub
     :members:
 
-.. autoclass:: brawlstats.core.Leaderboard
+.. autoclass:: brawlstats.models.Leaderboard
     :members:
 
-.. autoclass:: brawlstats.core.Events
+.. autoclass:: brawlstats.models.Events
     :members:
 
-.. autoclass:: brawlstats.core.Constants
+.. autoclass:: brawlstats.models.Constants
     :members:
 
-.. autoclass: brawlstats.core.MiscData
+.. autoclass: brawlstats.models.MiscData
     :members:
 
-Profile
+Player
 -------
 
-A full profile of a player (all its statistics)
+A full player object (all its statistics)
 
 
 Attributes:
@@ -41,6 +41,7 @@ Name                         Type
 ============================ ==============================
 ``tag``                      str
 ``name``                     str
+``name_color_code``          str
 ``brawlers_unlocked``        int
 ``brawlers``                 List[\ `Brawler`_, `Brawler`_]
 ``victories``                int
@@ -121,17 +122,17 @@ Returns some info about a club member. Get this by accessing
 
 Attributes:
 
-============== ====
-Name           Type
-============== ====
-``tag``        str
-``name``       str
-``role``       str
-``exp_level``  int
-``trophies``   int
-``avatar_id``  int
-``avatar_url`` str
-============== ====
+=================== ====
+Name                Type
+=================== ====
+``tag``             str
+``name``            str
+``name_color_code`` str
+``role``            str
+``trophies``        int
+``avatar_id``       int
+``avatar_url``      str
+=================== ====
 
 Leaderboard
 -----------
@@ -140,18 +141,19 @@ Returns a list of top players, clubs, or brawlers. To access this, do ``lb[index
 
 Player attributes:
 
-============== ====
-Name           Type
-============== ====
-``tag``        str
-``name``       str
-``position``   int
-``trophies``   int
-``club_name``  str
-``exp_level``  int
-``avatar_id``  int
-``avatar_url`` str
-============== ====
+=================== ====
+Name                Type
+=================== ====
+``tag``             str
+``name``            str
+``name_color_code`` str
+``position``        int
+``trophies``        int
+``club_name``       str
+``exp_level``       int
+``avatar_id``       int
+``avatar_url``      str
+=================== ====
 
 Club attributes:
 
@@ -169,19 +171,20 @@ Name              Type
 
 Brawler attributes:
 
-============== ====
-Name           Type
-============== ====
-``tag``        str
-``name``       str
-``position``   int
-``trophies``   int
-``club_name``  str
-``exp_level``  int
-``avatar_id``  int
-``avatar_url`` str
-``rank``       int
-============== ====
+=================== ====
+Name                Type
+=================== ====
+``tag``             str
+``name``            str
+``name_color_code`` str
+``position``        int
+``trophies``        int
+``club_name``       str
+``exp_level``       int
+``avatar_id``       int
+``avatar_url``      str
+``rank``            int
+=================== ====
 
 Brawler
 -------

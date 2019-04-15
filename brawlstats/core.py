@@ -270,13 +270,15 @@ class Client:
     def get_datetime(self, timestamp: str, unix=True):
         """Converts a %Y%m%dT%H%M%S.%fZ to a UNIX timestamp
         or a datetime.datetime object
+
         Parameters
-        ---------
+        ----------
         timestamp: str
             A timestamp in the %Y-%m-%dT%H:%M:%S.%fZ format, usually returned by the API
             in the ``created_time`` field for example (eg. 2018-07-18T14:59:06.000Z)
         unix: Optional[bool] = True
             Whether to return a POSIX timestamp (seconds since epoch) or not
+
         Returns int or datetime.datetime
         """
         time = datetime.strptime(timestamp, '%Y-%m-%dT%H:%M:%S.%fZ')
