@@ -21,7 +21,7 @@ Brawl Stats
     :alt: MIT License
 
 | This library is a sync and async wrapper the unofficial `Brawl Stars API`_.
-| To keep up with API changes, discussions, and status, I recommend you join the `discord server`_.
+| To keep up with API changes, discussions, and status, I recommend you join the API's `discord server`_.
 
 Features
 ~~~~~~~~
@@ -64,16 +64,17 @@ Misc
 
 | If you are currently using this wrapper, feel free to star this repository :)
 | If you come across an issue in the wrapper, please `create an issue`_. Do **not** PM me on Discord for help.
-| If you need an API Key, join the API’s `discord server`_.
+| If you need an API Key, create one using the `dashboard`_.
 
 Contributing
 ~~~~~~~~~~~~
 If you want to contribute, whether it be a bug fix or new feature, make sure to follow the `contributing guidelines`_.
 
-.. _Brawl Stars API: http://brawlapi.cf/api
+.. _Brawl Stars API: https://api.brawlapi.cf/v1
 .. _create an issue: https://github.com/SharpBit/brawlstats/issues
 .. _discord server: https://discord.me/BrawlAPI
 .. _Read the Docs: https://brawlstats.rtfd.io/
 .. _examples folder: https://github.com/SharpBit/brawlstats/tree/master/examples
 .. _discord.py rewrite: https://github.com/rapptz/discord.py/tree/rewrite
 .. _contributing guidelines: https://github.com/SharpBit/brawlstats/blob/master/CONTRIBUTING.md
+.. _dashboard: https://brawlapi.cf/dashboard

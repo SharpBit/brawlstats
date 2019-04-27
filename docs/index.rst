@@ -14,7 +14,7 @@ Welcome to Brawl Stats' documentation!
     :alt: MIT License
 
 | Brawl Stats is an easy to use async wrapper for the unofficial `Brawl Stars API`_.
-| Please note that both this API and wrapper are both still in beta, so there will be frequent breaking changes.
+| To keep up with API changes, discussions, and status, I recommend you join the API's `discord server`_.
 
 Features
 ~~~~~~~~

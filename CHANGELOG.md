@@ -1,6 +1,14 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.3.6] - 4/27/19
+### Added
+- Rosa to the brawler list
+- `prevent_ratelimit` option when initializing a client to wait when chaining requests
+### Changed
+- Base URL for requests to [the new API URL](https://api.brawlapi.cf/v1)
+- Ratelimit updated to API's 3 requests per second
+
 ## [2.3.5] - 4/15/19
 ### Fixed
 - Fixed the rate limit handler when error code 429 was returned by the API.

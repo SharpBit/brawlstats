@@ -6,7 +6,7 @@ from .errors import NotFoundError
 
 class API:
     def __init__(self, base_url):
-        self.BASE = base_url or 'https://brawlapi.cf/api'
+        self.BASE = base_url or 'https://api.brawlapi.cf/v1'
         self.PROFILE = self.BASE + '/player'
         self.CLUB = self.BASE + '/club'
         self.LEADERBOARD = self.BASE + '/leaderboards'
@@ -17,7 +17,7 @@ class API:
         self.BRAWLERS = [
             'shelly', 'nita', 'colt', 'bull', 'jessie',  # league reward 0-500
             'brock', 'dynamike', 'bo',                   # league reward 1000+
-            'el primo', 'barley', 'poco',                # rare
+            'el primo', 'barley', 'poco', 'rosa',        # rare
             'ricochet', 'penny', 'darryl', 'carl',       # super rare
             'frank', 'pam', 'piper',                     # epic
             'mortis', 'tara', 'gene',                    # mythic

@@ -24,7 +24,7 @@ class Client:
     Parameters
     ------------
     token: str
-        The API Key that you can get from https://discord.me/BrawlAPI
+        The API Key that you can get from https://brawlapi.cf/dashboard
     session: Optional[Session] = None
         Use a current session or a make new one. Can be ``aiohttp.ClientSession()`` or ``requests.Session()``
     timeout: Optional[int] = 10
@@ -42,6 +42,9 @@ class Client:
         Whether or not to give you more info to debug easily.
     base_url: Optional[str] = None
         Sets a different base URL to make request to. Only use this if you know what you are doing.
+    prevent_ratelimit: Optional[bool] = False
+        Whether or not you want to wait for a small amount of time between requests to prevent being ratelimited.
+        Recommended if you are performing multiple requests in a short period of time.
     """
 
     REQUEST_LOG = '{method} {url} recieved {text} has returned {status}'
@@ -54,10 +57,13 @@ class Client:
             aiohttp.ClientSession(loop=self.loop, connector=self.connector) if self.is_async else requests.Session()
         )
         self.timeout = timeout
+        self.lock = asyncio.Lock() if options.get('prevent_ratelimit') is True else None
         self.api = API(options.get('base_url'))
+
         self.debug = options.get('debug', False)
         self.cache = TTLCache(900, 180)  # 5 requests/sec
-        self.ratelimit = [5, 5, 0]  # per second, remaining, time until reset
+        self.ratelimit = [3, 3, 0]  # per second, remaining, time until reset
+
         self.headers = {
             'Authorization': token,
             'User-Agent': 'brawlstats/{0} (Python {1[0]}.{1[1]})'.format(self.api.VERSION, sys.version_info),
@@ -148,7 +154,13 @@ class Client:
         return data
 
     async def _aget_model(self, url, model, key=None):
-        data, resp = await self._arequest(url)
+        if self.lock is not None:
+            async with self.lock:
+                data, resp = await self._arequest(url)
+                await asyncio.sleep(1 / self.ratelimit[0])
+        else:
+            data, resp = await self._arequest(url)
+
         if model == Constants:
             if key and not data.get(key):
                 raise KeyError('No such key for Brawl Stars constants "{}"'.format(key))
