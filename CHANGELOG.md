@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.3.7] - 5/5/19
+### Changed
+- Changed the BASE URL to the old API URL. VERSION 2.3.6 WILL NOT WORK DUE TO API TIMEOUT ISSUES. PLEASE UPDATE.
+
 ## [2.3.6] - 4/27/19
 ### Added
 - Rosa to the brawler list
