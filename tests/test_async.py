@@ -1,7 +1,6 @@
 import asynctest
 import datetime
 import os
-import time
 
 import brawlstats
 from dotenv import load_dotenv, find_dotenv
@@ -18,10 +17,9 @@ class TestAsyncClient(asynctest.TestCase):
     async def setUp(self):
         self.player_tag = 'GGJVJLU2'
         self.club_tag = 'QCGV8PG'
-        self.client = brawlstats.Client(TOKEN, is_async=True, timeout=30)
+        self.client = brawlstats.Client(TOKEN, is_async=True, timeout=30, prevent_ratelimit=True)
 
     async def tearDown(self):
-        time.sleep(2)
         await self.client.close()
 
     async def test_get_player(self):

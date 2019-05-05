@@ -1,3 +1,6 @@
+# VSCode settings
+.vscode/
+
 # BAT Files
 *.bat
 

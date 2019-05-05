@@ -8,7 +8,7 @@ from .models import *
 ############
 
 
-__version__ = 'v2.3.6'
+__version__ = 'v2.3.7'
 __title__ = 'brawlstats'
 __license__ = 'MIT'
 __author__ = 'SharpBit'
