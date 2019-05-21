@@ -57,6 +57,7 @@ class Client:
             aiohttp.ClientSession(loop=self.loop, connector=self.connector) if self.is_async else requests.Session()
         )
         self.timeout = timeout
+        self.prevent_ratelimit = options.get('prevent_ratelimit', False)
         self.lock = asyncio.Lock() if options.get('prevent_ratelimit') is True else None
         self.api = API(options.get('base_url'))
 
@@ -123,8 +124,8 @@ class Client:
         cache = self._resolve_cache(url)
         if cache is not None:
             return cache
-        if self.ratelimit[1] == 0 and time.time() < self.ratelimit[2] / 1000:
-            raise RateLimitError(url, 429, self.ratelimit[2] / 1000 - time.time())
+        if self.ratelimit[1] == 0 and time.time() < self.ratelimit[2]:
+            raise RateLimitError(url, 429, self.ratelimit[2] - time.time())
 
         try:
             async with self.session.get(url, timeout=self.timeout, headers=self.headers) as resp:
@@ -140,8 +141,8 @@ class Client:
         cache = self._resolve_cache(url)
         if cache is not None:
             return cache
-        if self.ratelimit[1] == 0 and time.time() < self.ratelimit[2] / 1000:
-            raise RateLimitError(url, 429, self.ratelimit[2] / 1000 - time.time())
+        if self.ratelimit[1] == 0 and time.time() < self.ratelimit[2]:
+            asyncio.sleep(self.ratelimit[2] - time.time())
 
         try:
             with self.session.get(url, timeout=self.timeout, headers=self.headers) as resp:
@@ -173,7 +174,9 @@ class Client:
     def _get_model(self, url, model, key=None):
         if self.is_async:
             return self._aget_model(url, model=model, key=key)
-        data, resp = self._request(url)
+        if self.prevent_ratelimit:
+            data, resp = self._request(url)
+            time.sleep(1 / self.ratelimit[0])
         if model == Constants:
             if key and not data.get(key):
                 raise KeyError('No such key for Brawl Stars constants "{}"'.format(key))

@@ -47,3 +47,4 @@ Indices
 * :ref:`search`
 
 .. _Brawl Stars API: https://brawlapi.cf/api
+.. _discord server: https://discord.me/BrawlAPI

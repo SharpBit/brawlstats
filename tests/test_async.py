@@ -1,5 +1,6 @@
 import asynctest
 import datetime
+import logging
 import os
 
 import brawlstats
@@ -17,7 +18,14 @@ class TestAsyncClient(asynctest.TestCase):
     async def setUp(self):
         self.player_tag = 'GGJVJLU2'
         self.club_tag = 'QCGV8PG'
-        self.client = brawlstats.Client(TOKEN, is_async=True, timeout=30, prevent_ratelimit=True)
+        self.client = brawlstats.Client(
+            TOKEN,
+            is_async=True,
+            timeout=30,
+            prevent_ratelimit=True,
+            debug=True
+        )
+        logging.basicConfig(level=logging.DEBUG)
 
     async def tearDown(self):
         await self.client.close()

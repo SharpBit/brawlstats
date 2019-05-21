@@ -1,4 +1,5 @@
 import datetime
+import logging
 import unittest
 import os
 
@@ -18,7 +19,14 @@ class TestBlockingClient(unittest.TestCase):
     def setUp(self):
         self.player_tag = 'GGJVJLU2'
         self.club_tag = 'QCGV8PG'
-        self.client = brawlstats.Client(TOKEN, is_async=False, timeout=30, prevent_ratelimit=True)
+        self.client = brawlstats.Client(
+            TOKEN,
+            is_async=False,
+            timeout=30,
+            prevent_ratelimit=True,
+            debug=True
+        )
+        logging.basicConfig(level=logging.DEBUG)
 
     def tearDown(self):
         self.client.close()

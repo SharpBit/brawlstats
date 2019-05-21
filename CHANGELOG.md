@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.3.8] - 5/21/19
+### Changed
+- Changed the Base URL back to the new URL.
+- Now waits the number of seconds instead of raising a `RateLimitError` when a rate limit will be detected BEFORE it requests.
+
 ## [2.3.7] - 5/5/19
 ### Changed
 - Changed the BASE URL to the old API URL. VERSION 2.3.6 WILL NOT WORK DUE TO API TIMEOUT ISSUES. PLEASE UPDATE.
