@@ -18,8 +18,8 @@ class API:
             'shelly', 'nita', 'colt', 'bull', 'jessie',  # league reward 0-500
             'brock', 'dynamike', 'bo',                   # league reward 1000+
             'el primo', 'barley', 'poco', 'rosa',        # rare
-            'rico', 'penny', 'darryl', 'carl',       # super rare
-            'frank', 'pam', 'piper',                     # epic
+            'rico', 'penny', 'darryl', 'carl',           # super rare
+            'frank', 'pam', 'piper', 'bibi',             # epic
             'mortis', 'tara', 'gene',                    # mythic
             'spike', 'crow', 'leon'                      # legendary
         ]
