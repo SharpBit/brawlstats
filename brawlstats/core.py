@@ -174,8 +174,8 @@ class Client:
     def _get_model(self, url, model, key=None):
         if self.is_async:
             return self._aget_model(url, model=model, key=key)
+        data, resp = self._request(url)
         if self.prevent_ratelimit:
-            data, resp = self._request(url)
             time.sleep(1 / self.ratelimit[0])
         if model == Constants:
             if key and not data.get(key):
