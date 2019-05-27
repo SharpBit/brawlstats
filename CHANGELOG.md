@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.8.9] - 5/27/19
+## [2.3.9] - 5/27/19
 ### Fixed
 - Renamed ricochet to rico
 - Fixed the sync client when not using `prevent_ratelimit`
