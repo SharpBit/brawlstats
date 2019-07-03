@@ -2,6 +2,7 @@ import datetime
 import logging
 import unittest
 import os
+import time
 
 import brawlstats
 from dotenv import load_dotenv, find_dotenv
@@ -29,6 +30,7 @@ class TestBlockingClient(unittest.TestCase):
         logging.basicConfig(level=logging.DEBUG)
 
     def tearDown(self):
+        time.sleep(1)
         self.client.close()
 
     def test_get_player(self):

@@ -1,4 +1,5 @@
 import asynctest
+import asyncio
 import datetime
 import logging
 import os
@@ -22,12 +23,12 @@ class TestAsyncClient(asynctest.TestCase):
             TOKEN,
             is_async=True,
             timeout=30,
-            prevent_ratelimit=True,
             debug=True
         )
         logging.basicConfig(level=logging.DEBUG)
 
     async def tearDown(self):
+        await asyncio.sleep(1)
         await self.client.close()
 
     async def test_get_player(self):

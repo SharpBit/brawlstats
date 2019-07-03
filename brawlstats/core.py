@@ -142,7 +142,7 @@ class Client:
         if cache is not None:
             return cache
         if self.ratelimit[1] == 0 and time.time() < self.ratelimit[2]:
-            asyncio.sleep(self.ratelimit[2] - time.time())
+            time.sleep(self.ratelimit[2] - time.time())
 
         try:
             with self.session.get(url, timeout=self.timeout, headers=self.headers) as resp:
