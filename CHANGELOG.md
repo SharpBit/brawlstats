@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.3.11] - 7/3/19
+### Fixed
+- Fixed the sync version of the wrapper to not raise a RuntimeWarning due to using `asyncio.sleep()` instead of `time.sleep()`
+
 ## [2.3.10] - 7/2/19
 ### Added
 - New brawler tick
