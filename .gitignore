@@ -110,3 +110,5 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+*/__pycache__/
