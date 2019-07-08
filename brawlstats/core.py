@@ -183,10 +183,10 @@ class Client:
             if key and not data.get(key):
                 raise KeyError('No such key for Brawl Stars constants "{}"'.format(key))
             if key and data.get(key):
-                if isinstance(model, Log):
-                    data = data['items']
                 return model(self, resp, data.get(key))
         if isinstance(model, (PartialClub, Log)) and isinstance(data, list):
+            if isinstance(model, Log):
+                data = data['items']
             return [model(self, resp, data) for club in data]
         return model(self, resp, data)
 
