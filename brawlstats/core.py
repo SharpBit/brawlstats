@@ -167,7 +167,7 @@ class Client:
                 raise KeyError('No such key for Brawl Stars constants "{}"'.format(key))
             if key and data.get(key):
                 return model(self, resp, data.get(key))
-        if model == PartialClub and isinstance(data, list):
+        if isinstance(model, (PartialClub, Log)) and isinstance(data, list):
             return [model(self, resp, data) for club in data]
         return model(self, resp, data)
 
@@ -182,7 +182,7 @@ class Client:
                 raise KeyError('No such key for Brawl Stars constants "{}"'.format(key))
             if key and data.get(key):
                 return model(self, resp, data.get(key))
-        if model == PartialClub and isinstance(data, list):
+        if isinstance(model, (PartialClub, Log)) and isinstance(data, list):
             return [model(self, resp, data) for club in data]
         return model(self, resp, data)
 
@@ -311,7 +311,7 @@ class Client:
             A valid player tag.
             Valid characters: 0289PYLQGRJCUV
 
-        Returns battle logs
+        Returns Log
         """
         url = '{}?tag={}'.format(self.api.LOG, tag)
 
