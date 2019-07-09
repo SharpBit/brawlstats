@@ -90,7 +90,7 @@ If you want to contribute, whether it be a bug fix or new feature, make sure to 
 .. _contributing guidelines: https://github.com/SharpBit/brawlstats/blob/master/CONTRIBUTING.md
 .. _dashboard: https://brawlapi.cf/dashboard
 .. _4JR: https://github.com/fourjr
-.. _OrangutanGaming: https://github.com/OranguatanGaming
+.. _OrangutanGaming: https://github.com/OrangutanGaming
 .. _Stitch: https://github.com/Soumil07
 .. _kjkui: https://github.com/kjkui
 .. _Kyber: https://github.com/kyb3r
