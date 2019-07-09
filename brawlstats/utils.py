@@ -12,7 +12,7 @@ class API:
         self.LEADERBOARD = self.BASE + '/leaderboards'
         self.EVENTS = self.BASE + '/events'
         self.MISC = self.BASE + '/misc'
-        self.LOG = self.BASE + '/player/battlelog'
+        self.BATTLELOG = self.BASE + '/player/battlelog'
         self.CLUB_SEARCH = self.BASE + '/club/search'
         self.CONSTANTS = 'https://fourjr.herokuapp.com/bs/constants/'
         self.BRAWLERS = [
