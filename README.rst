@@ -62,6 +62,7 @@ Examples are in the `examples folder`_.
 Contributors
 ~~~~~~~~~~~~
 Special thanks to this project's contributors ❤️
+
 - `4JR`_
 - `OrangutanGaming`_
 - `Stitch`_
