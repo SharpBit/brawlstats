@@ -59,6 +59,16 @@ Examples are in the `examples folder`_.
 - ``async.py`` shows you basic async usage
 - ``discord_cog.py`` shows an example Discord Bot cog using `discord.py rewrite`_
 
+Contributors
+~~~~~~~~~~~~
+Special thanks to this project's contributors ❤️
+- `4JR`_
+- `OrangutanGaming`_
+- `Stitch`_
+- `kjkui`_
+- `Kyber`_
+- `Pollen`_
+
 Misc
 ~~~~
 
@@ -78,3 +88,9 @@ If you want to contribute, whether it be a bug fix or new feature, make sure to 
 .. _discord.py rewrite: https://github.com/rapptz/discord.py/tree/rewrite
 .. _contributing guidelines: https://github.com/SharpBit/brawlstats/blob/master/CONTRIBUTING.md
 .. _dashboard: https://brawlapi.cf/dashboard
+.. _4JR: https://github.com/fourjr
+.. _OrangutanGaming: https://github.com/OranguatanGaming
+.. _Stitch: https://github.com/Soumil07
+.. _kjkui: https://github.com/kjkui
+.. _Kyber: https://github.com/kyb3r
+.. _Pollen: https://github.com/pollen5
