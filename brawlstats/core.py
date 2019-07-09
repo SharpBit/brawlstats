@@ -168,8 +168,6 @@ class Client:
             if key and data.get(key):
                 return model(self, resp, data.get(key))
         if isinstance(model, (PartialClub, Log)) and isinstance(data, list):
-            if isinstance(model, Log):
-                data = data['items']
             return [model(self, resp, data) for club in data]
         return model(self, resp, data)
 
@@ -185,8 +183,6 @@ class Client:
             if key and data.get(key):
                 return model(self, resp, data.get(key))
         if isinstance(model, (PartialClub, Log)) and isinstance(data, list):
-            if isinstance(model, Log):
-                data = data['items']
             return [model(self, resp, data) for club in data]
         return model(self, resp, data)
 
