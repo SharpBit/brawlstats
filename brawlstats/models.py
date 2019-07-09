@@ -138,4 +138,4 @@ class BattleLog(BaseBox):
     """
 
     def __init__(self, client, resp, data):
-        self.from_data(data['items'])
+        super().__init__(client, resp, data['items'])
