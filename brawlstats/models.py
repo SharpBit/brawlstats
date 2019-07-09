@@ -131,3 +131,10 @@ class MiscData(BaseBox):
     Misc data such as shop and season info.
     """
     pass
+
+class Log(BaseBox):
+    """
+    Returns a full player battle object with all of its attributes.
+    """
+
+    pass

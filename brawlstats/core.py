@@ -11,7 +11,7 @@ from cachetools import TTLCache
 from datetime import datetime
 
 from .errors import NotFoundError, Unauthorized, ServerError, RateLimitError, MaintenanceError, UnexpectedError
-from .models import Player, Club, PartialClub, Events, Leaderboard, Constants, MiscData
+from .models import Player, Club, PartialClub, Events, Leaderboard, Constants, MiscData, Log
 from .utils import API, bstag
 
 log = logging.getLogger(__name__)
@@ -167,7 +167,9 @@ class Client:
                 raise KeyError('No such key for Brawl Stars constants "{}"'.format(key))
             if key and data.get(key):
                 return model(self, resp, data.get(key))
-        if model == PartialClub and isinstance(data, list):
+        if isinstance(model, (PartialClub, Log)) and isinstance(data, list):
+            if isinstance(model, Log):
+                data = data['items']
             return [model(self, resp, data) for club in data]
         return model(self, resp, data)
 
@@ -182,7 +184,9 @@ class Client:
                 raise KeyError('No such key for Brawl Stars constants "{}"'.format(key))
             if key and data.get(key):
                 return model(self, resp, data.get(key))
-        if model == PartialClub and isinstance(data, list):
+        if isinstance(model, (PartialClub, Log)) and isinstance(data, list):
+            if isinstance(model, Log):
+                data = data['items']
             return [model(self, resp, data) for club in data]
         return model(self, resp, data)
 
@@ -239,7 +243,7 @@ class Client:
             raise ValueError("Please enter 'players', 'clubs' or a brawler or make sure 'count' is between 1 and 200.")
         url = '{}/{}?count={}'.format(self.api.LEADERBOARD, lb_type, count)
         if lb_type in self.api.BRAWLERS:
-            url = '{}/players?count={}&brawler={}'.format(self.api.LEADERBOARD, count, lb_type)
+            url = '{}/players?count={}&brawlers={}'.format(self.api.LEADERBOARD, count, lb_type)
 
         return self._get_model(url, model=Leaderboard)
 
@@ -301,3 +305,18 @@ class Client:
             return int(time.timestamp())
         else:
             return time
+			
+    def get_battle_logs(self, tag: bstag):
+        """Get a player's battle logs.
+
+        Parameters
+        ----------
+        tag: str
+            A valid player tag.
+            Valid characters: 0289PYLQGRJCUV
+
+        Returns Log
+        """
+        url = '{}?tag={}'.format(self.api.LOG, tag)
+
+        return self._get_model(url, model=Log)
