@@ -301,7 +301,7 @@ class Client:
             return int(time.timestamp())
         else:
             return time
-			
+
     def get_battle_logs(self, tag: bstag):
         """Get a player's battle logs.
 
