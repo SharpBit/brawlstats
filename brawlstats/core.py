@@ -311,7 +311,7 @@ class Client:
             A valid player tag.
             Valid characters: 0289PYLQGRJCUV
 
-        Returns BattleLog
+        Returns List\[BattleLog, ..., BattleLog\]
         """
         url = '{}?tag={}'.format(self.api.BATTLELOG, tag)
 
