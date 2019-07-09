@@ -132,9 +132,10 @@ class MiscData(BaseBox):
     """
     pass
 
-class Log(BaseBox):
+class BattleLog(BaseBox):
     """
     Returns a full player battle object with all of its attributes.
     """
 
-    pass
+    def __init__(self, client, resp, data):
+        self.from_data(data['items'])
