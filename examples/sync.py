@@ -25,3 +25,6 @@ print(misc.time_until_season_ends)
 
 search = client.search_club('Cactus Bandits')
 print(search[0].tag)
+
+battles = client.get_battle_logs('GGJVJLU2')
+print(battles[0].battle.mode)
