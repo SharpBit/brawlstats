@@ -11,7 +11,7 @@ from cachetools import TTLCache
 from datetime import datetime
 
 from .errors import NotFoundError, Unauthorized, ServerError, RateLimitError, MaintenanceError, UnexpectedError
-from .models import Player, Club, PartialClub, Events, Leaderboard, Constants, MiscData, Log
+from .models import Player, Club, PartialClub, Events, Leaderboard, Constants, MiscData, BattleLog
 from .utils import API, bstag
 
 log = logging.getLogger(__name__)
@@ -315,8 +315,8 @@ class Client:
             A valid player tag.
             Valid characters: 0289PYLQGRJCUV
 
-        Returns Log
+        Returns BattleLog
         """
-        url = '{}?tag={}'.format(self.api.LOG, tag)
+        url = '{}?tag={}'.format(self.api.BATTLELOG, tag)
 
-        return self._get_model(url, model=Log)
+        return self._get_model(url, model=BattleLog)
