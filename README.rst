@@ -21,6 +21,7 @@ Brawl Stats
     :alt: MIT License
 
 | This library is a sync and async wrapper the unofficial `Brawl Stars API`_.
+| Python 3.5.3 or later is required.
 | To keep up with API changes, discussions, and status, I recommend you join the API's `discord server`_.
 
 Features
@@ -59,7 +60,14 @@ Examples are in the `examples folder`_.
 - ``async.py`` shows you basic async usage
 - ``discord_cog.py`` shows an example Discord Bot cog using `discord.py rewrite`_
 
-Contributors
+Misc
+~~~~
+
+- If you are currently using this wrapper, feel free to star this repository :)
+- If you come across an issue in the wrapper, please `create an issue`_. Do **not** PM me on Discord for help.
+- If you need an API Key, create one using the `dashboard`_.
+
+Contributing
 ~~~~~~~~~~~~
 Special thanks to this project's contributors ❤️
 
@@ -70,15 +78,6 @@ Special thanks to this project's contributors ❤️
 - `Kyber`_
 - `Pollen`_
 
-Misc
-~~~~
-
-| If you are currently using this wrapper, feel free to star this repository :)
-| If you come across an issue in the wrapper, please `create an issue`_. Do **not** PM me on Discord for help.
-| If you need an API Key, create one using the `dashboard`_.
-
-Contributing
-~~~~~~~~~~~~
 If you want to contribute, whether it be a bug fix or new feature, make sure to follow the `contributing guidelines`_.
 
 .. _Brawl Stars API: https://api.brawlapi.cf/v1
