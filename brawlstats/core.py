@@ -167,7 +167,7 @@ class Client:
                 raise KeyError('No such key for Brawl Stars constants "{}"'.format(key))
             if key and data.get(key):
                 return model(self, resp, data.get(key))
-        if isinstance(model, (PartialClub, Log)) and isinstance(data, list):
+        if model in (PartialClub, BattleLog) and (isinstance(data, list) if model == PartialClub else 1):
             return [model(self, resp, data) for club in data]
         return model(self, resp, data)
 
@@ -182,7 +182,7 @@ class Client:
                 raise KeyError('No such key for Brawl Stars constants "{}"'.format(key))
             if key and data.get(key):
                 return model(self, resp, data.get(key))
-        if isinstance(model, (PartialClub, Log)) and isinstance(data, list):
+        if model in (PartialClub, BattleLog) and (isinstance(data, list) if model == PartialClub else 1):
             return [model(self, resp, data) for club in data]
         return model(self, resp, data)
 
