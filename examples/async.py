@@ -29,6 +29,9 @@ async def main():
     search = await client.search_club('Cactus Bandits')
     print(search[0].tag)
 
+    battles = await client.get_battle_logs('GGJVJLU2')
+    print(battles[0].battle.mode)
+
 # run the async loop
 loop = asyncio.get_event_loop()
 loop.run_until_complete(main())
