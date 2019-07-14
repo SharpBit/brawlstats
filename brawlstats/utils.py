@@ -1,4 +1,3 @@
-import json
 import os
 import re
 
@@ -16,12 +15,19 @@ class API:
         self.BATTLELOG = self.BASE + '/player/battlelog'
         self.CLUB_SEARCH = self.BASE + '/club/search'
         self.CONSTANTS = 'https://fourjr.herokuapp.com/bs/constants/'
+        self.BRAWLERS = [
+            'shelly', 'nita', 'colt', 'bull', 'jessie',  # league reward 0-500
+            'brock', 'dynamike', 'bo', 'tick',           # league reward 1000+
+            'el primo', 'barley', 'poco', 'rosa',        # rare
+            'rico', 'penny', 'darryl', 'carl',           # super rare
+            'frank', 'pam', 'piper', 'bibi',             # epic
+            'mortis', 'tara', 'gene',                    # mythic
+            'spike', 'crow', 'leon'                      # legendary
+        ]
 
         path = os.path.dirname(__file__)
         with open(os.path.join(path, '__init__.py')) as f:
             self.VERSION = re.search(r'^__version__ = [\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE).group(1)
-        with open(os.path.join(path, 'constants.json')) as f:
-            self.BRAWLERS = [b['tID'] for b in json.load(f)['characters']]
 
 
 def bstag(tag):
