@@ -218,7 +218,7 @@ class Client:
 
         return self._get_model(url, model=Club)
 
-    def get_leaderboard(self, lb_type: str, count: int=200):
+    def get_leaderboard(self, lb_type: str, count: int=200, region='global'):
         """Get the top count players/clubs/brawlers.
 
         Parameters
@@ -237,9 +237,9 @@ class Client:
             raise ValueError("Make sure 'count' is an int")
         if lb_type not in self.api.BRAWLERS + ['players', 'clubs'] or not 0 < count <= 200:
             raise ValueError("Please enter 'players', 'clubs' or a brawler or make sure 'count' is between 1 and 200.")
-        url = '{}/{}?count={}'.format(self.api.LEADERBOARD, lb_type, count)
+        url = '{}/{}?count={}&region={}'.format(self.api.LEADERBOARD, lb_type, count, region)
         if lb_type in self.api.BRAWLERS:
-            url = '{}/players?count={}&brawlers={}'.format(self.api.LEADERBOARD, count, lb_type)
+            url = '{}/players?count={}&brawlers={}&region={}'.format(self.api.LEADERBOARD, count, lb_type, region)
 
         return self._get_model(url, model=Leaderboard)
 

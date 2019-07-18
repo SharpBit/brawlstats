@@ -24,7 +24,6 @@ class TestBlockingClient(unittest.TestCase):
             TOKEN,
             is_async=False,
             timeout=30,
-            prevent_ratelimit=True,
             debug=True
         )
         logging.basicConfig(level=logging.DEBUG)
@@ -44,6 +43,8 @@ class TestBlockingClient(unittest.TestCase):
     def test_get_leaderboard_player(self):
         lb = self.client.get_leaderboard('players')
         self.assertTrue(isinstance(lb, brawlstats.Leaderboard))
+        region = self.client.get_leaderboard('players', region='us')
+        self.assertTrue(isinstance(region, brawlstats.Leaderboard))
 
     def test_get_leaderboard_club(self):
         lb = self.client.get_leaderboard('clubs')
@@ -72,8 +73,11 @@ class TestBlockingClient(unittest.TestCase):
 
     def test_club_search(self):
         search = self.client.search_club('Penguin Raft')
-        print(search)
         self.assertTrue(isinstance(search, list))
+
+    def test_battle_logs(self):
+        logs = self.client.get_battle_logs(self.player_tag)
+        self.assertTrue(isinstance(logs, list))
 
     # Other
     def test_invalid_tag(self):

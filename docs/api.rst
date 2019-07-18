@@ -28,6 +28,9 @@ Data Models
 .. autoclass: brawlstats.models.MiscData
     :members:
 
+.. autoclass: brawlstats.models.BattleLog
+    :members:
+
 Player
 -------
 
@@ -264,7 +267,95 @@ Name                                  Type
 ``server_date_day_of_year``           int
 ===================================== ====
 
+Battle Logs
+-----------
 
+Returns a list of `BattleLog` that has the following attributes:
+
+Attributes:
+
+::
+
+    {
+        "battleTime":"20190706T151526.000Z",
+        "event":{
+            "id":15000126,
+            "mode":"duoShowdown",
+            "map":"Royal Runway"
+        },
+        "battle":{
+            "mode":"duoShowdown",
+            "type":"ranked",
+            "rank":1,
+            "trophyChange":9,
+            "teams":[
+                [
+                    {
+                        "tag":"#Y2QPGG",
+                        "name":"Lex_YouTube",
+                        "brawler":{
+                            "id":16000005,
+                            "name":"SPIKE",
+                            "power":10,
+                            "trophies":495
+                        }
+                    },
+                    {
+                        "tag":"#8Q229LJY",
+                        "name":"Brandon",
+                        "brawler":{
+                            "id":16000003,
+                            "name":"BROCK",
+                            "power":10,
+                            "trophies":495
+                        }
+                    },
+                        {
+                        "tag":"#29RGL0QJ0",
+                        "name":"smallwhitepeen1",
+                        "brawler":{
+                            "id":16000007,
+                            "name":"JESSIE",
+                            "power":7,
+                            "trophies":486
+                        }
+                    }
+                ],
+                [
+                    {
+                        "tag":"#CYLVL8LY",
+                        "name":"TST|ROYER™",
+                        "brawler":{
+                            "id":16000019,
+                            "name":"PENNY",
+                            "power":8,
+                            "trophies":541
+                        }
+                    },
+                    {
+                        "tag":"#8P2URCR0",
+                        "name":"ANOTHER",
+                        "brawler":{
+                            "id":16000023,
+                            "name":"LEON",
+                            "power":8,
+                            "trophies":559
+                        }
+                    },
+                    {
+                        "tag":"#8LRY92QP",
+                        "name":"Marshmello",
+                        "brawler":{
+                            "id":16000021,
+                            "name":"GENE",
+                            "power":7,
+                            "trophies":448
+                        }
+                    }
+                ]
+            ]
+        }
+    }
 
 .. _Club: https://brawlstats.readthedocs.io/en/latest/api.html#id1
 .. _PartialClub: https://brawlstats.readthedocs.io/en/latest/api.html#id2

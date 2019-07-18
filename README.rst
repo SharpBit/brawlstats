@@ -20,9 +20,9 @@ Brawl Stats
     :target: https://github.com/SharpBit/brawlstats/blob/master/LICENSE
     :alt: MIT License
 
-| This library is a sync and async wrapper the unofficial `Brawl Stars API`_.
-| Python 3.5.3 or later is required.
-| To keep up with API changes, discussions, and status, I recommend you join the API's `discord server`_.
+- This library is a sync and async wrapper the unofficial `Brawl Stars API`_.
+- Python 3.5.3 or later is required.
+- To keep up with API changes, discussions, and status, I recommend you join the API's `discord server`_.
 
 Features
 ~~~~~~~~

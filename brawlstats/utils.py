@@ -12,8 +12,8 @@ class API:
         self.LEADERBOARD = self.BASE + '/leaderboards'
         self.EVENTS = self.BASE + '/events'
         self.MISC = self.BASE + '/misc'
-        self.BATTLELOG = self.BASE + '/player/battlelog'
-        self.CLUB_SEARCH = self.BASE + '/club/search'
+        self.BATTLELOG = self.PROFILE + '/battlelog'
+        self.CLUB_SEARCH = self.CLUB + '/search'
         self.CONSTANTS = 'https://fourjr.herokuapp.com/bs/constants/'
         self.BRAWLERS = [
             'shelly', 'nita', 'colt', 'bull', 'jessie',  # league reward 0-500

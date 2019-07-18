@@ -42,6 +42,8 @@ class TestAsyncClient(asynctest.TestCase):
     async def test_get_leaderboard_player(self):
         lb = await self.client.get_leaderboard('players')
         self.assertTrue(isinstance(lb, brawlstats.Leaderboard))
+        region = await self.client.get_leaderboard('players', region='us')
+        self.assertTrue(isinstance(region, brawlstats.Leaderboard))
 
     async def test_get_leaderboard_club(self):
         lb = await self.client.get_leaderboard('clubs')
@@ -73,6 +75,10 @@ class TestAsyncClient(asynctest.TestCase):
     async def test_club_search(self):
         search = await self.client.search_club('Penguin Raft')
         self.assertTrue(isinstance(search, list))
+
+    async def test_battle_logs(self):
+        logs = await self.client.get_battle_logs(self.player_tag)
+        self.assertTrue(isinstance(logs, list))
 
     # Other
     async def test_invalid_tag(self):

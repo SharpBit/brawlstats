@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.3.12] - 7/18/19
+### Added
+- Player battle logs
+- Local leaderboards
+
 ## [2.3.11] - 7/3/19
 ### Fixed
 - Fixed the sync version of the wrapper to not raise a RuntimeWarning due to using `asyncio.sleep()` instead of `time.sleep()`
