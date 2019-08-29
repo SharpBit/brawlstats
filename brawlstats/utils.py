@@ -17,7 +17,7 @@ class API:
         self.CONSTANTS = 'https://fourjr.herokuapp.com/bs/constants/'
         self.BRAWLERS = [
             'shelly', 'nita', 'colt', 'bull', 'jessie',  # league reward 0-500
-            'brock', 'dynamike', 'bo', 'tick',           # league reward 1000+
+            'brock', 'dynamike', 'bo', 'tick', '8-bit'   # league reward 1000+
             'el primo', 'barley', 'poco', 'rosa',        # rare
             'rico', 'penny', 'darryl', 'carl',           # super rare
             'frank', 'pam', 'piper', 'bibi',             # epic
