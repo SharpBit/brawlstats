@@ -10,7 +10,7 @@ import sys
 from cachetools import TTLCache
 from datetime import datetime
 
-from .errors import NotFoundError, Unauthorized, ServerError, RateLimitError, MaintenanceError, UnexpectedError
+from ..errors import NotFoundError, Unauthorized, ServerError, RateLimitError, MaintenanceError, UnexpectedError
 from .models import Player, Club, PartialClub, Events, Leaderboard, Constants, MiscData, BattleLog
 from .utils import API, bstag
 
@@ -27,7 +27,7 @@ class Client:
         The API Key that you can get from https://brawlapi.cf/dashboard
     session: Optional[Session] = None
         Use a current session or a make new one. Can be ``aiohttp.ClientSession()`` or ``requests.Session()``
-    timeout: Optional[int] = 10
+    timeout: Optional[int] = 30
         A timeout in seconds for requests to the API.
     is_async: Optional[bool] = False
         Setting this to ``True`` makes the client async.
@@ -49,7 +49,7 @@ class Client:
 
     REQUEST_LOG = '{method} {url} recieved {text} has returned {status}'
 
-    def __init__(self, token, session=None, timeout=10, is_async=False, **options):
+    def __init__(self, token, session=None, timeout=30, is_async=False, **options):
         self.is_async = is_async
         self.loop = options.get('loop', asyncio.get_event_loop())
         self.connector = options.get('connector')
@@ -62,7 +62,7 @@ class Client:
         self.api = API(options.get('base_url'))
 
         self.debug = options.get('debug', False)
-        self.cache = TTLCache(900, 180)  # 5 requests/sec
+        self.cache = TTLCache(540, 180)  # 3 requests/sec
         self.ratelimit = [3, 3, 0]  # per second, remaining, time until reset
 
         self.headers = {

@@ -19,7 +19,7 @@ class TestAsyncClient(asynctest.TestCase):
     async def setUp(self):
         self.player_tag = 'GGJVJLU2'
         self.club_tag = 'QCGV8PG'
-        self.client = brawlstats.Client(
+        self.client = brawlstats.BrawlAPI(
             TOKEN,
             is_async=True,
             timeout=30,
@@ -41,17 +41,17 @@ class TestAsyncClient(asynctest.TestCase):
 
     async def test_get_leaderboard_player(self):
         lb = await self.client.get_leaderboard('players')
-        self.assertTrue(isinstance(lb, brawlstats.Leaderboard))
+        self.assertTrue(isinstance(lb, brawlstats.brawlapi.Leaderboard))
         region = await self.client.get_leaderboard('players', region='us')
-        self.assertTrue(isinstance(region, brawlstats.Leaderboard))
+        self.assertTrue(isinstance(region, brawlstats.brawlapi.Leaderboard))
 
     async def test_get_leaderboard_club(self):
         lb = await self.client.get_leaderboard('clubs')
-        self.assertTrue(isinstance(lb, brawlstats.Leaderboard))
+        self.assertTrue(isinstance(lb, brawlstats.brawlapi.Leaderboard))
 
     async def test_get_leaderboard_brawler(self):
         lb = await self.client.get_leaderboard('shelly')
-        self.assertTrue(isinstance(lb, brawlstats.Leaderboard))
+        self.assertTrue(isinstance(lb, brawlstats.brawlapi.Leaderboard))
 
     async def test_get_events(self):
         events = await self.client.get_events()
@@ -59,9 +59,9 @@ class TestAsyncClient(asynctest.TestCase):
 
     async def test_get_constants(self):
         default = await self.client.get_constants()
-        self.assertTrue(isinstance(default, brawlstats.Constants))
+        self.assertTrue(isinstance(default, brawlstats.brawlapi.Constants))
         maps = await self.client.get_constants('maps')
-        self.assertTrue(isinstance(maps, brawlstats.Constants))
+        self.assertTrue(isinstance(maps, brawlstats.brawlapi.Constants))
 
         async def request():
             await self.get_constants(invalid_key)

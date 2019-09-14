@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.3.14] - 9/14/19
+### Changed
+- Default timeout to 30
+- Cache size for the maximum size necessary (3 r/s)
+
 ## [2.3.13] - 8/29/19
 ### Added
 - New brawler 8-Bit
@@ -209,3 +214,21 @@ BREAKING CHANGES: Brawl Stars dev team changed "Band" to "Club". This update fix
 ## [2.0.0] - 11/19/18
 ### Added
 - Support for the brand new API at https://brawlapi.cf/api
+
+## [1.5.0] - 2/18/18
+### Added
+- Python 3.5 support!
+
+## [1.2.0] - 2/13/18
+### Changed
+- Base links for the new API changes
+
+## [1.1.12] - 2/7/18
+### Added
+- Essential core
+
+
+
+## [1.0.0]
+### Added
+- Request maker

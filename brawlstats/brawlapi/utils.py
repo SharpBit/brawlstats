@@ -1,7 +1,7 @@
 import os
 import re
 
-from .errors import NotFoundError
+from ..errors import NotFoundError
 
 
 class API:
@@ -25,7 +25,7 @@ class API:
             'spike', 'crow', 'leon'                      # legendary
         ]
 
-        path = os.path.dirname(__file__)
+        path = os.path.join(os.path.dirname(__file__), os.path.pardir)
         with open(os.path.join(path, '__init__.py')) as f:
             self.VERSION = re.search(r'^__version__ = [\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE).group(1)
 
