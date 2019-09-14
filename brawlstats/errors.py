@@ -39,7 +39,7 @@ class UnexpectedError(RequestError):
         self.code = code
         self.error = 'An unexpected error has occured.\nURL: ' + url
         self.text = data
-        super().__init__(self.code, self.error, text=self.data)
+        super().__init__(self.code, self.error, text=self.text)
 
 
 class ServerError(RequestError):

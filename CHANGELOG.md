@@ -1,6 +1,13 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.3.14] - 9/14/19
+### Changed
+- Default timeout from 10 to 30
+### Fixed
+- Cache is smaller due to smaller 3 r/s ratelimit (from 5)
+- Fixed a bug where `UnexpectedError` did not work due to a typo.
+
 ## [2.3.13] - 8/29/19
 ### Added
 - New brawler 8-Bit
