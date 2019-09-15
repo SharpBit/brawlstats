@@ -1,6 +1,7 @@
 import json
 import os
 import re
+import urllib.parse
 import urllib.request
 
 from ..errors import NotFoundError
@@ -8,24 +9,12 @@ from ..errors import NotFoundError
 
 class API:
     def __init__(self, base_url, version=1):
-        self.BASE = base_url or 'https://api.brawlapi.cf/v{}'.format(version)
-        self.PROFILE = self.BASE + '/player'
-        self.CLUB = self.BASE + '/club'
-        self.LEADERBOARD = self.BASE + '/leaderboards'
-        self.EVENTS = self.BASE + '/events'
-        self.MISC = self.BASE + '/misc'
-        self.BATTLELOG = self.PROFILE + '/battlelog'
-        self.CLUB_SEARCH = self.CLUB + '/search'
+        self.BASE = base_url or 'https://api.brawlstars.com/v{}'.format(version)
+        self.PROFILE = self.BASE + '/players'
+        self.CLUB = self.BASE + '/clubs'
+        self.RANKINGS = self.BASE + '/rankings'
+        self.BRAWLERS = self.CLUB + '/brawlers'
         self.CONSTANTS = 'https://fourjr.herokuapp.com/bs/constants/'
-        # self.BRAWLERS = [
-        #     'shelly', 'nita', 'colt', 'bull', 'jessie',  # league reward 0-500
-        #     'brock', 'dynamike', 'bo', 'tick', '8-bit'   # league reward 1000+
-        #     'el primo', 'barley', 'poco', 'rosa',        # rare
-        #     'rico', 'penny', 'darryl', 'carl',           # super rare
-        #     'frank', 'pam', 'piper', 'bibi',             # epic
-        #     'mortis', 'tara', 'gene',                    # mythic
-        #     'spike', 'crow', 'leon'                      # legendary
-        # ]
 
         path = os.path.join(os.path.dirname(__file__), os.path.pardir)
         with open(os.path.join(path, '__init__.py')) as f:
@@ -50,4 +39,4 @@ def bstag(tag):
     invalid = [c for c in tag if c not in allowed]
     if invalid:
         raise NotFoundError(invalid, 404)
-    return tag
+    return urllib.parse.quote('#' + tag)

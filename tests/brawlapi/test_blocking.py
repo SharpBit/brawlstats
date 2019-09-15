@@ -1,5 +1,4 @@
 import datetime
-import logging
 import unittest
 import os
 import time
@@ -7,13 +6,13 @@ import time
 import brawlstats
 from dotenv import load_dotenv, find_dotenv
 
-load_dotenv(find_dotenv('./.env'))
+load_dotenv(find_dotenv('../.env'))
 
-TOKEN = os.getenv('token')
+TOKEN = os.getenv('unofficial_token')
 
 
 class TestBlockingClient(unittest.TestCase):
-    """Tests all methods in the blocking client that
+    """Tests all methods in the blocking BrawlAPI client that
     uses the `requests` module in `brawlstats`
     """
 
@@ -23,10 +22,8 @@ class TestBlockingClient(unittest.TestCase):
         self.client = brawlstats.BrawlAPI(
             TOKEN,
             is_async=False,
-            timeout=30,
-            debug=True
+            timeout=30
         )
-        logging.basicConfig(level=logging.DEBUG)
 
     def tearDown(self):
         time.sleep(1)
@@ -51,7 +48,7 @@ class TestBlockingClient(unittest.TestCase):
         self.assertTrue(isinstance(lb, brawlstats.brawlapi.Leaderboard))
 
     def test_get_leaderboard_brawler(self):
-        lb = self.client.get_leaderboard('shelly')
+        lb = self.client.get_leaderboard('brawlers', brawler='shelly')
         self.assertTrue(isinstance(lb, brawlstats.brawlapi.Leaderboard))
 
     def test_get_events(self):
@@ -81,28 +78,28 @@ class TestBlockingClient(unittest.TestCase):
 
     # Other
     def test_invalid_tag(self):
-        get_profile = self.client.get_profile
+        get_player = self.client.get_player
         invalid_tag = 'P'
-        self.assertRaises(brawlstats.NotFoundError, get_profile, invalid_tag)
+        self.assertRaises(brawlstats.NotFoundError, get_player, invalid_tag)
         invalid_tag = 'AAA'
-        self.assertRaises(brawlstats.NotFoundError, get_profile, invalid_tag)
+        self.assertRaises(brawlstats.NotFoundError, get_player, invalid_tag)
         invalid_tag = '2PPPPPPP'
-        self.assertRaises(brawlstats.NotFoundError, get_profile, invalid_tag)
+        self.assertRaises(brawlstats.NotFoundError, get_player, invalid_tag)
 
     def test_invalid_lb(self):
         get_lb = self.client.get_leaderboard
         invalid_type = 'test'
-        invalid_count = 200
-        self.assertRaises(ValueError, get_lb, invalid_type, invalid_count)
+        invalid_limit = 200
+        self.assertRaises(ValueError, get_lb, invalid_type, invalid_limit)
         invalid_type = 'players'
-        invalid_count = 'string'
-        self.assertRaises(ValueError, get_lb, invalid_type, invalid_count)
+        invalid_limit = 'string'
+        self.assertRaises(ValueError, get_lb, invalid_type, invalid_limit)
         invalid_type = 'players'
-        invalid_count = 201
-        self.assertRaises(ValueError, get_lb, invalid_type, invalid_count)
+        invalid_limit = 201
+        self.assertRaises(ValueError, get_lb, invalid_type, invalid_limit)
         invalid_type = 'players'
-        invalid_count = -5
-        self.assertRaises(ValueError, get_lb, invalid_type, invalid_count)
+        invalid_limit = -5
+        self.assertRaises(ValueError, get_lb, invalid_type, invalid_limit)
 
 
 if __name__ == '__main__':

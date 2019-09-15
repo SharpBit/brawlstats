@@ -1,19 +1,18 @@
 import asynctest
 import asyncio
 import datetime
-import logging
 import os
 
 import brawlstats
 from dotenv import load_dotenv, find_dotenv
 
-load_dotenv(find_dotenv('./.env'))
+load_dotenv(find_dotenv('../.env'))
 
-TOKEN = os.getenv('token')
+TOKEN = os.getenv('unofficial_token')
 
 
 class TestAsyncClient(asynctest.TestCase):
-    """Tests all methods in the asynchronous client that
+    """Tests all methods in the asynchronous BrawlAPI client that
     uses the `aiohttp` module in `brawlstats`
     """
     async def setUp(self):
@@ -22,10 +21,8 @@ class TestAsyncClient(asynctest.TestCase):
         self.client = brawlstats.BrawlAPI(
             TOKEN,
             is_async=True,
-            timeout=30,
-            debug=True
+            timeout=30
         )
-        logging.basicConfig(level=logging.DEBUG)
 
     async def tearDown(self):
         await asyncio.sleep(1)
@@ -50,7 +47,7 @@ class TestAsyncClient(asynctest.TestCase):
         self.assertTrue(isinstance(lb, brawlstats.brawlapi.Leaderboard))
 
     async def test_get_leaderboard_brawler(self):
-        lb = await self.client.get_leaderboard('shelly')
+        lb = await self.client.get_leaderboard('brawlers', brawler='shelly')
         self.assertTrue(isinstance(lb, brawlstats.brawlapi.Leaderboard))
 
     async def test_get_events(self):
@@ -93,18 +90,18 @@ class TestAsyncClient(asynctest.TestCase):
 
     async def test_invalid_lb(self):
         async def request():
-            await self.client.get_leaderboard(invalid_type, invalid_count)
+            await self.client.get_leaderboard(invalid_type, invalid_limit)
         invalid_type = 'test'
-        invalid_count = 200
+        invalid_limit = 200
         self.assertAsyncRaises(ValueError, request)
         invalid_type = 'players'
-        invalid_count = 'string'
+        invalid_limit = 'string'
         self.assertAsyncRaises(ValueError, request)
         invalid_type = 'players'
-        invalid_count = 201
+        invalid_limit = 201
         self.assertAsyncRaises(ValueError, request)
         invalid_type = 'players'
-        invalid_count = -5
+        invalid_limit = -5
         self.assertAsyncRaises(ValueError, request)
 
 

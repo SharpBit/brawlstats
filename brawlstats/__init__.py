@@ -1,4 +1,5 @@
 from .brawlapi import Client as BrawlAPI
+from .officialapi import Client as OfficialAPI
 from .errors import *
 
 

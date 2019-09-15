@@ -14,6 +14,15 @@ class Unauthorized(RequestError):
         super().__init__(self.code, self.error)
 
 
+class Forbidden(RequestError):
+    """Raised if the IP using the token was not whitelisted."""
+
+    def __init__(self, url, code, message):
+        self.code = code
+        self.error = '{}\nURL: {}'.format(message, url)
+        super().__init__(self.code, self.error)
+
+
 class NotFoundError(RequestError):
     """Raised if an invalid player tag or club tag has been passed."""
 
