@@ -74,7 +74,7 @@ class TestBlockingClient(unittest.TestCase):
 
     def test_battle_logs(self):
         logs = self.client.get_battle_logs(self.player_tag)
-        self.assertTrue(isinstance(logs, list))
+        self.assertTrue(isinstance(logs, brawlstats.brawlapi.BattleLog))
 
     # Other
     def test_invalid_tag(self):

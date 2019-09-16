@@ -75,7 +75,7 @@ class TestAsyncClient(asynctest.TestCase):
 
     async def test_battle_logs(self):
         logs = await self.client.get_battle_logs(self.player_tag)
-        self.assertTrue(isinstance(logs, list))
+        self.assertTrue(isinstance(logs, brawlstats.brawlapi.BattleLog))
 
     # Other
     async def test_invalid_tag(self):
