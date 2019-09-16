@@ -12,7 +12,7 @@ from datetime import datetime
 
 from ..errors import NotFoundError, Unauthorized, ServerError, Forbidden, RateLimitError, UnexpectedError  # , MaintenanceError
 from .models import Player, Club, Members, Ranking, BattleLog, Constants
-from .utils import API, bstag
+from .utils import API, bstag, typecasted
 
 log = logging.getLogger(__name__)
 
@@ -62,8 +62,8 @@ class Client:
         self.api = API(options.get('base_url'), version=1)
 
         self.debug = options.get('debug', False)
-        self.cache = TTLCache(540, 180)  # 3 requests/sec
-        self.ratelimit = [3, 3, 0]  # per second, remaining, time until reset
+        self.cache = TTLCache(100, 300)  # 20 requests/min
+        self.ratelimit = [20, 20, 0]  # per minute, remaining, time until reset
 
         self.headers = {
             'Authorization': 'Bearer {}'.format(token),
@@ -186,6 +186,7 @@ class Client:
 
         return model(self, resp, data)
 
+    @typecasted
     def get_player(self, tag: bstag):
         """Get a player's stats.
 
@@ -198,12 +199,12 @@ class Client:
         Returns Player
         """
         url = '{}/{}'.format(self.api.PROFILE, tag)
-        print(url)
 
         return self._get_model(url, model=Player)
 
     get_profile = get_player
 
+    @typecasted
     def get_club(self, tag: bstag):
         """Get a club's stats.
 
@@ -216,10 +217,10 @@ class Client:
         Returns Club
         """
         url = '{}/{}'.format(self.api.CLUB, tag)
-        print(url)
 
         return self._get_model(url, model=Club)
 
+    @typecasted
     def get_club_members(self, tag: bstag):
         """Get the members of a club.
 
@@ -271,6 +272,7 @@ class Client:
 
         return self._get_model(url, model=Ranking)
 
+    @typecasted
     def get_battle_logs(self, tag: bstag):
         """Get a player's battle logs.
 

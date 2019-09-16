@@ -16,8 +16,8 @@ class TestBlockingClient(unittest.TestCase):
     """
 
     def setUp(self):
-        self.player_tag = 'GGJVJLU2'
-        self.club_tag = 'QCGV8PG'
+        self.player_tag = '#GGJVJLU2'
+        self.club_tag = '#QCGV8PG'
         self.client = brawlstats.OfficialAPI(
             TOKEN,
             is_async=False,

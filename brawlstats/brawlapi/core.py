@@ -12,7 +12,7 @@ from datetime import datetime
 
 from ..errors import NotFoundError, Unauthorized, ServerError, Forbidden, RateLimitError, MaintenanceError, UnexpectedError
 from .models import Player, Club, PartialClub, Events, Leaderboard, Constants, MiscData, BattleLog
-from .utils import API, bstag
+from .utils import API, bstag, typecasted
 
 log = logging.getLogger(__name__)
 
@@ -197,6 +197,7 @@ class Client:
 
         return model(self, resp, data)
 
+    @typecasted
     def get_player(self, tag: bstag):
         """Get a player's stats.
 
@@ -214,6 +215,7 @@ class Client:
 
     get_profile = get_player
 
+    @typecasted
     def get_club(self, tag: bstag):
         """Get a club's stats.
 
@@ -271,6 +273,7 @@ class Client:
         Returns Events"""
         return self._get_model(self.api.EVENTS, model=Events)
 
+    @typecasted
     def get_battle_logs(self, tag: bstag):
         """Get a player's battle logs.
 

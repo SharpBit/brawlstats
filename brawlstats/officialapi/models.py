@@ -68,6 +68,14 @@ class Club(BaseBox):
     def __str__(self):
         return '{0.name} ({0.tag})'.format(self)
 
+    def get_members(self):
+        """
+        Gets the members of a club.
+
+        Returns Members
+        """
+        return self.client.get_club_members(self.tag)
+
 
 class Members(BaseBox):
     """
