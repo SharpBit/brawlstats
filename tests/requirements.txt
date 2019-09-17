@@ -3,3 +3,4 @@ flake8
 asynctest
 pytest
 tox-travis
+pluggy>=0.12.0,<1.0.0
