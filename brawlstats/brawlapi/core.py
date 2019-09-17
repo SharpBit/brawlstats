@@ -65,8 +65,6 @@ class Client:
         self.cache = TTLCache(540, 180)  # 3 requests/sec
         self.ratelimit = [3, 3, 0]  # per second, remaining, time until reset
 
-        if isinstance(token, bytes):
-            token = token.decode('utf-8')
         self.headers = {
             'Authorization': token,
             'User-Agent': 'brawlstats/{0} (Python {1[0]}.{1[1]})'.format(self.api.VERSION, sys.version_info),
