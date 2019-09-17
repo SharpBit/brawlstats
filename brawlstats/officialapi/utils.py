@@ -24,12 +24,12 @@ class API:
         try:
             data = json.loads(urllib.request.urlopen(self.CONSTANTS).read())
         except (TypeError, urllib.error.HTTPError, urllib.error.URLError):
-            self.BRAWLERS = []
+            self.BRAWLERS = {}
         else:
             if data:
                 self.BRAWLERS = {b['tID'].lower(): b['scId'] for b in data['characters'] if b['tID']}
             else:
-                self.BRAWLERS = []
+                self.BRAWLERS = {}
 
 
 def bstag(tag):
