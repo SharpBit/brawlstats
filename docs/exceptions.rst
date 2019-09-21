@@ -9,6 +9,9 @@ The possible exceptions thrown by the library.
 .. autoexception:: brawlstats.errors.Unauthorized
        :members:
 
+.. autoexception:: brawlstats.errors.Forbidden
+       :members:
+
 .. autoexception:: brawlstats.errors.NotFoundError
        :members:
 
