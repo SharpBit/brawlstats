@@ -254,7 +254,7 @@ class Client:
 
         Returns Ranking
         """
-        if brawler:
+        if type(brawler) == str:
             brawler = brawler.lower()
         if brawler not in self.api.BRAWLERS and ranking_type not in ['players', 'clubs', 'brawlers']:
             raise ValueError("Please enter 'players', 'clubs' or a brawler.")

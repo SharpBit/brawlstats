@@ -53,6 +53,8 @@ class TestBlockingClient(unittest.TestCase):
     def test_get_rankings_brawler(self):
         lb = self.client.get_rankings('brawlers', brawler='shelly')
         self.assertTrue(isinstance(lb, brawlstats.officialapi.Ranking))
+        rankings = self.client.get_rankings('brawlers', brawler=16000000)
+        self.assertTrue(isinstance(rankings, brawlstats.officialapi.Ranking))
 
     def test_get_constants(self):
         default = self.client.get_constants()

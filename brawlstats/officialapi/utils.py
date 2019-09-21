@@ -27,7 +27,7 @@ class API:
             self.BRAWLERS = {}
         else:
             if data:
-                self.BRAWLERS = {b['tID'].lower(): b['scId'] for b in data['characters'] if b['tID']}
+                self.BRAWLERS = {b['tID'].lower(): str(b['scId'])[:2] + '0' + str(b['scId'])[2:] for b in data['characters'] if b['tID']}
             else:
                 self.BRAWLERS = {}
 
