@@ -1,10 +1,28 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [3.0.0]
+### Added
+- Official API support (all endpoints implemented, all methods documented)
+- `Forbidden` error raised when code 403 received
+- New terminology! "BrawlAPI" refers to the [unofficial API](https://api.brawlapi.cf/v1) while "OfficialAPI" refers to the [official API](https://developer.brawlstars.com)
+### Changed (BREAKING)
+- The unofficial API's client will now be accessed as `brawlstats.BrawlAPI` (from `brawlstats.Client`)
+- The unofficial API's models will now be accessed as `brawlstats.brawlapi.ModelName`
+- The official API's client will be accessed by `brawlstats.OfficialAPI`
+- The official API's models will be accessed by `brawlstats.officialapi.ModelName`
+- `get_leaderboard()` will now require "brawlers" for the ranking type and the actual brawler name passed through the brawler kwarg.
+- `get_leaderboard()` `count` argument has been renamed to `limit`
+### Fixed
+- BrawlAPI `get_leaderboard` parameter documentation fixed
+- Arguments passed into functions that require player/club tags now properly get formatted correctly.
+
 ## [2.3.14] - 9/14/19
 ### Changed
-- Default timeout to 30
-- Cache size for the maximum size necessary (3 r/s)
+- Default timeout from 10 to 30
+### Fixed
+- Cache is smaller due to smaller 3 r/s ratelimit (from 5)
+- Fixed a bug where `UnexpectedError` did not work due to a typo.
 
 ## [2.3.13] - 8/29/19
 ### Added
