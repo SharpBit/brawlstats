@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [3.0.0]
+## [3.0.0] - 9/22/19
 ### Added
 - Official API support (all endpoints implemented, all methods documented)
 - `Forbidden` error raised when code 403 received
