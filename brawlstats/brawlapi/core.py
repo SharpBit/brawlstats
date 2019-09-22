@@ -10,16 +10,16 @@ import sys
 from cachetools import TTLCache
 from datetime import datetime
 
-from .errors import NotFoundError, Unauthorized, ServerError, RateLimitError, MaintenanceError, UnexpectedError
+from ..errors import NotFoundError, Unauthorized, ServerError, Forbidden, RateLimitError, MaintenanceError, UnexpectedError
 from .models import Player, Club, PartialClub, Events, Leaderboard, Constants, MiscData, BattleLog
-from .utils import API, bstag
+from .utils import API, bstag, typecasted
 
 log = logging.getLogger(__name__)
 
 
 class Client:
     """
-    This is a sync/async client class that lets you access the API.
+    This is a sync/async client class that lets you access the unofficial BrawlAPI.
 
     Parameters
     ------------
@@ -59,7 +59,7 @@ class Client:
         self.timeout = timeout
         self.prevent_ratelimit = options.get('prevent_ratelimit', False)
         self.lock = asyncio.Lock() if options.get('prevent_ratelimit') is True else None
-        self.api = API(options.get('base_url'))
+        self.api = API(options.get('base_url'), version=1)
 
         self.debug = options.get('debug', False)
         self.cache = TTLCache(540, 180)  # 3 requests/sec
@@ -72,7 +72,7 @@ class Client:
         }
 
     def __repr__(self):
-        return '<BrawlStats-Client async={} timeout={}>'.format(self.is_async, self.timeout)
+        return '<BrawlAPI-Client async={} timeout={} debug={}>'.format(self.is_async, self.timeout, self.debug)
 
     def close(self):
         return self.session.close()
@@ -98,6 +98,8 @@ class Client:
             return (data, resp)
         if code == 401:
             raise Unauthorized(url, code)
+        if code == 403:
+            raise Forbidden(url, code, data['message'])
         if code in (400, 404):
             raise NotFoundError(url, code)
         if code == 429:
@@ -162,13 +164,17 @@ class Client:
         else:
             data, resp = await self._arequest(url)
 
-        if model == Constants:
-            if key and not data.get(key):
-                raise KeyError('No such key for Brawl Stars constants "{}"'.format(key))
-            if key and data.get(key):
-                return model(self, resp, data.get(key))
-        if model in (PartialClub, BattleLog) and (isinstance(data, list) if model == PartialClub else 1):
+        # Club search
+        if model == PartialClub and isinstance(data, list):
             return [model(self, resp, data) for club in data]
+
+        if model == Constants:
+            if key:
+                if data.get(key):
+                    return model(self, resp, data.get(key))
+                else:
+                    raise KeyError('No such Constants key "{}"'.format(key))
+
         return model(self, resp, data)
 
     def _get_model(self, url, model, key=None):
@@ -177,15 +183,21 @@ class Client:
         data, resp = self._request(url)
         if self.prevent_ratelimit:
             time.sleep(1 / self.ratelimit[0])
-        if model == Constants:
-            if key and not data.get(key):
-                raise KeyError('No such key for Brawl Stars constants "{}"'.format(key))
-            if key and data.get(key):
-                return model(self, resp, data.get(key))
-        if model in (PartialClub, BattleLog) and (isinstance(data, list) if model == PartialClub else 1):
+
+        # Club search
+        if model == PartialClub and isinstance(data, list):
             return [model(self, resp, data) for club in data]
+
+        if model == Constants:
+            if key:
+                if data.get(key):
+                    return model(self, resp, data.get(key))
+                else:
+                    raise KeyError('No such Constants key "{}"'.format(key))
+
         return model(self, resp, data)
 
+    @typecasted
     def get_player(self, tag: bstag):
         """Get a player's stats.
 
@@ -203,6 +215,7 @@ class Client:
 
     get_profile = get_player
 
+    @typecasted
     def get_club(self, tag: bstag):
         """Get a club's stats.
 
@@ -218,28 +231,39 @@ class Client:
 
         return self._get_model(url, model=Club)
 
-    def get_leaderboard(self, lb_type: str, count: int=200, region='global'):
+    def get_leaderboard(self, lb_type: str, limit: int=200, region='global', brawler=None):
         """Get the top count players/clubs/brawlers.
 
         Parameters
         ----------
-        type: str
-            The type of leaderboard. Must be "players", "clubs", or the brawler leaderboard you are trying to access.
+        lb_type: str
+            The type of leaderboard. Must be "players", "clubs", "brawlers".
             Anything else will return a ValueError.
-        count: Optional[int] = 200
+        limit: Optional[int] = 200
             The number of top players or clubs to fetch.
             If count > 200, it will return a ValueError.
+        region: Optional[str] = "global"
+            The region to retrieve from. Must be a 2 letter country code or "global"
+        brawler: Optional[str|int] = None
+            The brawler name or ID.
 
         Returns Leaderboard
         """
-        lb_type = lb_type.lower()
-        if type(count) != int:
+        if brawler:
+            brawler = brawler.lower()
+        if brawler not in self.api.BRAWLERS and lb_type not in ['players', 'clubs', 'brawlers']:
+            raise ValueError("Please enter 'players', 'clubs' or 'brawlers'.")
+        if brawler in self.api.BRAWLERS.keys():
+            brawler = self.api.BRAWLERS[brawler]
+
+        if type(limit) != int:
             raise ValueError("Make sure 'count' is an int")
-        if lb_type not in self.api.BRAWLERS + ['players', 'clubs'] or not 0 < count <= 200:
-            raise ValueError("Please enter 'players', 'clubs' or a brawler or make sure 'count' is between 1 and 200.")
-        url = '{}/{}?count={}&region={}'.format(self.api.LEADERBOARD, lb_type, count, region)
-        if lb_type in self.api.BRAWLERS:
-            url = '{}/players?count={}&brawlers={}&region={}'.format(self.api.LEADERBOARD, count, lb_type, region)
+        if not 0 < limit <= 200:
+            raise ValueError('Make sure limit is between 1 and 200.')
+
+        url = '{}/{}?count={}&region={}'.format(self.api.LEADERBOARD, lb_type, limit, region)
+        if lb_type == 'brawlers':
+            url = '{}/players?count={}&brawlers={}&region={}'.format(self.api.LEADERBOARD, limit, lb_type, region)
 
         return self._get_model(url, model=Leaderboard)
 
@@ -248,6 +272,35 @@ class Client:
 
         Returns Events"""
         return self._get_model(self.api.EVENTS, model=Events)
+
+    @typecasted
+    def get_battle_logs(self, tag: bstag):
+        """Get a player's battle logs.
+
+        Parameters
+        ----------
+        tag: str
+            A valid player tag.
+            Valid characters: 0289PYLQGRJCUV
+
+        Returns BattleLog
+        """
+        url = '{}?tag={}'.format(self.api.BATTLELOG, tag)
+
+        return self._get_model(url, model=BattleLog)
+
+    def search_club(self, club_name: str):
+        """Searches for bands of the provided club name.
+
+        Parameters
+        ----------
+        club_name: str
+            The query for the club search.
+
+        Returns List\[PartialClub, ..., PartialClub\]
+        """
+        url = self.api.CLUB_SEARCH + '?name=' + club_name
+        return self._get_model(url, model=PartialClub)
 
     def get_constants(self, key=None):
         """Gets Brawl Stars constants extracted from the app.
@@ -269,19 +322,6 @@ class Client:
 
         return self._get_model(self.api.MISC, model=MiscData)
 
-    def search_club(self, club_name: str):
-        """Searches for bands of the provided club name.
-
-        Parameters
-        ----------
-        club_name: str
-            The query for the club search.
-
-        Returns List\[PartialClub, ..., PartialClub\]
-        """
-        url = self.api.CLUB_SEARCH + '?name=' + club_name
-        return self._get_model(url, model=PartialClub)
-
     def get_datetime(self, timestamp: str, unix=True):
         """Converts a %Y%m%dT%H%M%S.%fZ to a UNIX timestamp
         or a datetime.datetime object
@@ -301,18 +341,3 @@ class Client:
             return int(time.timestamp())
         else:
             return time
-
-    def get_battle_logs(self, tag: bstag):
-        """Get a player's battle logs.
-
-        Parameters
-        ----------
-        tag: str
-            A valid player tag.
-            Valid characters: 0289PYLQGRJCUV
-
-        Returns List\[BattleLog, ..., BattleLog\]
-        """
-        url = '{}?tag={}'.format(self.api.BATTLELOG, tag)
-
-        return self._get_model(url, model=BattleLog)

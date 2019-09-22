@@ -1,31 +1,28 @@
 import asynctest
 import asyncio
 import datetime
-import logging
 import os
 
 import brawlstats
 from dotenv import load_dotenv, find_dotenv
 
-load_dotenv(find_dotenv('./.env'))
+load_dotenv(find_dotenv('../.env'))
 
-TOKEN = os.getenv('token')
+TOKEN = os.getenv('unofficial_token')
 
 
 class TestAsyncClient(asynctest.TestCase):
-    """Tests all methods in the asynchronous client that
+    """Tests all methods in the asynchronous BrawlAPI client that
     uses the `aiohttp` module in `brawlstats`
     """
     async def setUp(self):
         self.player_tag = 'GGJVJLU2'
         self.club_tag = 'QCGV8PG'
-        self.client = brawlstats.Client(
+        self.client = brawlstats.BrawlAPI(
             TOKEN,
             is_async=True,
-            timeout=30,
-            debug=True
+            timeout=30
         )
-        logging.basicConfig(level=logging.DEBUG)
 
     async def tearDown(self):
         await asyncio.sleep(1)
@@ -41,17 +38,17 @@ class TestAsyncClient(asynctest.TestCase):
 
     async def test_get_leaderboard_player(self):
         lb = await self.client.get_leaderboard('players')
-        self.assertTrue(isinstance(lb, brawlstats.Leaderboard))
+        self.assertTrue(isinstance(lb, brawlstats.brawlapi.Leaderboard))
         region = await self.client.get_leaderboard('players', region='us')
-        self.assertTrue(isinstance(region, brawlstats.Leaderboard))
+        self.assertTrue(isinstance(region, brawlstats.brawlapi.Leaderboard))
 
     async def test_get_leaderboard_club(self):
         lb = await self.client.get_leaderboard('clubs')
-        self.assertTrue(isinstance(lb, brawlstats.Leaderboard))
+        self.assertTrue(isinstance(lb, brawlstats.brawlapi.Leaderboard))
 
     async def test_get_leaderboard_brawler(self):
-        lb = await self.client.get_leaderboard('shelly')
-        self.assertTrue(isinstance(lb, brawlstats.Leaderboard))
+        lb = await self.client.get_leaderboard('brawlers', brawler='shelly')
+        self.assertTrue(isinstance(lb, brawlstats.brawlapi.Leaderboard))
 
     async def test_get_events(self):
         events = await self.client.get_events()
@@ -59,9 +56,9 @@ class TestAsyncClient(asynctest.TestCase):
 
     async def test_get_constants(self):
         default = await self.client.get_constants()
-        self.assertTrue(isinstance(default, brawlstats.Constants))
+        self.assertTrue(isinstance(default, brawlstats.brawlapi.Constants))
         maps = await self.client.get_constants('maps')
-        self.assertTrue(isinstance(maps, brawlstats.Constants))
+        self.assertTrue(isinstance(maps, brawlstats.brawlapi.Constants))
 
         async def request():
             await self.get_constants(invalid_key)
@@ -78,7 +75,7 @@ class TestAsyncClient(asynctest.TestCase):
 
     async def test_battle_logs(self):
         logs = await self.client.get_battle_logs(self.player_tag)
-        self.assertTrue(isinstance(logs, list))
+        self.assertTrue(isinstance(logs, brawlstats.brawlapi.BattleLog))
 
     # Other
     async def test_invalid_tag(self):
@@ -93,18 +90,18 @@ class TestAsyncClient(asynctest.TestCase):
 
     async def test_invalid_lb(self):
         async def request():
-            await self.client.get_leaderboard(invalid_type, invalid_count)
+            await self.client.get_leaderboard(invalid_type, invalid_limit)
         invalid_type = 'test'
-        invalid_count = 200
+        invalid_limit = 200
         self.assertAsyncRaises(ValueError, request)
         invalid_type = 'players'
-        invalid_count = 'string'
+        invalid_limit = 'string'
         self.assertAsyncRaises(ValueError, request)
         invalid_type = 'players'
-        invalid_count = 201
+        invalid_limit = 201
         self.assertAsyncRaises(ValueError, request)
         invalid_type = 'players'
-        invalid_count = -5
+        invalid_limit = -5
         self.assertAsyncRaises(ValueError, request)
 
 

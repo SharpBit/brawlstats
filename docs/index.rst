@@ -13,21 +13,22 @@ Welcome to Brawl Stats' documentation!
     :target: https://github.com/SharpBit/brawlstats/blob/master/LICENSE
     :alt: MIT License
 
-| Brawl Stats is an easy to use async wrapper for the unofficial `Brawl Stars API`_.
-| To keep up with API changes, discussions, and status, I recommend you join the API's `discord server`_.
+- This library is a sync and async wrapper for https://brawlapi.cf (BrawlAPI) and the official Brawl Stars API.
+- Python 3.5.3 or later is required.
 
 Features
 ~~~~~~~~
 
-- Covers all of the API endpoints.
+- Covers all of the endpoints of both APIs.
 - Use the same client for sync and async usage.
-- Helper functions to access other game files such as maps and audio files.
+- Choose which API you want to use!
+- Access game constants such as maps, brawlers, and images.
 - Easy to use with an object oriented design.
 
 Installation
 ~~~~~~~~~~~~
 
-Install the latest stable version:
+Install the latest stable build:
 
 ::
 
@@ -45,6 +46,3 @@ Indices
 
 * :ref:`genindex`
 * :ref:`search`
-
-.. _Brawl Stars API: https://brawlapi.cf/api
-.. _discord server: https://discord.me/BrawlAPI

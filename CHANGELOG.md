@@ -1,6 +1,22 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [3.0.0]
+### Added
+- Official API support (all endpoints implemented, all methods documented)
+- `Forbidden` error raised when code 403 received
+- New terminology! "BrawlAPI" refers to the [unofficial API](https://api.brawlapi.cf/v1) while "OfficialAPI" refers to the [official API](https://developer.brawlstars.com)
+### Changed (BREAKING)
+- The unofficial API's client will now be accessed as `brawlstats.BrawlAPI` (from `brawlstats.Client`)
+- The unofficial API's models will now be accessed as `brawlstats.brawlapi.ModelName`
+- The official API's client will be accessed by `brawlstats.OfficialAPI`
+- The official API's models will be accessed by `brawlstats.officialapi.ModelName`
+- `get_leaderboard()` will now require "brawlers" for the ranking type and the actual brawler name passed through the brawler kwarg.
+- `get_leaderboard()` `count` argument has been renamed to `limit`
+### Fixed
+- BrawlAPI `get_leaderboard` parameter documentation fixed
+- Arguments passed into functions that require player/club tags now properly get formatted correctly.
+
 ## [2.3.14] - 9/14/19
 ### Changed
 - Default timeout from 10 to 30
@@ -216,3 +232,21 @@ BREAKING CHANGES: Brawl Stars dev team changed "Band" to "Club". This update fix
 ## [2.0.0] - 11/19/18
 ### Added
 - Support for the brand new API at https://brawlapi.cf/api
+
+## [1.5.0] - 2/18/18
+### Added
+- Python 3.5 support!
+
+## [1.2.0] - 2/13/18
+### Changed
+- Base links for the new API changes
+
+## [1.1.12] - 2/7/18
+### Added
+- Essential core
+
+
+
+## [1.0.0]
+### Added
+- Request maker
