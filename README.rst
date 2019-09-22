@@ -55,6 +55,7 @@ Documentation is being hosted on `Read the Docs`_.
 Examples
 ~~~~~~~~
 Examples are in the `examples folder`_. Within each folder, you will find:
+
 - ``sync.py`` shows you basic sync usage
 - ``async.py`` shows you basic async usage
 - ``discord_cog.py`` shows an example Discord Bot cog using `discord.py`_
