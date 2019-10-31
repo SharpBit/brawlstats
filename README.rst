@@ -20,7 +20,7 @@ Brawl Stats
     :target: https://github.com/SharpBit/brawlstats/blob/master/LICENSE
     :alt: MIT License
 
-- This library is a sync and async wrapper for https://brawlapi.cf (BrawlAPI) and the official Brawl Stars API.
+- This library is a sync and async wrapper for https://api.starlist.pro (BrawlAPI) and the official Brawl Stars API.
 - Python 3.5.3 or later is required.
 
 Features
@@ -87,7 +87,7 @@ If you want to contribute, whether it be a bug fix or new feature, make sure to 
 .. _examples folder: https://github.com/SharpBit/brawlstats/tree/master/examples
 .. _discord.py: https://github.com/rapptz/discord.py
 .. _contributing guidelines: https://github.com/SharpBit/brawlstats/blob/master/CONTRIBUTING.md
-.. _dashboard: https://brawlapi.cf/dashboard
+.. _dashboard: https://starlist.pro/dashboard
 
 .. _4JR: https://github.com/fourjr
 .. _OrangutanGaming: https://github.com/OrangutanGaming

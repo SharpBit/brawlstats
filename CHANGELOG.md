@@ -3,13 +3,13 @@ All notable changes to this project will be documented in this file.
 
 ## [3.0.1] - 10/31/19
 ### Changed
-- Base url for BrawlAPI now `api.starlist.pro`
+- Base url for BrawlAPI now https://api.starlist.pro/v1
 
 ## [3.0.0] - 9/22/19
 ### Added
 - Official API support (all endpoints implemented, all methods documented)
 - `Forbidden` error raised when code 403 received
-- New terminology! "BrawlAPI" refers to the [unofficial API](https://api.brawlapi.cf/v1) while "OfficialAPI" refers to the [official API](https://developer.brawlstars.com)
+- New terminology! "BrawlAPI" refers to the [unofficial API](https://api.starlist.pro/v1) while "OfficialAPI" refers to the [official API](https://developer.brawlstars.com)
 ### Changed (BREAKING)
 - The unofficial API's client will now be accessed as `brawlstats.BrawlAPI` (from `brawlstats.Client`)
 - The unofficial API's models will now be accessed as `brawlstats.brawlapi.ModelName`
@@ -66,7 +66,7 @@ All notable changes to this project will be documented in this file.
 - Rosa to the brawler list
 - `prevent_ratelimit` option when initializing a client to wait when chaining requests
 ### Changed
-- Base URL for requests to [the new API URL](https://api.brawlapi.cf/v1)
+- Base URL for requests to [the new API URL](https://api.starlist.pro/v1)
 - Ratelimit updated to API's 3 requests per second
 
 ## [2.3.5] - 4/15/19
@@ -235,7 +235,7 @@ BREAKING CHANGES: Brawl Stars dev team changed "Band" to "Club". This update fix
 
 ## [2.0.0] - 11/19/18
 ### Added
-- Support for the brand new API at https://brawlapi.cf/api
+- Support for the brand new API at https://api.starlist.pro/v1
 
 ## [1.5.0] - 2/18/18
 ### Added
@@ -248,8 +248,6 @@ BREAKING CHANGES: Brawl Stars dev team changed "Band" to "Club". This update fix
 ## [1.1.12] - 2/7/18
 ### Added
 - Essential core
-
-
 
 ## [1.0.0]
 ### Added
