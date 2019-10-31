@@ -8,7 +8,7 @@ from .errors import *
 ############
 
 
-__version__ = 'v3.0.0'
+__version__ = 'v3.0.1'
 __title__ = 'brawlstats'
 __license__ = 'MIT'
 __author__ = 'SharpBit'

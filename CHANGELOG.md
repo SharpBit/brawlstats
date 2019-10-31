@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [3.0.1] - 10/31/19
+### Changed
+- Base url for BrawlAPI now `api.starlist.pro`
+
 ## [3.0.0] - 9/22/19
 ### Added
 - Official API support (all endpoints implemented, all methods documented)

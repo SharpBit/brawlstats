@@ -10,7 +10,7 @@ from ..errors import NotFoundError
 
 class API:
     def __init__(self, base_url, version=1):
-        self.BASE = base_url or 'https://api.brawlapi.cf/v{}'.format(version)
+        self.BASE = base_url or 'https://api.starlist.pro/v{}'.format(version)
         self.PROFILE = self.BASE + '/player'
         self.CLUB = self.BASE + '/club'
         self.LEADERBOARD = self.BASE + '/leaderboards'
