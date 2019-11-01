@@ -24,7 +24,7 @@ class Client:
     Parameters
     ------------
     token: str
-        The API Key that you can get from https://starlist.pro/dashboard
+        The API Key that you can get from https://api.starlist.pro/dashboard
     session: Optional[Session] = None
         Use a current session or a make new one. Can be ``aiohttp.ClientSession()`` or ``requests.Session()``
     timeout: Optional[int] = 30

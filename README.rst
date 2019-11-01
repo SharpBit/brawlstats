@@ -82,12 +82,12 @@ Special thanks to this project's contributors ❤️
 If you want to contribute, whether it be a bug fix or new feature, make sure to follow the `contributing guidelines`_.
 
 .. _create an issue: https://github.com/SharpBit/brawlstats/issues
-.. _discord server: https://discord.me/BrawlAPI
+.. _discord server: https://discord.gg/vbbHXNf
 .. _Read the Docs: https://brawlstats.rtfd.io/
 .. _examples folder: https://github.com/SharpBit/brawlstats/tree/master/examples
 .. _discord.py: https://github.com/rapptz/discord.py
 .. _contributing guidelines: https://github.com/SharpBit/brawlstats/blob/master/CONTRIBUTING.md
-.. _dashboard: https://starlist.pro/dashboard
+.. _dashboard: https://api.starlist.pro/dashboard
 
 .. _4JR: https://github.com/fourjr
 .. _OrangutanGaming: https://github.com/OrangutanGaming
