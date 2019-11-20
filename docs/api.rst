@@ -412,7 +412,7 @@ Name                         Type
 ``highest_trophies``         int
 ``exp_level``                int
 ``exp_points``               int
-``3_vs_3_victories``         int
+``x3_vs_3_victories``        int
 ``solo_victories``           int
 ``duo_victories``            int
 ``best_robo_rumble_time``    int
