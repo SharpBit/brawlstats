@@ -251,10 +251,8 @@ class Client:
         """
         if brawler:
             brawler = brawler.lower()
-        if brawler not in self.api.BRAWLERS and lb_type not in ['players', 'clubs', 'brawlers']:
+        if brawler not in self.api.BRAWLERS.keys() and lb_type not in ['players', 'clubs', 'brawlers']:
             raise ValueError("Please enter 'players', 'clubs' or 'brawlers'.")
-        if brawler in self.api.BRAWLERS.keys():
-            brawler = self.api.BRAWLERS[brawler]
 
         if type(limit) != int:
             raise ValueError("Make sure 'count' is an int")

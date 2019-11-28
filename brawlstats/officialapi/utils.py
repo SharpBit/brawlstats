@@ -14,7 +14,6 @@ class API:
         self.PROFILE = self.BASE + '/players'
         self.CLUB = self.BASE + '/clubs'
         self.RANKINGS = self.BASE + '/rankings'
-        self.BRAWLERS = self.CLUB + '/brawlers'
         self.CONSTANTS = 'https://fourjr.herokuapp.com/bs/constants/'
 
         path = os.path.join(os.path.dirname(__file__), os.path.pardir)
