@@ -8,6 +8,7 @@ from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv('../.env'))
 
 TOKEN = os.getenv('official_token')
+URL = os.getenv('official_api_url')
 
 
 class TestBlockingClient(unittest.TestCase):
@@ -21,6 +22,7 @@ class TestBlockingClient(unittest.TestCase):
         self.client = brawlstats.OfficialAPI(
             TOKEN,
             is_async=False,
+            base_url=URL,
             timeout=30
         )
 

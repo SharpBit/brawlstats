@@ -8,6 +8,7 @@ from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv('../.env'))
 
 TOKEN = os.getenv('official_token')
+URL = os.getenv('official_api_url')
 
 
 class TestAsyncClient(asynctest.TestCase):
@@ -20,6 +21,7 @@ class TestAsyncClient(asynctest.TestCase):
         self.client = brawlstats.OfficialAPI(
             TOKEN,
             is_async=True,
+            base_url=URL,
             timeout=30
         )
 
