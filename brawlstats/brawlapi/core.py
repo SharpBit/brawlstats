@@ -261,7 +261,7 @@ class Client:
 
         url = '{}/{}?count={}&region={}'.format(self.api.LEADERBOARD, lb_type, limit, region)
         if lb_type == 'brawlers':
-            url = '{}/players?count={}&brawlers={}&region={}'.format(self.api.LEADERBOARD, limit, lb_type, region)
+            url = '{}/players?count={}&brawlers={}&region={}'.format(self.api.LEADERBOARD, limit, brawler, region)
 
         return self._get_model(url, model=Leaderboard)
 
