@@ -73,6 +73,7 @@ Contributing
 Special thanks to this project's contributors ❤️
 
 - `4JR`_
+- `kawaii banana`_
 - `kjkui`_
 - `Kyber`_
 - `Pollen`_
@@ -95,3 +96,4 @@ If you want to contribute, whether it be a bug fix or new feature, make sure to 
 .. _kjkui: https://github.com/kjkui
 .. _Kyber: https://github.com/kyb3r
 .. _Pollen: https://github.com/pollen5
+.. _kawaii banana: https://github.com/bananaboy21
