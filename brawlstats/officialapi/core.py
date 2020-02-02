@@ -78,7 +78,7 @@ class Client:
     def close(self):
         return self.session.close()
 
-    def _raise_for_status(self, resp, text, url):
+    def _raise_for_status(self, resp, text):
         """
         Checks for invalid error codes returned by the API.
         """
