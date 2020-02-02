@@ -16,17 +16,22 @@ class API:
         self.RANKINGS = self.BASE + '/rankings'
         self.CONSTANTS = 'https://fourjr.herokuapp.com/bs/constants/'
 
+        # Get package version from __init__.py
         path = os.path.join(os.path.dirname(__file__), os.path.pardir)
         with open(os.path.join(path, '__init__.py')) as f:
             self.VERSION = re.search(r'^__version__ = [\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE).group(1)
 
+        # Get current brawlers and their IDs
         try:
-            data = json.loads(urllib.request.urlopen(self.CONSTANTS).read())
+            data = json.loads(urllib.request.urlopen(self.CONSTANTS + '/characters').read())
         except (TypeError, urllib.error.HTTPError, urllib.error.URLError):
             self.BRAWLERS = {}
         else:
             if data:
-                self.BRAWLERS = {b['tID'].lower(): str(b['scId'])[:2] + '0' + str(b['scId'])[2:] for b in data['characters'] if b['tID']}
+                self.BRAWLERS = {
+                    b['tID'].lower(): str(b['scId'])[:2] + '0' + str(b['scId'])[2:]
+                    for b in data if b['tID']
+                }
             else:
                 self.BRAWLERS = {}
 
@@ -39,7 +44,7 @@ def bstag(tag):
         raise NotFoundError('Tag less than 3 characters.', 404)
     invalid = [c for c in tag if c not in allowed]
     if invalid:
-        raise NotFoundError(invalid, 404)
+        raise NotFoundError(404, invalid)
 
     if not tag.startswith('%23'):
         tag = '%23' + tag
@@ -47,8 +52,8 @@ def bstag(tag):
     return tag
 
 def typecasted(func):
-    '''Decorator that converts arguments via annotations.
-    Source: https://github.com/cgrok/clashroyale/blob/master/clashroyale/official_api/utils.py#L11'''
+    """Decorator that converts arguments via annotations.
+    Source: https://github.com/cgrok/clashroyale/blob/master/clashroyale/official_api/utils.py#L11"""
     signature = inspect.signature(func).parameters.items()
 
     @wraps(func)

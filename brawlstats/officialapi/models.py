@@ -2,9 +2,8 @@ from box import Box, BoxList
 
 
 class BaseBox:
-    def __init__(self, client, resp, data):
+    def __init__(self, client, data):
         self.client = client
-        self.resp = resp
         self.from_data(data)
 
     def from_data(self, data):
@@ -82,8 +81,8 @@ class Members(BaseBox):
     Returns the members in a club.
     """
 
-    def __init__(self, client, resp, data):
-        super().__init__(client, resp, data['items'])
+    def __init__(self, client, data):
+        super().__init__(client, data['items'])
 
     def __len__(self):
         return sum(1 for i in self)
@@ -100,8 +99,8 @@ class Ranking(BaseBox):
     Returns a player or club ranking that contains a list of players or clubs.
     """
 
-    def __init__(self, client, resp, data):
-        super().__init__(client, resp, data['items'])
+    def __init__(self, client, data):
+        super().__init__(client, data['items'])
 
     def __len__(self):
         return sum(1 for i in self)
@@ -118,8 +117,8 @@ class BattleLog(BaseBox):
     Returns a full player battle object with all of its attributes.
     """
 
-    def __init__(self, client, resp, data):
-        super().__init__(client, resp, data['items'])
+    def __init__(self, client, data):
+        super().__init__(client, data['items'])
 
 
 class Constants(BaseBox):
