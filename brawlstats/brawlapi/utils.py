@@ -47,7 +47,7 @@ def bstag(tag):
         raise NotFoundError('Tag less than 3 characters.', 404)
     invalid = [c for c in tag if c not in allowed]
     if invalid:
-        raise NotFoundError(invalid, 404)
+        raise NotFoundError(404, invalid)
     return tag
 
 def typecasted(func):

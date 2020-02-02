@@ -107,7 +107,7 @@ class Client:
             raise Forbidden(code, url, data['message'])
         if code in (400, 404):
             # Tag not found
-            raise NotFoundError(code, url)
+            raise NotFoundError(code)
         if code == 429:
             raise RateLimitError(code, url, int(resp.headers.get('x-ratelimit-reset')) - time.time())
         if code >= 500:
@@ -324,7 +324,7 @@ class Client:
         club_name: str
             The query for the club search.
 
-        Returns List\[PartialClub, ..., PartialClub\]
+        Returns List\[PartialClub\]
         """
         url = self.api.CLUB_SEARCH + '?name=' + club_name
         return self._get_model(url, model=PartialClub)
