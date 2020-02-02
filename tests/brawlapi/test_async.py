@@ -70,7 +70,7 @@ class TestAsyncClient(asynctest.TestCase):
         self.assertEqual(misc.server_date_year, datetime.date.today().year)
 
     async def test_club_search(self):
-        search = await self.client.search_club('Penguin Raft')
+        search = await self.client.search_club('Cactus Bandits')
         self.assertTrue(isinstance(search, list))
 
     async def test_battle_logs(self):
@@ -86,16 +86,13 @@ class TestAsyncClient(asynctest.TestCase):
         invalid_tag = 'AAA'
         self.assertAsyncRaises(brawlstats.NotFoundError, request)
         invalid_tag = '2PPPPPPP'
-        self.assertAsyncRaises(brawlstats.NotFoundError, request)
+        self.assertAsyncRaises(brawlstats.ServerError, request)
 
     async def test_invalid_lb(self):
         async def request():
             await self.client.get_leaderboard(invalid_type, invalid_limit)
         invalid_type = 'test'
         invalid_limit = 200
-        self.assertAsyncRaises(ValueError, request)
-        invalid_type = 'players'
-        invalid_limit = 'string'
         self.assertAsyncRaises(ValueError, request)
         invalid_type = 'players'
         invalid_limit = 201

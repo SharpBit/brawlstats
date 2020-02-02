@@ -18,28 +18,24 @@ class API:
         self.MISC = self.BASE + '/misc'
         self.BATTLELOG = self.PROFILE + '/battlelog'
         self.CLUB_SEARCH = self.CLUB + '/search'
-        self.CONSTANTS = 'https://fourjr.herokuapp.com/bs/constants/'
-        # self.BRAWLERS = [
-        #     'shelly', 'nita', 'colt', 'bull', 'jessie',  # league reward 0-500
-        #     'brock', 'dynamike', 'bo', 'tick', '8-bit'   # league reward 1000+
-        #     'el primo', 'barley', 'poco', 'rosa',        # rare
-        #     'rico', 'penny', 'darryl', 'carl',           # super rare
-        #     'frank', 'pam', 'piper', 'bibi',             # epic
-        #     'mortis', 'tara', 'gene',                    # mythic
-        #     'spike', 'crow', 'leon'                      # legendary
-        # ]
+        self.CONSTANTS = 'https://fourjr.herokuapp.com/bs/constants'
 
+        # Get package version from __init__.py
         path = os.path.join(os.path.dirname(__file__), os.path.pardir)
         with open(os.path.join(path, '__init__.py')) as f:
             self.VERSION = re.search(r'^__version__ = [\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE).group(1)
 
+        # Get current brawlers and their IDs
         try:
-            data = json.loads(urllib.request.urlopen(self.CONSTANTS).read())
+            data = json.loads(urllib.request.urlopen(self.CONSTANTS + '/characters').read())
         except (TypeError, urllib.error.HTTPError, urllib.error.URLError):
             self.BRAWLERS = {}
         else:
             if data:
-                self.BRAWLERS = {b['tID'].lower(): str(b['scId'])[:2] + '0' + str(b['scId'])[2:] for b in data['characters'] if b['tID']}
+                self.BRAWLERS = {
+                    b['tID'].lower(): str(b['scId'])[:2] + '0' + str(b['scId'])[2:]
+                    for b in data if b['tID']
+                }
             else:
                 self.BRAWLERS = {}
 
@@ -55,8 +51,8 @@ def bstag(tag):
     return tag
 
 def typecasted(func):
-    '''Decorator that converts arguments via annotations.
-    Source: https://github.com/cgrok/clashroyale/blob/master/clashroyale/official_api/utils.py#L11'''
+    """Decorator that converts arguments via annotations.
+    Source: https://github.com/cgrok/clashroyale/blob/master/clashroyale/official_api/utils.py#L11"""
     signature = inspect.signature(func).parameters.items()
 
     @wraps(func)

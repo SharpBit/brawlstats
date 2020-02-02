@@ -69,7 +69,7 @@ class TestBlockingClient(unittest.TestCase):
         self.assertEqual(misc.server_date_year, datetime.date.today().year)
 
     def test_club_search(self):
-        search = self.client.search_club('Penguin Raft')
+        search = self.client.search_club('Cactus Bandits')
         self.assertTrue(isinstance(search, list))
 
     def test_battle_logs(self):
@@ -84,15 +84,12 @@ class TestBlockingClient(unittest.TestCase):
         invalid_tag = 'AAA'
         self.assertRaises(brawlstats.NotFoundError, get_player, invalid_tag)
         invalid_tag = '2PPPPPPP'
-        self.assertRaises(brawlstats.NotFoundError, get_player, invalid_tag)
+        self.assertRaises(brawlstats.ServerError, get_player, invalid_tag)
 
     def test_invalid_lb(self):
         get_lb = self.client.get_leaderboard
         invalid_type = 'test'
         invalid_limit = 200
-        self.assertRaises(ValueError, get_lb, invalid_type, invalid_limit)
-        invalid_type = 'players'
-        invalid_limit = 'string'
         self.assertRaises(ValueError, get_lb, invalid_type, invalid_limit)
         invalid_type = 'players'
         invalid_limit = 201

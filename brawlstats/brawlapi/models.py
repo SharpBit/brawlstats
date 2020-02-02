@@ -2,9 +2,8 @@ from box import Box, BoxList
 
 
 class BaseBox:
-    def __init__(self, client, resp, data):
+    def __init__(self, client, data):
         self.client = client
-        self.resp = resp
         self.from_data(data)
 
     def from_data(self, data):
@@ -62,7 +61,7 @@ class Player(BaseBox):
         if full:
             club = self.client.get_club(self.club.tag)
         else:
-            club = PartialClub(self.client, self.resp, self.club)
+            club = PartialClub(self.client, self.club)
         return club
 
 
@@ -137,5 +136,5 @@ class BattleLog(BaseBox):
     Returns a full player battle object with all of its attributes.
     """
 
-    def __init__(self, client, resp, data):
-        super().__init__(client, resp, data['items'])
+    def __init__(self, client, data):
+        super().__init__(client, data['items'])
