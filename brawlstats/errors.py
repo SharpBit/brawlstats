@@ -4,6 +4,9 @@ class RequestError(Exception):
     def __init__(self, code, message, retry_after=None):
         pass
 
+    def __str__(self):
+        return self.message
+
 
 class Unauthorized(RequestError):
     """Raised if your API Key is invalid or blocked."""
@@ -31,6 +34,7 @@ class NotFoundError(RequestError):
     def __init__(self, code, invalid_chars=[]):
         self.code = code
         self.message = 'An incorrect tag has been passed.\nInvalid Characters: ' + ', '.join(invalid_chars)
+        self.invalid_chars = invalid_chars
         super().__init__(self.code, self.message)
 
 
