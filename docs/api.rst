@@ -45,14 +45,14 @@ A full player object (all its statistics)
 
 Attributes:
 
-============================ =======================
+============================ =============
 Name                         Type
-============================ =======================
+============================ =============
 ``tag``                      str
 ``name``                     str
 ``name_color_code``          str
 ``brawlers_unlocked``        int
-``brawlers``                 List[\Brawler, Brawler]
+``brawlers``                 List[Brawler]
 ``victories``                int
 ``solo_showdown_victories``  int
 ``duo_showdown_victories``   int
@@ -67,7 +67,7 @@ Name                         Type
 ``best_robo_rumble_time``    str
 ``has_skins``                bool
 ``club``                     PartialClub
-============================ =======================
+============================ =============
 
 Club
 ~~~~
@@ -78,9 +78,9 @@ must get it from the client or a player object.
 
 Attributes:
 
-===================== =====================
+===================== ============
 Name                  Type
-===================== =====================
+===================== ============
 ``tag``               str
 ``name``              str
 ``status``            str
@@ -91,8 +91,8 @@ Name                  Type
 ``description``       str
 ``badge_id``          int
 ``badge_url``         str
-``members``           List[\Member, Member]
-===================== =====================
+``members``           List[Member]
+===================== ============
 
 PartialClub
 ~~~~~~~~~~~
@@ -209,16 +209,16 @@ a profile’s brawler info by getting Profile.brawlers
 
 Attributes:
 
-==================== ===========
+==================== =============
 Name                 Type
-==================== ===========
+==================== =============
 ``name``             str
 ``has_skin``         bool
-``skin``             str or None
+``skin``             Optional[str]
 ``trophies``         int
 ``highest_trophies`` int
 ``power``            int
-==================== ===========
+==================== =============
 
 Events
 ~~~~~~
@@ -227,12 +227,12 @@ Returns a result of current and upcoming events.
 
 Attributes:
 
-============ ===================
+============ ===========
 Name         Type
-============ ===================
-``current``  List[\Event, Event]
-``upcoming`` List[\Event, Event]
-============ ===================
+============ ===========
+``current``  List[Event]
+``upcoming`` List[Event]
+============ ===========
 
 Event Attributes:
 
@@ -403,9 +403,9 @@ A full player object (all its statistics)
 
 Attributes:
 
-============================ =======================
+============================ =============
 Name                         Type
-============================ =======================
+============================ =============
 ``name``                     str
 ``name_color``               str
 ``trophies``                 int
@@ -419,8 +419,8 @@ Name                         Type
 ``best_time_as_big_brawler`` int
 ``club.tag``                 str
 ``club.name``                str
-``brawlers``                 List[\Brawler, Brawler]
-============================ =======================
+``brawlers``                 List[Brawler]
+============================ =============
 
 Club
 ~~~~
@@ -431,17 +431,17 @@ must get it from the client or a player object.
 
 Attributes:
 
-===================== =====================
+===================== ============
 Name                  Type
-===================== =====================
+===================== ============
 ``tag``               str
 ``name``              str
 ``description``       str
 ``type``              str
 ``trophies``          int
 ``required_trophies`` int
-``members``           List[\Member, Member]
-===================== =====================
+``members``           List[Member]
+===================== ============
 
 Members
 ~~~~~~~
@@ -523,17 +523,17 @@ a profile’s brawler info by getting Profile.brawlers
 
 Attributes:
 
-==================== ==============
+==================== ========
 Name                 Type
-==================== ==============
+==================== ========
 ``id``               int
 ``name``             str
 ``power``            int
 ``rank``             int
 ``trophies``         int
 ``highest_trophies`` int
-``star_powers``      List\[SP, SP\]
-==================== ==============
+``star_powers``      List[SP]
+==================== ========
 
 Star Power
 ~~~~~~~~~~

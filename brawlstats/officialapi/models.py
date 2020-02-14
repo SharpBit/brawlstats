@@ -49,7 +49,7 @@ class Player(BaseBox):
         """
         Gets the player's club.
 
-        Returns None or Club
+        Returns Optional[Club]
         """
         if not self.club:
             return None

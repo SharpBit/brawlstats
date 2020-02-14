@@ -54,7 +54,7 @@ class Player(BaseBox):
         full: Optional[bool] = True
             Whether or not to get the player's full club stats or not.
 
-        Returns None, PartialClub, or Club
+        Returns Optional[Union[PartialClub, Club]]
         """
         if not self.club:
             return None

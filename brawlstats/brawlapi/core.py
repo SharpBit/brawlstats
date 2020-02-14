@@ -324,7 +324,7 @@ class Client:
         club_name: str
             The query for the club search.
 
-        Returns List\[PartialClub\]
+        Returns List[PartialClub]
         """
         url = self.api.CLUB_SEARCH + '?name=' + club_name
         return self._get_model(url, model=PartialClub)
