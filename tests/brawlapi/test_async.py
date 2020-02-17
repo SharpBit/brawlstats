@@ -46,19 +46,21 @@ class TestAsyncClient(asynctest.TestCase):
         self.assertEqual(club.tag, self.club_tag)
 
     async def test_get_leaderboard_player(self):
-        lb = await self.client.get_leaderboard('players')
+        lb = await self.client.get_player_leaderboard(limit=200)
         self.assertIsInstance(lb, Leaderboard)
-        lb = await self.client.get_leaderboard('players', region='us')
+        lb = await self.client.get_player_leaderboard(limit=5, region='us')
         self.assertIsInstance(lb, Leaderboard)
-        lb = await self.client.get_leaderboard('players', region='us', limit=5)
-        self.assertTrue(len(lb) == 5)
 
     async def test_get_leaderboard_club(self):
-        lb = await self.client.get_leaderboard('clubs')
+        lb = await self.client.get_club_leaderboard(limit=200)
+        self.assertIsInstance(lb, Leaderboard)
+        lb = await self.client.get_club_leaderboard(limit=5, region='us')
         self.assertIsInstance(lb, Leaderboard)
 
     async def test_get_leaderboard_brawler(self):
-        lb = await self.client.get_leaderboard('brawlers', brawler='shelly')
+        lb = await self.client.get_club_leaderboard('shelly', limit=200)
+        self.assertIsInstance(lb, Leaderboard)
+        lb = await self.client.get_club_leaderboard('mortis', limit=5, region='us')
         self.assertIsInstance(lb, Leaderboard)
 
     async def test_get_events(self):
@@ -93,24 +95,11 @@ class TestAsyncClient(asynctest.TestCase):
         async def request():
             await self.client.get_player(invalid_tag)
         invalid_tag = 'P'
-        self.assertRaises(brawlstats.NotFoundError, request)
+        self.assertAsyncRaises(brawlstats.NotFoundError, request)
         invalid_tag = 'AAA'
-        self.assertRaises(brawlstats.NotFoundError, request)
+        self.assertAsyncRaises(brawlstats.NotFoundError, request)
         invalid_tag = '2PPPPPPP'
-        self.assertRaises(brawlstats.ServerError, request)
-
-    async def test_invalid_lb(self):
-        async def request():
-            await self.client.get_leaderboard(invalid_type, invalid_limit)
-        invalid_type = 'test'
-        invalid_limit = 200
-        self.assertRaises(ValueError, request)
-        invalid_type = 'players'
-        invalid_limit = 201
-        self.assertRaises(ValueError, request)
-        invalid_type = 'players'
-        invalid_limit = -5
-        self.assertRaises(ValueError, request)
+        self.assertAsyncRaises(brawlstats.ServerError, request)
 
 
 if __name__ == '__main__':

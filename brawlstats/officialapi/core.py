@@ -196,7 +196,7 @@ class Client:
             # Calls the async function
             return self._aget_model(url, model=model, key=key)
 
-        data, resp = self._request(url)
+        data = self._request(url)
         if self.prevent_ratelimit:
             time.sleep(1 / self.ratelimit[0])
 
@@ -259,45 +259,74 @@ class Client:
         url = '{}/{}/members'.format(self.api.CLUB, tag)
         return self._get_model(url, model=Members)
 
-    def get_rankings(self, ranking_type: str, limit: int=200, region='global', brawler=None):
+    def get_player_rankings(self, limit=200, region='global'):
         """
-        Get the top count players/clubs/brawlers.
+        Get the top players.
 
         Parameters
         ----------
-        ranking_type: str
-            The type of ranking. Must be "players", "clubs", "brawlers".
-            Anything else will return a ValueError.
         limit: Optional[int] = 200
             The number of top players or clubs to fetch.
-            If count > 200, it will return a ValueError.
+            If count > 200, it will set the limit to 200.
         region: Optional[str] = "global"
             The region to retrieve from. Must be a 2 letter country code or "global".
-        brawler: Optional[Union[str, int]] = None
-            The brawler name or ID.
 
         Returns Ranking
         """
-        if brawler:
-            brawler = brawler.lower()
-            if brawler not in self.api.BRAWLERS:
-                raise ValueError('Invalid brawler.')
-
-        # Check for invalid parameters
-        if ranking_type not in ('players', 'clubs', 'brawlers'):
-            raise ValueError("'lb_type' must be 'players', 'clubs' or 'brawlers'.")
         if not 0 < limit <= 200:
-            raise ValueError('Make sure limit is between 1 and 200.')
+            limit = 200
+
+        url = '{}/{}/players?limit={}'.format(self.api.RANKINGS, region, limit)
+        return self._get_model(url, model=Ranking)
+
+    def get_club_rankings(self, limit=200, region='global'):
+        """
+        Get the top clubs.
+
+        Parameters
+        ----------
+        limit: Optional[int] = 200
+            The number of top players or clubs to fetch.
+            If count > 200, it will set the limit to 200.
+        region: Optional[str] = "global"
+            The region to retrieve from. Must be a 2 letter country code or "global".
+
+        Returns Ranking
+        """
+        if not 0 < limit <= 200:
+            limit = 200
+
+        url = '{}/{}/clubs?limit={}'.format(self.api.RANKINGS, region, limit)
+        return self._get_model(url, model=Ranking)
+
+    def get_brawler_rankings(self, brawler, limit=200, region='global'):
+        """
+        Get the leaderboard for a certain brawler.
+
+        Parameters
+        ----------
+        brawler: Union[str, int]
+            The brawler name or ID
+        limit: Optional[int] = 200
+            The number of top players or clubs to fetch.
+            If count > 200, it will set the limit to 200.
+        region: Optional[str] = "global"
+            The region to retrieve from. Must be a 2 letter country code or "global".
+
+        Returns Ranking
+        """
+        brawler = brawler.lower()
+        if brawler not in self.api.BRAWLERS:
+            raise ValueError('Invalid brawler.')
+
+        if not 0 < limit <= 200:
+            limit = 200
 
         # Replace brawler name with ID
         if brawler in self.api.BRAWLERS.keys():
             brawler = self.api.BRAWLERS[brawler]
 
-        # Construct URL
-        url = '{}/{}/{}?limit={}'.format(self.api.RANKINGS, region, ranking_type, limit)
-        if ranking_type == 'brawlers':
-            url = '{}/{}/{}/{}?limit={}'.format(self.api.RANKINGS, region, ranking_type, brawler, limit)
-
+        url = '{}/{}/brawlers/{}?limit={}'.format(self.api.RANKINGS, region, brawler, limit)
         return self._get_model(url, model=Ranking)
 
     @typecasted

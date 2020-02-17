@@ -49,19 +49,21 @@ class TestAsyncClient(asynctest.TestCase):
         self.assertIsInstance(members, Members)
 
     async def test_get_rankings_player(self):
-        rankings = await self.client.get_rankings('players')
+        rankings = await self.client.get_player_rankings(limit=200)
         self.assertIsInstance(rankings, Ranking)
-        region = await self.client.get_rankings('players', region='us')
-        self.assertIsInstance(region, Ranking)
+        rankings = await self.client.get_player_rankings(limit=5, region='us')
+        self.assertIsInstance(rankings, Ranking)
 
     async def test_get_rankings_club(self):
-        rankings = await self.client.get_rankings('clubs')
+        rankings = await self.client.get_club_rankings(limit=200)
+        self.assertIsInstance(rankings, Ranking)
+        rankings = await self.client.get_club_rankings(limit=5, region='us')
         self.assertIsInstance(rankings, Ranking)
 
     async def test_get_rankings_brawler(self):
-        rankings = await self.client.get_rankings('brawlers', brawler='shelly')
+        rankings = await self.client.get_brawler_rankings(brawler='shelly', limit=200)
         self.assertIsInstance(rankings, Ranking)
-        rankings = await self.client.get_rankings('brawlers', brawler=16000000)
+        rankings = await self.client.get_brawler_rankings(brawler=16000000, limit=5, region='us')
         self.assertIsInstance(rankings, Ranking)
 
     async def test_get_constants(self):
@@ -89,19 +91,6 @@ class TestAsyncClient(asynctest.TestCase):
         self.assertRaises(brawlstats.NotFoundError, request)
         invalid_tag = '2PPPPPPP'
         self.assertRaises(brawlstats.NotFoundError, request)
-
-    async def test_invalid_rankings(self):
-        async def request():
-            await self.client.get_rankings(invalid_type, invalid_limit)
-        invalid_type = 'test'
-        invalid_limit = 200
-        self.assertRaises(ValueError, request)
-        invalid_type = 'players'
-        invalid_limit = 201
-        self.assertRaises(ValueError, request)
-        invalid_type = 'players'
-        invalid_limit = -5
-        self.assertRaises(ValueError, request)
 
 
 if __name__ == '__main__':

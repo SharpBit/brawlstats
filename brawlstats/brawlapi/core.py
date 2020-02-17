@@ -258,41 +258,73 @@ class Client:
         url = '{}?tag={}'.format(self.api.CLUB, tag)
         return self._get_model(url, model=Club)
 
-    def get_leaderboard(self, lb_type: str, limit: int=200, region='global', brawler=None):
+    def get_player_leaderboard(self, limit=200, region='global'):
         """
-        Get the top count players/clubs/brawlers.
+        Get the top players.
 
         Parameters
         ----------
-        lb_type: str
-            The type of leaderboard. Must be "players", "clubs", "brawlers".
-            Anything else will return a ValueError.
         limit: Optional[int] = 200
-            The number of top players or clubs to fetch.
-            If count > 200, it will return a ValueError.
+            The number of top players to fetch.
+            If limit > 200, it will set the limit to 200.
         region: Optional[str] = "global"
             The region to retrieve from. Must be a 2 letter country code or "global"
-        brawler: Optional[Union[str, int]] = None
-            The brawler name or ID.
 
         Returns Leaderboard
         """
-        if brawler:
-            brawler = brawler.lower()
-            if brawler not in self.api.BRAWLERS.keys():
-                raise ValueError('Invalid brawler.')
+        if not 0 < limit <= 200:
+            limit = 200
+
+        url = '{}/players?count={}&region={}'.format(self.api.LEADERBOARD, limit, region)
+        return self._get_model(url, model=Leaderboard)
+
+    def get_club_leaderboard(self, limit=200, region='global'):
+        """
+        Get the top clubs.
+
+        Parameters
+        ----------
+        limit: Optional[int] = 200
+            The number of top clubs to fetch.
+            If limit > 200, it will set the limit to 200.
+        region: Optional[str] = "global"
+            The region to retrieve from. Must be a 2 letter country code or "global"
+
+        Returns Leaderboard
+        """
 
         # Check for invalid parameters
-        if lb_type not in ('players', 'clubs', 'brawlers'):
-            raise ValueError("'lb_type' must be 'players', 'clubs' or 'brawlers'.")
         if not 0 < limit <= 200:
-            raise ValueError('Make sure limit is between 1 and 200.')
+            limit = 200
 
         # Construct URL
-        url = '{}/{}?count={}&region={}'.format(self.api.LEADERBOARD, lb_type, limit, region)
-        if lb_type == 'brawlers':
-            url = '{}/players?count={}&brawlers={}&region={}'.format(self.api.LEADERBOARD, limit, brawler, region)
+        url = '{}/clubs?count={}&region={}'.format(self.api.LEADERBOARD, limit, region)
+        return self._get_model(url, model=Leaderboard)
 
+    def get_brawler_leaderboard(self, brawler, limit=200, region='global'):
+        """
+        Get the leaderboard for a certain brawler.
+
+        Parameters
+        ----------
+        brawler: str
+            The brawler name to get the leaderboard for.
+        limit: Optional[int] = 200
+            The number of top clubs to fetch.
+            If limit > 200, it will set the limit to 200.
+        region: Optional[str] = "global"
+            The region to retrieve from. Must be a 2 letter country code or "global"
+
+        Returns Leaderboard
+        """
+        brawler = brawler.lower()
+        if brawler not in self.api.BRAWLERS.keys():
+            raise ValueError('Invalid brawler.')
+
+        if not 0 < limit <= 200:
+            limit = 200
+
+        url = '{}/players?brawlers={}&count={}&region={}'.format(self.api.LEADERBOARD, brawler, limit, region)
         return self._get_model(url, model=Leaderboard)
 
     def get_events(self):

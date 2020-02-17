@@ -46,17 +46,21 @@ class TestBlockingClient(unittest.TestCase):
         self.assertEqual(club.tag, self.club_tag)
 
     def test_get_leaderboard_player(self):
-        lb = self.client.get_leaderboard('players')
+        lb = self.client.get_player_leaderboard(limit=200)
         self.assertIsInstance(lb, Leaderboard)
-        region = self.client.get_leaderboard('players', region='us')
-        self.assertIsInstance(region, Leaderboard)
+        lb = self.client.get_player_leaderboard(limit=5, region='us')
+        self.assertIsInstance(lb, Leaderboard)
 
     def test_get_leaderboard_club(self):
-        lb = self.client.get_leaderboard('clubs')
+        lb = self.client.get_club_leaderboard(limit=200)
+        self.assertIsInstance(lb, Leaderboard)
+        lb = self.client.get_club_leaderboard(limit=5, region='us')
         self.assertIsInstance(lb, Leaderboard)
 
     def test_get_leaderboard_brawler(self):
-        lb = self.client.get_leaderboard('brawlers', brawler='shelly')
+        lb = self.client.get_club_leaderboard('shelly', limit=200)
+        self.assertIsInstance(lb, Leaderboard)
+        lb = self.client.get_club_leaderboard('mortis', limit=5, region='us')
         self.assertIsInstance(lb, Leaderboard)
 
     def test_get_events(self):
@@ -94,18 +98,6 @@ class TestBlockingClient(unittest.TestCase):
         self.assertRaises(brawlstats.NotFoundError, get_player, invalid_tag)
         invalid_tag = '2PPPPPPP'
         self.assertRaises(brawlstats.ServerError, get_player, invalid_tag)
-
-    def test_invalid_lb(self):
-        get_lb = self.client.get_leaderboard
-        invalid_type = 'test'
-        invalid_limit = 200
-        self.assertRaises(ValueError, get_lb, invalid_type, invalid_limit)
-        invalid_type = 'players'
-        invalid_limit = 201
-        self.assertRaises(ValueError, get_lb, invalid_type, invalid_limit)
-        invalid_type = 'players'
-        invalid_limit = -5
-        self.assertRaises(ValueError, get_lb, invalid_type, invalid_limit)
 
 
 if __name__ == '__main__':

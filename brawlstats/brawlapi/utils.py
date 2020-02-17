@@ -43,9 +43,7 @@ class API:
 def bstag(tag):
     tag = tag.strip('#').upper().replace('O', '0')
     allowed = '0289PYLQGRJCUV'
-    print(tag)
     if len(tag) < 3:
-        print(f'Less than 3 {tag}')
         raise NotFoundError('Tag less than 3 characters.', 404)
     invalid = [c for c in tag if c not in allowed]
     if invalid:
