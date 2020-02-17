@@ -78,7 +78,6 @@ class TestBlockingClient(unittest.TestCase):
         logs = self.client.get_battle_logs(self.player_tag)
         self.assertIsInstance(logs, BattleLog)
 
-    # Other
     def test_invalid_tag(self):
         get_player = self.client.get_player
         invalid_tag = 'P'

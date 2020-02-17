@@ -1,4 +1,4 @@
-# import datetime
+import datetime
 import unittest
 import os
 import time
@@ -77,9 +77,9 @@ class TestBlockingClient(unittest.TestCase):
         invalid_key = 'invalid'
         self.assertRaises(KeyError, get_constants, invalid_key)
 
-    # def test_get_misc(self):
-    #     misc = self.client.get_misc()
-    #     self.assertEqual(misc.server_date_year, datetime.date.today().year)
+    def test_get_misc(self):
+        misc = self.client.get_misc()
+        self.assertEqual(misc.server_date_year, datetime.date.today().year)
 
     def test_club_search(self):
         search = self.client.search_club('Cactus Bandits')
@@ -89,7 +89,6 @@ class TestBlockingClient(unittest.TestCase):
         logs = self.client.get_battle_logs(self.player_tag)
         self.assertIsInstance(logs, BattleLog)
 
-    # Other
     def test_invalid_tag(self):
         get_player = self.client.get_player
         invalid_tag = 'P'

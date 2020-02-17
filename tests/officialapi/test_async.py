@@ -81,7 +81,6 @@ class TestAsyncClient(asynctest.TestCase):
         logs = await self.client.get_battle_logs(self.player_tag)
         self.assertIsInstance(logs, BattleLog)
 
-    # Other
     async def test_invalid_tag(self):
         async def request():
             await self.client.get_player(invalid_tag)

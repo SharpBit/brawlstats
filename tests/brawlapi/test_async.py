@@ -1,6 +1,6 @@
 import asynctest
 import asyncio
-# import datetime
+import datetime
 import os
 
 import brawlstats
@@ -78,9 +78,9 @@ class TestAsyncClient(asynctest.TestCase):
         invalid_key = 'invalid'
         self.assertRaises(KeyError, request)
 
-    # async def test_get_misc(self):
-    #     misc = await self.client.get_misc()
-    #     self.assertEqual(misc.server_date_year, datetime.date.today().year)
+    async def test_get_misc(self):
+        misc = await self.client.get_misc()
+        self.assertEqual(misc.server_date_year, datetime.date.today().year)
 
     async def test_club_search(self):
         search = await self.client.search_club('Cactus Bandits')
@@ -90,7 +90,6 @@ class TestAsyncClient(asynctest.TestCase):
         logs = await self.client.get_battle_logs(self.player_tag)
         self.assertIsInstance(logs, BattleLog)
 
-    # Other
     async def test_invalid_tag(self):
         async def request():
             await self.client.get_player(invalid_tag)
