@@ -149,7 +149,7 @@ class Client:
             raise ServerError(503, url)
         else:
             # Cache the data if successful
-            self.cache[url] = data[0]
+            self.cache[url] = data
 
         return data
 
@@ -171,7 +171,7 @@ class Client:
             raise ServerError(503, url)
         else:
             # Cache the data if successful
-            self.cache[url] = data[0]
+            self.cache[url] = data
 
         return data
 
@@ -214,7 +214,9 @@ class Client:
 
         if model == Constants:
             if key:
+                print(key)
                 if data.get(key):
+                    print(f'valid key {key}')
                     return model(self, data.get(key))
                 else:
                     raise KeyError('No such Constants key "{}"'.format(key))
@@ -277,11 +279,12 @@ class Client:
         """
         if brawler:
             brawler = brawler.lower()
+            if brawler not in self.api.BRAWLERS.keys():
+                raise ValueError('Invalid brawler.')
+
         # Check for invalid parameters
         if lb_type not in ('players', 'clubs', 'brawlers'):
             raise ValueError("'lb_type' must be 'players', 'clubs' or 'brawlers'.")
-        if brawler not in self.api.BRAWLERS.keys():
-            raise ValueError('Invalid brawler.')
         if not 0 < limit <= 200:
             raise ValueError('Make sure limit is between 1 and 200.')
 

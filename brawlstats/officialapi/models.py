@@ -53,7 +53,8 @@ class Player(BaseBox):
         """
         if not self.club:
             return None
-        return self.client.get_club(self.club.tag)
+        url = '{}?tag={}'.format(self.client.api.CLUB, self.club.tag)
+        return self.client._get_model(url, model=Club)
 
 
 class Club(BaseBox):
@@ -73,7 +74,8 @@ class Club(BaseBox):
 
         Returns Members
         """
-        return self.client.get_club_members(self.tag)
+        url = '{}/{}/members'.format(self.client.api.CLUB, self.tag)
+        return self._get_model(url, model=Members)
 
 
 class Members(BaseBox):

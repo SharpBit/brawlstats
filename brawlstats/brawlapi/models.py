@@ -59,7 +59,8 @@ class Player(BaseBox):
         if not self.club:
             return None
         if full:
-            club = self.client.get_club(self.club.tag)
+            url = '{}?tag={}'.format(self.client.api.CLUB, self.club.tag)
+            club = self.client._get_model(url, model=Club)
         else:
             club = PartialClub(self.client, self.club)
         return club
@@ -82,7 +83,8 @@ class PartialClub(BaseBox):
 
         Returns Club
         """
-        return self.client.get_club(self.tag)
+        url = '{}?tag={}'.format(self.client.api.CLUB, self.tag)
+        return self.client._get_model(url, model=Club)
 
 
 class Club(BaseBox):

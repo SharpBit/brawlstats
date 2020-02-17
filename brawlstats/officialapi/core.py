@@ -142,7 +142,7 @@ class Client:
             raise ServerError(503, url)
         else:
             # Cache the data if successful
-            self.cache[url] = data[0]
+            self.cache[url] = data
 
         return data
 
@@ -167,7 +167,7 @@ class Client:
             raise ServerError(503, url)
         else:
             # Cache the data if successful
-            self.cache[url] = data[0]
+            self.cache[url] = data
 
         return data
 
@@ -278,13 +278,14 @@ class Client:
 
         Returns Ranking
         """
-        if type(brawler) == str:
+        if brawler:
             brawler = brawler.lower()
+            if brawler not in self.api.BRAWLERS:
+                raise ValueError('Invalid brawler.')
+
         # Check for invalid parameters
         if ranking_type not in ('players', 'clubs', 'brawlers'):
             raise ValueError("'lb_type' must be 'players', 'clubs' or 'brawlers'.")
-        if brawler not in self.api.BRAWLERS:
-            raise ValueError('Invalid brawler.')
         if not 0 < limit <= 200:
             raise ValueError('Make sure limit is between 1 and 200.')
 

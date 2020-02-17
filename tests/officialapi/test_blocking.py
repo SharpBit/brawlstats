@@ -94,9 +94,6 @@ class TestBlockingClient(unittest.TestCase):
         invalid_limit = 200
         self.assertRaises(ValueError, get_rankings, invalid_type, invalid_limit)
         invalid_type = 'players'
-        invalid_limit = 'string'
-        self.assertRaises(ValueError, get_rankings, invalid_type, invalid_limit)
-        invalid_type = 'players'
         invalid_limit = 201
         self.assertRaises(ValueError, get_rankings, invalid_type, invalid_limit)
         invalid_type = 'players'

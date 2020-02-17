@@ -1,6 +1,6 @@
 import asynctest
 import asyncio
-import datetime
+# import datetime
 import os
 
 import brawlstats
@@ -48,8 +48,10 @@ class TestAsyncClient(asynctest.TestCase):
     async def test_get_leaderboard_player(self):
         lb = await self.client.get_leaderboard('players')
         self.assertIsInstance(lb, Leaderboard)
-        region = await self.client.get_leaderboard('players', region='us')
-        self.assertIsInstance(region, Leaderboard)
+        lb = await self.client.get_leaderboard('players', region='us')
+        self.assertIsInstance(lb, Leaderboard)
+        lb = await self.client.get_leaderboard('players', region='us', limit=5)
+        self.assertTrue(len(lb) == 5)
 
     async def test_get_leaderboard_club(self):
         lb = await self.client.get_leaderboard('clubs')
@@ -74,9 +76,9 @@ class TestAsyncClient(asynctest.TestCase):
         invalid_key = 'invalid'
         self.assertRaises(KeyError, request)
 
-    async def test_get_misc(self):
-        misc = await self.client.get_misc()
-        self.assertEqual(misc.server_date_year, datetime.date.today().year)
+    # async def test_get_misc(self):
+    #     misc = await self.client.get_misc()
+    #     self.assertEqual(misc.server_date_year, datetime.date.today().year)
 
     async def test_club_search(self):
         search = await self.client.search_club('Cactus Bandits')

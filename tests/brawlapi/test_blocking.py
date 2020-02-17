@@ -1,4 +1,4 @@
-import datetime
+# import datetime
 import unittest
 import os
 import time
@@ -73,9 +73,9 @@ class TestBlockingClient(unittest.TestCase):
         invalid_key = 'invalid'
         self.assertRaises(KeyError, get_constants, invalid_key)
 
-    def test_get_misc(self):
-        misc = self.client.get_misc()
-        self.assertEqual(misc.server_date_year, datetime.date.today().year)
+    # def test_get_misc(self):
+    #     misc = self.client.get_misc()
+    #     self.assertEqual(misc.server_date_year, datetime.date.today().year)
 
     def test_club_search(self):
         search = self.client.search_club('Cactus Bandits')

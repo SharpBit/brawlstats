@@ -97,9 +97,6 @@ class TestAsyncClient(asynctest.TestCase):
         invalid_limit = 200
         self.assertRaises(ValueError, request)
         invalid_type = 'players'
-        invalid_limit = 'string'
-        self.assertRaises(ValueError, request)
-        invalid_type = 'players'
         invalid_limit = 201
         self.assertRaises(ValueError, request)
         invalid_type = 'players'
