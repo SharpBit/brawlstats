@@ -4,6 +4,7 @@ import os
 import time
 
 import brawlstats
+from brawlstats.brawlapi.models import BattleLog, Club, Constants, Events, Leaderboard, PartialClub
 from dotenv import load_dotenv, find_dotenv
 
 load_dotenv(find_dotenv('../.env'))
@@ -33,33 +34,41 @@ class TestBlockingClient(unittest.TestCase):
         player = self.client.get_player(self.player_tag)
         self.assertEqual(player.tag, self.player_tag)
 
+        partialclub = player.get_club(full=False)
+        self.assertIsInstance(partialclub, PartialClub)
+        full_club = partialclub.get_full()
+        self.assertIsInstance(full_club, Club)
+        club = player.get_club()
+        self.assertIsInstance(club, Club)
+
     def test_get_club(self):
         club = self.client.get_club(self.club_tag)
         self.assertEqual(club.tag, self.club_tag)
 
     def test_get_leaderboard_player(self):
         lb = self.client.get_leaderboard('players')
-        self.assertTrue(isinstance(lb, brawlstats.brawlapi.Leaderboard))
+        self.assertIsInstance(lb, Leaderboard)
         region = self.client.get_leaderboard('players', region='us')
-        self.assertTrue(isinstance(region, brawlstats.brawlapi.Leaderboard))
+        self.assertIsInstance(region, Leaderboard)
 
     def test_get_leaderboard_club(self):
         lb = self.client.get_leaderboard('clubs')
-        self.assertTrue(isinstance(lb, brawlstats.brawlapi.Leaderboard))
+        self.assertIsInstance(lb, Leaderboard)
 
     def test_get_leaderboard_brawler(self):
         lb = self.client.get_leaderboard('brawlers', brawler='shelly')
-        self.assertTrue(isinstance(lb, brawlstats.brawlapi.Leaderboard))
+        self.assertIsInstance(lb, Leaderboard)
 
     def test_get_events(self):
         events = self.client.get_events()
-        self.assertTrue(isinstance(events.current, list))
+        self.assertIsInstance(events, Events)
 
     def test_get_constants(self):
         default = self.client.get_constants()
-        self.assertTrue(isinstance(default, brawlstats.brawlapi.Constants))
+        self.assertIsInstance(default, Constants)
         maps = self.client.get_constants('maps')
-        self.assertTrue(isinstance(maps, brawlstats.brawlapi.Constants))
+        self.assertIsInstance(maps, Constants)
+
         get_constants = self.client.get_constants
         invalid_key = 'invalid'
         self.assertRaises(KeyError, get_constants, invalid_key)
@@ -70,11 +79,11 @@ class TestBlockingClient(unittest.TestCase):
 
     def test_club_search(self):
         search = self.client.search_club('Cactus Bandits')
-        self.assertTrue(isinstance(search, list))
+        self.assertIsInstance(search, list)
 
     def test_battle_logs(self):
         logs = self.client.get_battle_logs(self.player_tag)
-        self.assertTrue(isinstance(logs, brawlstats.brawlapi.BattleLog))
+        self.assertIsInstance(logs, BattleLog)
 
     # Other
     def test_invalid_tag(self):
