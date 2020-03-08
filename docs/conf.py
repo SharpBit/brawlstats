@@ -24,7 +24,7 @@ with open('../brawlstats/__init__.py') as f:
 # -- Project information -----------------------------------------------------
 
 project = 'BrawlStats'
-copyright = '2018, SharpBit'
+copyright = '2018-2020, SharpBit'
 author = 'SharpBit'
 
 # The full version, including alpha/beta/rc tags

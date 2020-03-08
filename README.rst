@@ -20,15 +20,14 @@ Brawl Stats
     :target: https://github.com/SharpBit/brawlstats/blob/master/LICENSE
     :alt: MIT License
 
-- This library is a sync and async wrapper for https://api.starlist.pro (BrawlAPI) and the official Brawl Stars API.
+- This library is a sync and async wrapper for the Brawl Stars API.
 - Python 3.5.3 or later is required.
 
 Features
 ~~~~~~~~
 
-- Covers all of the endpoints of both APIs.
+- Covers all of the endpoints of the API.
 - Use the same client for sync and async usage.
-- Choose which API you want to use!
 - Access game constants such as maps, brawlers, and images.
 - Easy to use with an object oriented design.
 
@@ -54,7 +53,7 @@ Documentation is being hosted on `Read the Docs`_.
 
 Examples
 ~~~~~~~~
-Examples are in the `examples folder`_. Within each folder, you will find:
+Examples are in the `examples folder`_.
 
 - ``sync.py`` shows you basic sync usage
 - ``async.py`` shows you basic async usage
@@ -64,9 +63,8 @@ Misc
 ~~~~
 
 - If you are currently using this wrapper, please star this repository :)
-- If you come across an issue in the wrapper, please `create an issue`_. Do **not** PM me on Discord for help.
-- If you need an API Key for BrawlAPI, create one using the `dashboard`_. If you need one for the official API, visit https://developer.brawlstars.com
-- To receive help for using the BrawlAPI, I recommend you join BrawlAPI's `discord server`_.
+- If you come across an issue in the wrapper, please `create an issue`_.
+- If you need an API key, visit https://developer.brawlstars.com
 
 Contributing
 ~~~~~~~~~~~~
@@ -83,12 +81,10 @@ Special thanks to this project's contributors ❤️
 If you want to contribute, whether it be a bug fix or new feature, make sure to follow the `contributing guidelines`_.
 
 .. _create an issue: https://github.com/SharpBit/brawlstats/issues
-.. _discord server: https://discord.gg/vbbHXNf
 .. _Read the Docs: https://brawlstats.rtfd.io/
 .. _examples folder: https://github.com/SharpBit/brawlstats/tree/master/examples
 .. _discord.py: https://github.com/rapptz/discord.py
 .. _contributing guidelines: https://github.com/SharpBit/brawlstats/blob/master/CONTRIBUTING.md
-.. _dashboard: https://api.starlist.pro/dashboard
 
 .. _4JR: https://github.com/fourjr
 .. _OrangutanGaming: https://github.com/OrangutanGaming

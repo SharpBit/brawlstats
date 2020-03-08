@@ -1,7 +1,18 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [3.0.3] - 3/8/20
+## [4.0.0] - TBD
+### Added
+- `reason` attribute for `NotFoundError`
+### Removed
+- BrawlAPI client
+### Changed
+- `Client.get_datetime` moved to utils
+- `get_rankings` now requires all arguments to be keyword arguments
+### Fixed
+- Brawler leaderboard now works
+
+## [3.0.4] - 3/8/20
 ### Added
 - `invalid_chars` attribute for `NotFoundError` when applicable
 - `url` attribute for all errors that have requested a URL

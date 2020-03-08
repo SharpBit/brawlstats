@@ -6,9 +6,6 @@ The possible exceptions thrown by the library.
 .. autoexception:: brawlstats.errors.RequestError
        :members:
 
-.. autoexception:: brawlstats.errors.Unauthorized
-       :members:
-
 .. autoexception:: brawlstats.errors.Forbidden
        :members:
 
@@ -22,7 +19,4 @@ The possible exceptions thrown by the library.
        :members:
 
 .. autoexception:: brawlstats.errors.ServerError
-       :members:
-
-.. autoexception:: brawlstats.errors.MaintenanceError
        :members:
