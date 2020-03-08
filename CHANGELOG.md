@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [3.0.3] - TBD
+## [3.0.3] - 3/8/20
 ### Added
 - `invalid_chars` attribute for `NotFoundError` when applicable
 - `url` attribute for all errors that have requested a URL
