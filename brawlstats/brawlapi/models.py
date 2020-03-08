@@ -1,4 +1,5 @@
 from box import Box, BoxList
+from .utils import bstag
 
 
 class BaseBox:
@@ -59,7 +60,7 @@ class Player(BaseBox):
         if not self.club:
             return None
         if full:
-            url = '{}?tag={}'.format(self.client.api.CLUB, self.club.tag)
+            url = '{}?tag={}'.format(self.client.api.CLUB, bstag(self.club.tag))
             club = self.client._get_model(url, model=Club)
         else:
             club = PartialClub(self.client, self.club)

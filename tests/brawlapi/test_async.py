@@ -103,13 +103,13 @@ class TestAsyncClient(asynctest.TestCase):
             await self.client.get_leaderboard(invalid_type, invalid_limit)
         invalid_type = 'test'
         invalid_limit = 200
-        self.assertRaises(ValueError, request)
+        self.assertAsyncRaises(ValueError, request)
         invalid_type = 'players'
         invalid_limit = 201
-        self.assertRaises(ValueError, request)
+        self.assertAsyncRaises(ValueError, request)
         invalid_type = 'players'
         invalid_limit = -5
-        self.assertRaises(ValueError, request)
+        self.assertAsyncRaises(ValueError, request)
 
 
 if __name__ == '__main__':

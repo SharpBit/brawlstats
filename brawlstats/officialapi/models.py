@@ -1,4 +1,5 @@
 from box import Box, BoxList
+from .utils import bstag
 
 
 class BaseBox:
@@ -53,7 +54,7 @@ class Player(BaseBox):
         """
         if not self.club:
             return None
-        url = '{}?tag={}'.format(self.client.api.CLUB, self.club.tag)
+        url = '{}/{}'.format(self.client.api.CLUB, bstag(self.club.tag))
         return self.client._get_model(url, model=Club)
 
 
@@ -74,8 +75,8 @@ class Club(BaseBox):
 
         Returns Members
         """
-        url = '{}/{}/members'.format(self.client.api.CLUB, self.tag)
-        return self._get_model(url, model=Members)
+        url = '{}/{}/members'.format(self.client.api.CLUB, bstag(self.tag))
+        return self.client._get_model(url, model=Members)
 
 
 class Members(BaseBox):

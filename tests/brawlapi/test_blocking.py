@@ -98,13 +98,13 @@ class TestBlockingClient(unittest.TestCase):
         get_lb = self.client.get_leaderboard
         invalid_type = 'test'
         invalid_limit = 200
-        self.assertRaises(ValueError, get_lb, invalid_type, invalid_limit)
+        self.assertAsyncRaises(ValueError, get_lb, invalid_type, invalid_limit)
         invalid_type = 'players'
         invalid_limit = 201
-        self.assertRaises(ValueError, get_lb, invalid_type, invalid_limit)
+        self.assertAsyncRaises(ValueError, get_lb, invalid_type, invalid_limit)
         invalid_type = 'players'
         invalid_limit = -5
-        self.assertRaises(ValueError, get_lb, invalid_type, invalid_limit)
+        self.assertAsyncRaises(ValueError, get_lb, invalid_type, invalid_limit)
 
 
 if __name__ == '__main__':

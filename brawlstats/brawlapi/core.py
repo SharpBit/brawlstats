@@ -204,7 +204,7 @@ class Client:
             # Calls the async function
             return self._aget_model(url, model=model, key=key)
 
-        data, resp = self._request(url)
+        data = self._request(url)
         if self.prevent_ratelimit:
             time.sleep(1 / self.ratelimit[0])
 
@@ -214,9 +214,7 @@ class Client:
 
         if model == Constants:
             if key:
-                print(key)
                 if data.get(key):
-                    print(f'valid key {key}')
                     return model(self, data.get(key))
                 else:
                     raise KeyError('No such Constants key "{}"'.format(key))
