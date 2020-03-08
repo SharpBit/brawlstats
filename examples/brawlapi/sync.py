@@ -13,7 +13,7 @@ best_players = club.members[:5]  # members sorted by trophies, gets best 5 playe
 for player in best_players:
     print(player.name, player.trophies)  # prints name and trophies
 
-leaderboard = client.get_player_leaderboard(limit=5)  # gets top 5 players
+leaderboard = client.get_leaderboard('players', limit=5)  # gets top 5 players
 for player in leaderboard:
     print(player.name, player.position)
 

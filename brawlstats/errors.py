@@ -33,10 +33,8 @@ class NotFoundError(RequestError):
 
     def __init__(self, code, invalid_chars=[]):
         self.code = code
+        self.message = 'An incorrect tag has been passed.\nInvalid Characters: ' + ', '.join(invalid_chars)
         self.invalid_chars = invalid_chars
-        self.message = 'An incorrect tag has been passed.'
-        if invalid_chars:
-            self.message += '\nInvalid Characters: ' + ', '.join(invalid_chars)
         super().__init__(self.code, self.message)
 
 

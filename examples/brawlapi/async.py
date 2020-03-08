@@ -16,7 +16,7 @@ async def main():
     for player in best_players:
         print(player.name, player.trophies)
 
-    leaderboard = await client.get_player_leaderboard(limit=5)  # gets top 5 players
+    leaderboard = await client.get_leaderboard('players', limit=5)  # gets top 5 players
     for player in leaderboard:
         print(player.name, player.position)
 

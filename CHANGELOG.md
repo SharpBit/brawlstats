@@ -1,15 +1,13 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [3.0.3] - 2/17/20
+## [3.0.3] - TBD
 ### Added
 - `invalid_chars` attribute for `NotFoundError` when applicable
 - `url` attribute for all errors that have requested a URL
 - `str(error)` will return the message attribute of the error.
 ### Changed
 - The `error` attribute for all errors have been renamed to `message`
-- For BrawlAPI: `get_leaderboard` split up into `get_player_leaderboard`, `get_club_leaderboard`, and `get_brawler_leaderboard`
-- For the official API: `get_rankings` split up into `get_player_rankings`, `get_club_rankings`, and `get_brawler_rankings`
 
 ## [3.0.2] - 12/22/19
 ### Fixed
