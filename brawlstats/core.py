@@ -69,7 +69,7 @@ class Client:
         }
 
     def __repr__(self):
-        return '<OfficialAPI-Client async={} timeout={} debug={}>'.format(self.is_async, self.timeout, self.debug)
+        return '<Client async={} timeout={} debug={}>'.format(self.is_async, self.timeout, self.debug)
 
     def close(self):
         return self.session.close()
