@@ -26,6 +26,11 @@ Data Models
     :members:
 
 
+Attributes of Data Models
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Note: These are subject to change at any time. Visit https://developer.brawlstars.com/#/documentation to view up-to-date information on the API.
+
 Player
 ~~~~~~
 
@@ -34,24 +39,28 @@ A full player object (all its statistics)
 
 Attributes:
 
-============================ =============
-Name                         Type
-============================ =============
-``name``                     str
-``name_color``               str
-``trophies``                 int
-``highest_trophies``         int
-``exp_level``                int
-``exp_points``               int
-``x3_vs_3_victories``        int
-``solo_victories``           int
-``duo_victories``            int
-``best_robo_rumble_time``    int
-``best_time_as_big_brawler`` int
-``club.tag``                 str
-``club.name``                str
-``brawlers``                 List[Brawler]
-============================ =============
+============================================ =============
+Name                                         Type
+============================================ =============
+``tag``                                      str
+``name``                                     str
+``name_color``                               str
+``trophies``                                 int
+``highest_trophies``                         int
+``power_play_points``                        int
+``highest_power_play_points``                int
+``exp_level``                                int
+``exp_points``                               int
+``is_qualified_from_championship_challenge`` bool
+``x3_vs_3_victories``                        int
+``solo_victories``                           int
+``duo_victories``                            int
+``best_robo_rumble_time``                    int
+``best_time_as_big_brawler``                 int
+``club.tag``                                 str
+``club.name``                                str
+``brawlers``                                 List[Brawler]
+============================================ =============
 
 Club
 ~~~~
@@ -102,7 +111,7 @@ Ranking
 
 Returns a list of top players, clubs, or brawlers. To access this, do ``ranking[index]``
 
-Player attributes:
+Player/Brawler attributes:
 
 ============== ====
 Name           Type
@@ -127,24 +136,11 @@ Name             Type
 ``member_count`` int
 ================ ====
 
-Brawler attributes:
-
-============== ====
-Name           Type
-============== ====
-``tag``        str
-``name``       str
-``name_color`` str
-``trophies``   int
-``rank``       int
-``club.name``  str
-============== ====
-
 Brawler
 ~~~~~~~
 
 Returns a brawler object with the following attributes. You can retrieve
-a profile’s brawler info by getting Profile.brawlers
+a profile’s brawler info by getting ``Profile.brawlers``
 
 .. code:: py
 

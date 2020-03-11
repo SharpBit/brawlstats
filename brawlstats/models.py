@@ -95,9 +95,6 @@ class Members(BaseBox):
     def __repr__(self):
         return '<Members object count={}>'.format(len(self))
 
-    def __str__(self):
-        return 'Members containing {} items'.format(len(self))
-
 
 class Ranking(BaseBox):
     """
@@ -112,9 +109,6 @@ class Ranking(BaseBox):
 
     def __repr__(self):
         return '<Ranking object count={}>'.format(len(self))
-
-    def __str__(self):
-        return 'Ranking containing {} items'.format(len(self))
 
 
 class BattleLog(BaseBox):
