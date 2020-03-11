@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [4.0.0] - TBD
+## [4.0.0] - 3/11/20
 ### Added
 - `reason` attribute for `NotFoundError`
 ### Removed
