@@ -13,17 +13,18 @@ Welcome to Brawl Stats' documentation!
     :target: https://github.com/SharpBit/brawlstats/blob/master/LICENSE
     :alt: MIT License
 
-- This library is a sync and async wrapper for https://api.starlist.pro/v1 (BrawlAPI) and the official Brawl Stars API.
+- This library is a sync and async wrapper for the Brawl Stars API.
 - Python 3.5.3 or later is required.
 
 Features
 ~~~~~~~~
 
-- Covers all of the endpoints of both APIs.
-- Use the same client for sync and async usage.
-- Choose which API you want to use!
-- Access game constants such as maps, brawlers, and images.
 - Easy to use with an object oriented design.
+- Use the same client for sync and async usage.
+- Get a player profile and battlelog.
+- Get a club and its members.
+- Get the top 200 rankings for players, clubs, or a specific brawler.
+- Get information about maps, brawlers, and more!
 
 Installation
 ~~~~~~~~~~~~

@@ -1,5 +1,5 @@
-from .brawlapi import Client as BrawlAPI
-from .officialapi import Client as OfficialAPI
+from .core import Client
+from .models import *
 from .errors import *
 
 
@@ -8,7 +8,7 @@ from .errors import *
 ############
 
 
-__version__ = 'v3.0.4'
+__version__ = 'v4.0.0'
 __title__ = 'brawlstats'
 __license__ = 'MIT'
 __author__ = 'SharpBit'

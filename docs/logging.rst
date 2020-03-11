@@ -20,9 +20,9 @@ The optional ``level`` argument specifies what level of events to log
 out and can any of ``CRITICAL``, ``ERROR``, ``WARNING``, ``INFO``, and
 ``DEBUG`` and if not specified defaults to ``WARNING``.
 
-More advance setups are possible with the :mod:`logging` module.  To for
-example write the logs to a file called ``brawlstars.log`` instead of
-outputting them to to the console the following snippet can be used
+More advanced setups are possible with the :mod:`logging` module. For example,
+to write the logs to a file called ``brawlstars.log`` instead of
+outputting them to to the console, the following snippet can be used:
 
 .. code-block:: python
 

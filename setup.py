@@ -1,8 +1,6 @@
-from setuptools import setup, find_packages
-
-import json
 import re
-import urllib.request
+
+from setuptools import find_packages, setup
 
 with open('README.rst', encoding='utf8') as f:
     long_description = f.read()
@@ -17,7 +15,7 @@ with open('requirements.txt') as f:
 setup(
     name='brawlstats',
     version=version,
-    description='An easy-to-use wrapper for the unofficial Brawl Stars API',
+    description='An easy-to-use wrapper for the Brawl Stars API',
     long_description=long_description,
     long_description_content_type='text/x-rst',
     url='https://github.com/SharpBit/brawlstats',
@@ -45,13 +43,3 @@ setup(
         'Natural Language :: English'
     ]
 )
-
-# Reload Constants
-try:
-    data = json.loads(urllib.request.urlopen('https://fourjr-webserver.herokuapp.com/bs/constants').read())
-except (TypeError, urllib.error.HTTPError, urllib.error.URLError):
-    pass
-else:
-    if data:
-        with open('brawlstats/constants.json', 'w') as f:
-            json.dump(data, f)
