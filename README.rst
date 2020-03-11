@@ -26,10 +26,12 @@ Brawl Stats
 Features
 ~~~~~~~~
 
-- Covers all of the endpoints of the API.
-- Use the same client for sync and async usage.
-- Access game constants such as maps, brawlers, and images.
 - Easy to use with an object oriented design.
+- Use the same client for sync and async usage.
+- Get a player profile and battlelog.
+- Get a club and its members.
+- Get the top 200 rankings for players, clubs, or a specific brawler.
+- Get information about maps, brawlers, and more!
 
 Installation
 ~~~~~~~~~~~~
@@ -44,7 +46,7 @@ Install the development build:
 
 ::
 
-   pip install git+https://github.com/SharpBit/brawlstats
+   pip install git+https://github.com/SharpBit/brawlstats@development
 
 Documentation
 ~~~~~~~~~~~~~
