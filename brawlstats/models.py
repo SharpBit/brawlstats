@@ -42,6 +42,10 @@ class Player(BaseBox):
     Returns a full player object with all of its attributes.
     """
 
+    def __init__(self):
+        # Make a less awkward alias
+        self.team_victories = self.x3vs3_victories
+
     def __repr__(self):
         return "<Player object name='{0.name}' tag='{0.tag}'>".format(self)
 

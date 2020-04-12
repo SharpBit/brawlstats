@@ -52,7 +52,8 @@ Name                                         Type
 ``exp_level``                                int
 ``exp_points``                               int
 ``is_qualified_from_championship_challenge`` bool
-``x3_vs_3_victories``                        int
+``x3vs3_victories``                          int
+``team_victories``                           int
 ``solo_victories``                           int
 ``duo_victories``                            int
 ``best_robo_rumble_time``                    int
