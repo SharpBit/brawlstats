@@ -42,8 +42,8 @@ class Player(BaseBox):
     Returns a full player object with all of its attributes.
     """
 
-    def __init__(self):
-        # Make a less awkward alias
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.team_victories = self.x3vs3_victories
 
     def __repr__(self):
