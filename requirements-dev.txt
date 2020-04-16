@@ -1,6 +1,6 @@
-python-dotenv
-flake8
 asynctest
+flake8
 pytest
+pytest-asyncio
+python-dotenv
 tox-travis
-pluggy>=0.12.0,<1.0.0
