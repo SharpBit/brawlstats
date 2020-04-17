@@ -36,9 +36,14 @@ class TestAsyncClient(asynctest.TestCase):
         self.assertIsInstance(club, brawlstats.Club)
         self.assertEqual(club.tag, self.CLUB_TAG)
 
-        await self.assertAsyncRaises(brawlstats.NotFoundError, self.client.get_player('2PPPPPPP'))
-        await self.assertAsyncRaises(brawlstats.NotFoundError, self.client.get_player('P'))
-        await self.assertAsyncRaises(brawlstats.NotFoundError, self.client.get_player('AAA'))
+        with self.assertRaises(brawlstats.NotFoundError):
+            await self.client.get_player('2PPPPPPP')
+
+        with self.assertRaises(brawlstats.NotFoundError):
+            await self.client.get_player('P')
+
+        with self.assertRaises(brawlstats.NotFoundError):
+            await self.client.get_player('AAA')
 
     async def test_get_battle_logs(self):
         battle_logs = await self.client.get_battle_logs(self.PLAYER_TAG)
@@ -53,9 +58,14 @@ class TestAsyncClient(asynctest.TestCase):
         self.assertIsInstance(club_members, brawlstats.Members)
         self.assertIn(self.PLAYER_TAG, [x.tag for x in club_members])
 
-        await self.assertAsyncRaises(brawlstats.NotFoundError, self.client.get_club('8GGGGGGG'))
-        await self.assertAsyncRaises(brawlstats.NotFoundError, self.client.get_club('P'))
-        await self.assertAsyncRaises(brawlstats.NotFoundError, self.client.get_club('AAA'))
+        with self.assertRaises(brawlstats.NotFoundError):
+            await self.client.get_club('8GGGGGGG')
+
+        with self.assertRaises(brawlstats.NotFoundError):
+            await self.client.get_club('P')
+
+        with self.assertRaises(brawlstats.NotFoundError):
+            await self.client.get_club('AAA')
 
     async def test_get_club_members(self):
         club_members = await self.client.get_club_members(self.CLUB_TAG)
