@@ -24,7 +24,6 @@ class TestAsyncClient(asynctest.TestCase):
             os.getenv('token'),
             base_url=os.getenv('base_url'),
             is_async=True,
-            loop=self.loop,
             session=session
         )
 
@@ -97,8 +96,8 @@ class TestAsyncClient(asynctest.TestCase):
 
         await self.assertAsyncRaises(KeyError, self.client.get_constants('invalid'))
 
-    async def asyncTearDown(self):
-        await self.client.close()
+    def tearDown(self):
+        self.client.close()
 
 
 if __name__ == '__main__':
