@@ -24,7 +24,10 @@ class API:
 
         # Get current brawlers and their IDs
         try:
-            data = json.loads(urllib.request.urlopen(self.CONSTANTS + '/characters').read())
+            resp = urllib.request.urlopen(self.CONSTANTS + '/characters').read()
+            if isinstance(resp, bytes):
+                resp = resp.decode('utf-8')
+            data = json.loads(resp)
         except (TypeError, urllib.error.HTTPError, urllib.error.URLError):
             self.BRAWLERS = {}
         else:

@@ -1,108 +1,120 @@
-import asynctest
-import asyncio
 import os
 
+import aiohttp
+import asynctest
 import brawlstats
-from brawlstats.models import BattleLog, Club, Constants, Members, Ranking
-from dotenv import load_dotenv, find_dotenv
+import pytest
+from dotenv import load_dotenv
 
-load_dotenv(find_dotenv('.env'))
-
-TOKEN = os.getenv('token')
-URL = os.getenv('base_url')
+pytestmark = pytest.mark.asyncio
+load_dotenv()
 
 
 class TestAsyncClient(asynctest.TestCase):
-    """Tests all methods in the asynchronous client that
-    uses the `aiohttp` module in `brawlstats`
-    """
+    use_default_loop = True
+
+    PLAYER_TAG = '#GGJVJLU2'
+    CLUB_TAG = '#QCCQCGV'
+
     async def setUp(self):
-        self.player_tag = '#GGJVJLU2'
-        self.club_tag = '#QCGV8PG'
+        session = aiohttp.ClientSession(loop=self.loop)
+
         self.client = brawlstats.Client(
-            TOKEN,
+            os.getenv('token'),
+            base_url=os.getenv('base_url'),
             is_async=True,
-            base_url=URL,
-            timeout=30
+            session=session
         )
 
-    async def tearDown(self):
-        await asyncio.sleep(1)
-        await self.client.close()
-
     async def test_get_player(self):
-        player = await self.client.get_player(self.player_tag)
-        self.assertEqual(player.tag, self.player_tag)
+        player = await self.client.get_player(self.PLAYER_TAG)
+        self.assertIsInstance(player, brawlstats.Player)
+        self.assertEqual(player.tag, self.PLAYER_TAG)
 
         club = await player.get_club()
-        self.assertIsInstance(club, Club)
+        self.assertIsInstance(club, brawlstats.Club)
+        self.assertEqual(club.tag, self.CLUB_TAG)
+
+        with self.assertRaises(brawlstats.NotFoundError):
+            await self.client.get_player('2PPPPPPP')
+
+        with self.assertRaises(brawlstats.NotFoundError):
+            await self.client.get_player('P')
+
+        with self.assertRaises(brawlstats.NotFoundError):
+            await self.client.get_player('AAA')
+
+    async def test_get_battle_logs(self):
+        battle_logs = await self.client.get_battle_logs(self.PLAYER_TAG)
+        self.assertIsInstance(battle_logs, brawlstats.BattleLog)
 
     async def test_get_club(self):
-        club = await self.client.get_club(self.club_tag)
-        self.assertEqual(club.tag, self.club_tag)
+        club = await self.client.get_club(self.CLUB_TAG)
+        self.assertIsInstance(club, brawlstats.Club)
+        self.assertEqual(club.tag, self.CLUB_TAG)
 
-        members = await club.get_members()
-        self.assertIsInstance(members, Members)
+        club_members = await club.get_members()
+        self.assertIsInstance(club_members, brawlstats.Members)
+        self.assertIn(self.PLAYER_TAG, [x.tag for x in club_members])
+
+        with self.assertRaises(brawlstats.NotFoundError):
+            await self.client.get_club('8GGGGGGG')
+
+        with self.assertRaises(brawlstats.NotFoundError):
+            await self.client.get_club('P')
+
+        with self.assertRaises(brawlstats.NotFoundError):
+            await self.client.get_club('AAA')
 
     async def test_get_club_members(self):
-        members = await self.client.get_club_members(self.club_tag)
-        self.assertIsInstance(members, Members)
+        club_members = await self.client.get_club_members(self.CLUB_TAG)
+        self.assertIsInstance(club_members, brawlstats.Members)
+        self.assertIn(self.PLAYER_TAG, [x.tag for x in club_members])
 
-    async def test_get_rankings_player(self):
-        rankings = await self.client.get_rankings(ranking='players')
-        self.assertIsInstance(rankings, Ranking)
-        region = await self.client.get_rankings(ranking='players', region='us')
-        self.assertIsInstance(region, Ranking)
+        await self.assertAsyncRaises(brawlstats.NotFoundError, self.client.get_club_members('8GGGGGGG'))
 
-    async def test_get_rankings_club(self):
-        rankings = await self.client.get_rankings(ranking='clubs')
-        self.assertIsInstance(rankings, Ranking)
-        limit = await self.client.get_rankings(ranking='clubs', limit=100)
-        self.assertTrue(len(limit) == 100)
+    async def test_get_rankings(self):
+        player_ranking = await self.client.get_rankings(ranking='players')
+        self.assertIsInstance(player_ranking, brawlstats.Ranking)
 
-    async def test_get_rankings_brawler(self):
-        rankings = await self.client.get_rankings(ranking='brawlers', brawler='shelly')
-        self.assertIsInstance(rankings, Ranking)
-        rankings = await self.client.get_rankings(ranking='brawlers', brawler=16000000)
-        self.assertIsInstance(rankings, Ranking)
+        us_player_ranking = await self.client.get_rankings(ranking='players', region='US', limit=1)
+        self.assertIsInstance(us_player_ranking, brawlstats.Ranking)
+        self.assertTrue(len(us_player_ranking) == 1)
+
+        club_ranking = await self.client.get_rankings(ranking='clubs')
+        self.assertIsInstance(club_ranking, brawlstats.Ranking)
+
+        us_club_ranking = await self.client.get_rankings(ranking='clubs', region='US', limit=1)
+        self.assertIsInstance(us_club_ranking, brawlstats.Ranking)
+        self.assertTrue(len(us_club_ranking) == 1)
+
+        brawler_ranking = await self.client.get_rankings(ranking='brawlers', brawler='Shelly')
+        self.assertIsInstance(brawler_ranking, brawlstats.Ranking)
+
+        us_brawler_ranking = await self.client.get_rankings(ranking='brawlers', brawler=16000000, region='US', limit=1)
+        self.assertIsInstance(us_brawler_ranking, brawlstats.Ranking)
+        self.assertTrue(len(us_brawler_ranking) == 1)
+
+        with self.assertRaises(ValueError):
+            await self.client.get_rankings(ranking='people')
+
+        with self.assertRaises(ValueError):
+            await self.client.get_rankings(ranking='people', limit=0)
+
+        with self.assertRaises(ValueError):
+            await self.client.get_rankings(ranking='brawlers', brawler='SharpBit')
 
     async def test_get_constants(self):
-        default = await self.client.get_constants()
-        self.assertIsInstance(default, Constants)
+        constants = await self.client.get_constants()
+        self.assertIsInstance(constants, brawlstats.Constants)
+
         maps = await self.client.get_constants('maps')
-        self.assertIsInstance(maps, Constants)
+        self.assertIsInstance(maps, brawlstats.Constants)
 
-        async def request():
-            await self.get_constants(invalid_key)
-        invalid_key = 'invalid'
-        self.assertAsyncRaises(KeyError, request)
+        await self.assertAsyncRaises(KeyError, self.client.get_constants('invalid'))
 
-    async def test_battle_logs(self):
-        logs = await self.client.get_battle_logs(self.player_tag)
-        self.assertIsInstance(logs, BattleLog)
-
-    async def test_invalid_tag(self):
-        async def request():
-            await self.client.get_player(invalid_tag)
-        invalid_tag = 'P'
-        self.assertAsyncRaises(brawlstats.NotFoundError, request)
-        invalid_tag = 'AAA'
-        self.assertAsyncRaises(brawlstats.NotFoundError, request)
-        invalid_tag = '2PPPPPPP'
-        self.assertAsyncRaises(brawlstats.NotFoundError, request)
-
-    async def test_invalid_rankings(self):
-        async def request():
-            await self.client.get_rankings(ranking=invalid_ranking, limit=invalid_limit)
-        invalid_ranking = 'test'
-        invalid_limit = 200
-        self.assertAsyncRaises(ValueError, request)
-        invalid_ranking = 'players'
-        invalid_limit = 201
-        self.assertAsyncRaises(ValueError, request)
-        invalid_ranking = 'players'
-        invalid_limit = -5
-        self.assertAsyncRaises(ValueError, request)
+    async def asyncTearDown(self):
+        await self.client.close()
 
 
 if __name__ == '__main__':
