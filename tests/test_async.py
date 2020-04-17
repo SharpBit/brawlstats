@@ -7,6 +7,7 @@ import pytest
 from dotenv import load_dotenv
 
 pytestmark = pytest.mark.asyncio
+load_dotenv()
 
 
 class TestAsyncClient(asynctest.TestCase):
@@ -16,8 +17,6 @@ class TestAsyncClient(asynctest.TestCase):
     CLUB_TAG = '#QCCQCGV'
 
     async def setUp(self):
-        load_dotenv()
-
         session = aiohttp.ClientSession(loop=self.loop)
 
         self.client = brawlstats.Client(

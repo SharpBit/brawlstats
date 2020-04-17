@@ -4,6 +4,8 @@ import unittest
 import brawlstats
 from dotenv import load_dotenv
 
+load_dotenv()
+
 
 class TestBlockingClient(unittest.TestCase):
 
@@ -11,7 +13,6 @@ class TestBlockingClient(unittest.TestCase):
     CLUB_TAG = '#QCCQCGV'
 
     def setUp(self):
-        load_dotenv()
 
         self.client = brawlstats.Client(
             os.getenv('token'),
