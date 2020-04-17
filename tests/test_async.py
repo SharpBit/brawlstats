@@ -114,8 +114,8 @@ class TestAsyncClient(asynctest.TestCase):
 
         await self.assertAsyncRaises(KeyError, self.client.get_constants('invalid'))
 
-    def tearDown(self):
-        self.client.close()
+    async def asyncTearDown(self):
+        await self.client.close()
 
 
 if __name__ == '__main__':
