@@ -47,6 +47,10 @@ class TestAsyncClient(asynctest.TestCase):
         self.assertIsInstance(club, brawlstats.Club)
         self.assertEqual(club.tag, self.CLUB_TAG)
 
+        club_members = await club.get_members()
+        self.assertIsInstance(club_members, brawlstats.Members)
+        self.assertIn(self.PLAYER_TAG, [x.tag for x in club_members])
+
         await self.assertAsyncRaises(brawlstats.NotFoundError, self.client.get_club('8GGGGGGG'))
 
     async def test_get_club_members(self):
