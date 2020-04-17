@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [4.0.3] - 4/17/20
+### Fixed
+- Brawler leaderboards for Python 3.5
+
 ## [4.0.2] - 4/15/20
 ### Fixed
 - Player model bug
