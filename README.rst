@@ -76,6 +76,7 @@ Special thanks to this project's contributors ❤️
 - `kawaii banana`_
 - `kjkui`_
 - `Kyber`_
+- `Papiersnipper`_
 - `Pollen`_
 - `OrangutanGaming`_
 - `Stitch`_
@@ -93,5 +94,6 @@ If you want to contribute, whether it be a bug fix or new feature, make sure to 
 .. _Stitch: https://github.com/Soumil07
 .. _kjkui: https://github.com/kjkui
 .. _Kyber: https://github.com/kyb3r
+.. _Papiersnipper: https://github.com/robinmahieu
 .. _Pollen: https://github.com/pollen5
 .. _kawaii banana: https://github.com/bananaboy21
