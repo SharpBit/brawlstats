@@ -49,6 +49,7 @@ class Client:
         self.is_async = is_async
         self.loop = options.get('loop', asyncio.get_event_loop()) if self.is_async else None
         self.connector = options.get('connector')
+        self.lock = asyncio.Lock()
 
         # Session and request options
         self.session = options.get('session') or (
@@ -153,8 +154,8 @@ class Client:
     async def _aget_model(self, url, model, key=None):
         """Method to turn the response data into a Model class for the async client."""
         if self.prevent_ratelimit:
-            # Use asyncio.Lock() if prevent_ratelimit=True
-            async with asyncio.Lock():
+            # Use a Lock if prevent_ratelimit=True
+            async with self.lock:
                 data = await self._arequest(url)
                 await asyncio.sleep(0.1)
         else:
