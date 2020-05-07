@@ -2,3 +2,4 @@ aiohttp>=3.6.0,<3.7.0
 requests
 python-box
 cachetools>=3.1.0
+asyncio-throttle>=1.0.1

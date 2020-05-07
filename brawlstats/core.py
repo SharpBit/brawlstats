@@ -6,6 +6,7 @@ import time
 
 import aiohttp
 import requests
+from asyncio_throttle import Throttler
 from cachetools import TTLCache
 
 from .errors import Forbidden, NotFoundError, RateLimitError, ServerError, UnexpectedError
@@ -56,6 +57,7 @@ class Client:
         )
         self.timeout = timeout
         self.prevent_ratelimit = options.get('prevent_ratelimit', False)
+        self.throttler = Throttler(rate_limit=80, period=1)
         self.api = API(options.get('base_url'), version=1)
 
         self.debug = options.get('debug', False)
@@ -153,8 +155,8 @@ class Client:
     async def _aget_model(self, url, model, key=None):
         """Method to turn the response data into a Model class for the async client."""
         if self.prevent_ratelimit:
-            # Use asyncio.Lock() if prevent_ratelimit=True
-            async with asyncio.Lock():
+            # Use asyncio-throttle to limit the requests
+            async with self.throttler:
                 data = await self._arequest(url)
                 await asyncio.sleep(0.1)
         else:
