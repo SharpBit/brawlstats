@@ -158,7 +158,6 @@ class Client:
             # Use asyncio-throttle to limit the requests
             async with self.throttler:
                 data = await self._arequest(url)
-                await asyncio.sleep(0.1)
         else:
             data = await self._arequest(url)
 
