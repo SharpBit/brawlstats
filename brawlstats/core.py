@@ -57,7 +57,7 @@ class Client:
         )
         self.timeout = timeout
         self.prevent_ratelimit = options.get('prevent_ratelimit', False)
-        self.throttler = Throttler(rate_limit=80, period=1)
+        self.throttler = Throttler(rate_limit=3200, period=60)
         self.api = API(options.get('base_url'), version=1)
 
         self.debug = options.get('debug', False)
