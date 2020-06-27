@@ -339,7 +339,7 @@ class Client:
 
     def get_brawlers(self):
         """
-        Get available brawlers.
+        Get available brawlers and information about them.
 
         No parameters
 

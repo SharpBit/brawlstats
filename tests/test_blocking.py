@@ -19,6 +19,9 @@ class TestBlockingClient(unittest.TestCase):
             base_url=os.getenv('base_url')
         )
 
+    def tearDown(self):
+        self.client.close()
+
     def test_get_player(self):
         player = self.client.get_player(self.PLAYER_TAG)
         self.assertIsInstance(player, brawlstats.Player)
@@ -106,8 +109,9 @@ class TestBlockingClient(unittest.TestCase):
 
         self.assertRaises(KeyError, self.client.get_constants, 'invalid')
 
-    def tearDown(self):
-        self.client.close()
+    def test_get_brawlers(self):
+        brawlers = self.client.get_brawlers()
+        self.assertIsInstance(brawlers, brawlstats.Brawlers)
 
 
 if __name__ == '__main__':

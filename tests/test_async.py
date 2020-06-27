@@ -26,6 +26,9 @@ class TestAsyncClient(asynctest.TestCase):
             session=session
         )
 
+    async def asyncTearDown(self):
+        await self.client.close()
+
     async def test_get_player(self):
         player = await self.client.get_player(self.PLAYER_TAG)
         self.assertIsInstance(player, brawlstats.Player)
@@ -120,8 +123,9 @@ class TestAsyncClient(asynctest.TestCase):
         await self.assertAsyncRaises(
             KeyError, self.client.get_constants('invalid'))
 
-    async def asyncTearDown(self):
-        await self.client.close()
+    async def test_get_brawlers(self):
+        brawlers = await self.client.get_brawlers()
+        self.assertIsInstance(brawlers, brawlstats.Brawlers)
 
 
 if __name__ == '__main__':
