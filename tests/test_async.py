@@ -71,32 +71,27 @@ class TestAsyncClient(asynctest.TestCase):
         self.assertIsInstance(club_members, brawlstats.Members)
         self.assertIn(self.PLAYER_TAG, [x.tag for x in club_members])
 
-        await self.assertAsyncRaises(
-            brawlstats.NotFoundError, self.client.get_club_members('8GGGGGGG'))
+        await self.assertAsyncRaises(brawlstats.NotFoundError, self.client.get_club_members('8GGGGGGG'))
 
     async def test_get_rankings(self):
         player_ranking = await self.client.get_rankings(ranking='players')
         self.assertIsInstance(player_ranking, brawlstats.Ranking)
 
-        us_player_ranking = await self.client.get_rankings(
-            ranking='players', region='US', limit=1)
+        us_player_ranking = await self.client.get_rankings(ranking='players', region='US', limit=1)
         self.assertIsInstance(us_player_ranking, brawlstats.Ranking)
         self.assertTrue(len(us_player_ranking) == 1)
 
         club_ranking = await self.client.get_rankings(ranking='clubs')
         self.assertIsInstance(club_ranking, brawlstats.Ranking)
 
-        us_club_ranking = await self.client.get_rankings(
-            ranking='clubs', region='US', limit=1)
+        us_club_ranking = await self.client.get_rankings(ranking='clubs', region='US', limit=1)
         self.assertIsInstance(us_club_ranking, brawlstats.Ranking)
         self.assertTrue(len(us_club_ranking) == 1)
 
-        brawler_ranking = await self.client.get_rankings(
-            ranking='brawlers', brawler='Shelly')
+        brawler_ranking = await self.client.get_rankings(ranking='brawlers', brawler='Shelly')
         self.assertIsInstance(brawler_ranking, brawlstats.Ranking)
 
-        us_brawler_ranking = await self.client.get_rankings(
-            ranking='brawlers', brawler=16000000, region='US', limit=1)
+        us_brawler_ranking = await self.client.get_rankings(ranking='brawlers', brawler=16000000, region='US', limit=1)
         self.assertIsInstance(us_brawler_ranking, brawlstats.Ranking)
         self.assertTrue(len(us_brawler_ranking) == 1)
 
@@ -107,8 +102,7 @@ class TestAsyncClient(asynctest.TestCase):
             await self.client.get_rankings(ranking='people', limit=0)
 
         with self.assertRaises(ValueError):
-            await self.client.get_rankings(
-                ranking='brawlers', brawler='SharpBit')
+            await self.client.get_rankings(ranking='brawlers', brawler='SharpBit')
 
     async def test_get_constants(self):
         constants = await self.client.get_constants()
@@ -117,8 +111,7 @@ class TestAsyncClient(asynctest.TestCase):
         maps = await self.client.get_constants('maps')
         self.assertIsInstance(maps, brawlstats.Constants)
 
-        await self.assertAsyncRaises(
-            KeyError, self.client.get_constants('invalid'))
+        await self.assertAsyncRaises(KeyError, self.client.get_constants('invalid'))
 
     async def asyncTearDown(self):
         await self.client.close()
