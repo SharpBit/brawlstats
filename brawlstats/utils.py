@@ -12,7 +12,7 @@ from .errors import NotFoundError
 class API:
     def __init__(self, base_url, version=1):
         self.BASE = base_url or 'https://api.brawlstars.com/v'\
-            '{}'.format(version)
+            + str(version)
         self.PROFILE = self.BASE + '/players'
         self.CLUB = self.BASE + '/clubs'
         self.RANKINGS = self.BASE + '/rankings'
