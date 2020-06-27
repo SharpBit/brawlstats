@@ -19,7 +19,10 @@ import re
 # sys.path.insert(0, os.path.abspath('.'))
 
 with open('../brawlstats/__init__.py') as f:
-    version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE).group(1)
+    version = re.search(
+        r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
+        f.read(), re.MULTILINE
+    ).group(1)
 
 # -- Project information -----------------------------------------------------
 

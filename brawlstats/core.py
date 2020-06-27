@@ -8,8 +8,14 @@ import aiohttp
 import requests
 from cachetools import TTLCache
 
-from .errors import Forbidden, NotFoundError, RateLimitError, ServerError, UnexpectedError
-from .models import BattleLog, Club, Constants, Members, Player, Ranking
+from .errors import (
+    Forbidden, NotFoundError, RateLimitError,
+    ServerError, UnexpectedError
+)
+from .models import (
+    BattleLog, Brawlers, Club,
+    Constants, Members, Player, Ranking
+)
 from .utils import API, bstag, typecasted
 
 log = logging.getLogger(__name__)
@@ -30,7 +36,7 @@ class Client:
     session: Optional[Union[requests.Session, aiohttp.ClientSession]] = None
         Use a current session or a make new one.
     loop: Optional[asyncio.window_events._WindowsSelectorEventLoop]
-        The event loop to use for asynchronous operations. Defaults to ``None``,
+        The event loop to use for asynchronous operations. Defaults = ``None``,
         in which case the default event loop is ``asyncio.get_event_loop()``.
     connector: Optional[aiohttp.TCPConnector]
         Pass a TCPConnector into the client (aiohttp). Defaults to ``None``.
@@ -44,15 +50,20 @@ class Client:
 
     REQUEST_LOG = '{method} {url} recieved {text} has returned {status}'
 
-    def __init__(self, token, session=None, timeout=30, is_async=False, **options):
+    def __init__(
+        self, token, session=None, timeout=30, is_async=False, **options
+    ):
         # Async options
         self.is_async = is_async
-        self.loop = options.get('loop', asyncio.get_event_loop()) if self.is_async else None
+        self.loop = (
+            options.get('loop', asyncio.get_event_loop())
+            if self.is_async else None)
         self.connector = options.get('connector')
 
         # Session and request options
         self.session = options.get('session') or (
-            aiohttp.ClientSession(loop=self.loop, connector=self.connector) if self.is_async else requests.Session()
+            aiohttp.ClientSession(loop=self.loop, connector=self.connector)
+            if self.is_async else requests.Session()
         )
         self.timeout = timeout
         self.prevent_ratelimit = options.get('prevent_ratelimit', False)
@@ -64,12 +75,16 @@ class Client:
         # Request/response headers
         self.headers = {
             'Authorization': 'Bearer {}'.format(token),
-            'User-Agent': 'brawlstats/{0} (Python {1[0]}.{1[1]})'.format(self.api.VERSION, sys.version_info),
+            'User-Agent': 'brawlstats/{0} (Python {1[0]}.{1[1]})'.format(
+                self.api.VERSION, sys.version_info
+            ),
             'Accept-Encoding': 'gzip'
         }
 
     def __repr__(self):
-        return '<Client async={} timeout={} debug={}>'.format(self.is_async, self.timeout, self.debug)
+        return '<Client async={} timeout={} debug={}>'.format(
+            self.is_async, self.timeout, self.debug
+        )
 
     def close(self):
         return self.session.close()
@@ -87,7 +102,9 @@ class Client:
         url = resp.url
 
         if self.debug:
-            log.debug(self.REQUEST_LOG.format(method='GET', url=url, text=text, status=code))
+            log.debug(self.REQUEST_LOG.format(
+                method='GET', url=url, text=text, status=code
+            ))
 
         if 300 > code >= 200:
             return data
@@ -119,7 +136,9 @@ class Client:
             return cache
 
         try:
-            async with self.session.get(url, timeout=self.timeout, headers=self.headers) as resp:
+            async with self.session.get(
+                url, timeout=self.timeout, headers=self.headers
+            ) as resp:
                 data = self._raise_for_status(resp, await resp.text())
         except asyncio.TimeoutError:
             raise ServerError(503, url)
@@ -140,7 +159,9 @@ class Client:
             return cache
 
         try:
-            with self.session.get(url, timeout=self.timeout, headers=self.headers) as resp:
+            with self.session.get(
+                url, timeout=self.timeout, headers=self.headers
+            ) as resp:
                 data = self._raise_for_status(resp, resp.text)
         except requests.Timeout:
             raise ServerError(503, url)
@@ -151,7 +172,8 @@ class Client:
         return data
 
     async def _aget_model(self, url, model, key=None):
-        """Method to turn the response data into a Model class for the async client."""
+        """Method to turn the response data into a
+        Model class for the async client."""
         if self.prevent_ratelimit:
             # Use asyncio.Lock() if prevent_ratelimit=True
             async with asyncio.Lock():
@@ -170,7 +192,8 @@ class Client:
         return model(self, data)
 
     def _get_model(self, url, model, key=None):
-        """Method to turn the response data into a Model class for the sync client."""
+        """Method to turn the response data into a
+        Model class for the sync client."""
         if self.is_async:
             # Calls the async function
             return self._aget_model(url, model=model, key=key)
@@ -253,7 +276,9 @@ class Client:
         url = '{}/{}/members'.format(self.api.CLUB, tag)
         return self._get_model(url, model=Members)
 
-    def get_rankings(self, *, ranking: str, region=None, limit: int=200, brawler=None):
+    def get_rankings(
+        self, *, ranking: str, region=None, limit: int = 200, brawler=None
+    ):
         """
         Get the top count players/clubs/brawlers.
 
@@ -287,14 +312,15 @@ class Client:
 
         # Check for invalid parameters
         if ranking not in ('players', 'clubs', 'brawlers'):
-            raise ValueError("'ranking' must be 'players', 'clubs' or 'brawlers'.")
+            raise ValueError(
+                "'ranking' must be 'players', 'clubs' or 'brawlers'.")
         if not 0 < limit <= 200:
             raise ValueError('Make sure limit is between 1 and 200.')
 
         # Construct URL
-        url = '{}/{}/{}?limit={}'.format(self.api.RANKINGS, region, ranking, limit)
+        url = f'{self.api.RANKINGS}/{region}/{ranking}?{limit=}'
         if ranking == 'brawlers':
-            url = '{}/{}/{}/{}?limit={}'.format(self.api.RANKINGS, region, ranking, brawler, limit)
+            url = f'{self.api.RANKINGS}/{region}/{ranking}/{brawler}?{limit=}'
 
         return self._get_model(url, model=Ranking)
 
@@ -310,3 +336,13 @@ class Client:
         Returns Constants
         """
         return self._get_model(self.api.CONSTANTS, model=Constants, key=key)
+
+    def get_brawlers(self):
+        """
+        Get available brawlers.
+
+        No parameters
+
+        Returns Brawlers
+        """
+        return self._get_model(self.api.BRAWLERS_URL, model=Brawlers)
