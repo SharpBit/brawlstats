@@ -65,7 +65,7 @@ def get_datetime(timestamp: str, unix=True):
     Parameters
     ----------
     timestamp: str
-        A timestamp in the %Y-%m-%dT%H:%M:%S.%fZ format, usually returned by the API	        A timestamp in the %Y-%m-%dT%H:%M:%S.%fZ format,
+        A timestamp in the %Y-%m-%dT%H:%M:%S.%fZ format, usually returned by the API
         in the ``created_time`` field for example (eg. 2018-07-18T14:59:06.000Z)
     unix: Optional[bool] = True
         Whether to return a POSIX timestamp (seconds since epoch) or not
