@@ -101,7 +101,7 @@ class Members(BaseBoxList):
     """
 
     def __repr__(self):
-        return f'<Members object count={self.__len__()}>'
+        return '<Members object count={}>'.format(len(self))
 
 
 class Ranking(BaseBoxList):
@@ -110,7 +110,7 @@ class Ranking(BaseBoxList):
     """
 
     def __repr__(self):
-        return f'<Ranking object count={self.__len__()}>'
+        return '<Ranking object count={}>'.format(len(self))
 
 
 class BattleLog(BaseBoxList):
@@ -133,7 +133,7 @@ class Brawlers(BaseBoxList):
     """
 
     def __repr__(self):
-        return f'<Brawlers object count={self.__len__()}>'
+        return '<Brawlers object count={}>'.format(len(self))
 
     def __str__(self):
-        return f'Here {self.__len__()} brawlers'
+        return 'Here {} brawlers'.format(len(self))

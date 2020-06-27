@@ -318,9 +318,11 @@ class Client:
             raise ValueError('Make sure limit is between 1 and 200.')
 
         # Construct URL
-        url = f'{self.api.RANKINGS}/{region}/{ranking}?{limit=}'
+        url = '{}/{}/{}?limit={}'.format(
+            self.api.RANKINGS, region, ranking, limit)
         if ranking == 'brawlers':
-            url = f'{self.api.RANKINGS}/{region}/{ranking}/{brawler}?{limit=}'
+            url = '{}/{}/{}/{}?limit={}'.format(
+                self.api.RANKINGS, region, ranking, brawler, limit)
 
         return self._get_model(url, model=Ranking)
 
