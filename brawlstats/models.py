@@ -129,7 +129,7 @@ class Constants(BaseBox):
 
 class Brawlers(BaseBoxList):
     """
-    Returns list of available brawlers and information about every brawler.
+    Returns list of available brawlers and information about them.
     """
 
     def __repr__(self):
