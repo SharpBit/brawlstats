@@ -2,10 +2,7 @@ from box import Box, BoxList
 from .utils import bstag
 
 
-__all__ = [
-    'Player', 'Club', 'Members', 'Ranking',
-    'BattleLog', 'Constants', 'Brawlers'
-]
+__all__ = ['Player', 'Club', 'Members', 'Ranking', 'BattleLog', 'Constants', 'Brawlers']
 
 
 class BaseBox:
@@ -25,9 +22,7 @@ class BaseBox:
             try:
                 return super().__getattr__(attr)
             except AttributeError:
-                return None
-                # users can use an if statement rather than
-                # try/except to find a missing attribute
+                return None  # users can use an if statement rather than try/except to find a missing attribute
 
     def __getitem__(self, item):
         try:

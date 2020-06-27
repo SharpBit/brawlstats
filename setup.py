@@ -6,10 +6,7 @@ with open('README.rst', encoding='utf8') as f:
     long_description = f.read()
 
 with open('brawlstats/__init__.py') as f:
-    version = re.search(
-        r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
-        f.read(), re.MULTILINE
-    ).group(1)
+    version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE).group(1)
 
 requirements = []
 with open('requirements.txt') as f:

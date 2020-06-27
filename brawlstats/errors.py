@@ -29,8 +29,7 @@ class NotFoundError(RequestError):
         if self.reason:
             self.message += '\nReason: {}'.format(self.reason)
         elif self.invalid_chars:
-            self.message += 'Invalid characters: {}'.format(
-                ', '.join(self.invalid_chars))
+            self.message += 'Invalid characters: {}'.format(', '.join(self.invalid_chars))
         super().__init__(self.code, self.message)
 
 
@@ -59,6 +58,5 @@ class ServerError(RequestError):
     def __init__(self, code, url):
         self.code = code
         self.url = url
-        self.message = 'The API is down. Please be patient '\
-            'and try again later.'
+        self.message = 'The API is down. Please be patient and try again later.'
         super().__init__(self.code, self.message)

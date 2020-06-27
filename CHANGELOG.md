@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 
 
-## [4.0.4] - 6/27/20
+## [Unnoun yet] - 6/27/20
 ### Added
 - `get_brawlers` function to get available brawlers
 ### Changed

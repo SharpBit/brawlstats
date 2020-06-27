@@ -11,8 +11,7 @@ from .errors import NotFoundError
 
 class API:
     def __init__(self, base_url, version=1):
-        self.BASE = base_url or 'https://api.brawlstars.com/v'\
-            + str(version)
+        self.BASE = base_url or 'https://api.brawlstars.com/v{}'.format(version)
         self.PROFILE = self.BASE + '/players'
         self.CLUB = self.BASE + '/clubs'
         self.RANKINGS = self.BASE + '/rankings'
@@ -22,16 +21,11 @@ class API:
         # Get package version from __init__.py
         path = os.path.dirname(__file__)
         with open(os.path.join(path, '__init__.py')) as f:
-            self.VERSION = re.search(
-                r'^__version__ = [\'"]([^\'"]*)[\'"]',
-                f.read(), re.MULTILINE
-            ).group(1)
+            self.VERSION = re.search(r'^__version__ = [\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE).group(1)
 
         # Get current brawlers and their IDs
         try:
-            resp = urllib.request.urlopen(
-                self.CONSTANTS + '/characters'
-            ).read()
+            resp = urllib.request.urlopen(self.CONSTANTS + '/characters').read()
             if isinstance(resp, bytes):
                 resp = resp.decode('utf-8')
             data = json.loads(resp)
@@ -40,8 +34,7 @@ class API:
         else:
             if data:
                 self.BRAWLERS = {
-                    b['tID'].lower():
-                    int(str(b['scId'])[:2] + '0' + str(b['scId'])[2:])
+                    b['tID'].lower(): int(str(b['scId'])[:2] + '0' + str(b['scId'])[2:])
                     for b in data if b['tID']
                 }
             else:
@@ -72,10 +65,8 @@ def get_datetime(timestamp: str, unix=True):
     Parameters
     ----------
     timestamp: str
-        A timestamp in the %Y-%m-%dT%H:%M:%S.%fZ format,
-        usually returned by the API
-        in the ``created_time`` field
-        for example (eg. 2018-07-18T14:59:06.000Z)
+        A timestamp in the %Y-%m-%dT%H:%M:%S.%fZ format, usually returned by the API	        A timestamp in the %Y-%m-%dT%H:%M:%S.%fZ format,
+        in the ``created_time`` field for example (eg. 2018-07-18T14:59:06.000Z)
     unix: Optional[bool] = True
         Whether to return a POSIX timestamp (seconds since epoch) or not
 
