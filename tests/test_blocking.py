@@ -91,6 +91,10 @@ class TestBlockingClient(unittest.TestCase):
 
         self.assertRaises(KeyError, self.client.get_constants, 'invalid')
 
+    def test_get_brawlers(self):
+        brawlers = self.client.get_brawlers()
+        self.assertIsInstance(brawlers, brawlstats.Brawlers)
+
     def tearDown(self):
         self.client.close()
 

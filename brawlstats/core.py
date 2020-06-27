@@ -9,7 +9,7 @@ import requests
 from cachetools import TTLCache
 
 from .errors import Forbidden, NotFoundError, RateLimitError, ServerError, UnexpectedError
-from .models import BattleLog, Club, Constants, Members, Player, Ranking
+from .models import BattleLog, Brawlers, Club, Constants, Members, Player, Ranking
 from .utils import API, bstag, typecasted
 
 log = logging.getLogger(__name__)
@@ -310,3 +310,13 @@ class Client:
         Returns Constants
         """
         return self._get_model(self.api.CONSTANTS, model=Constants, key=key)
+
+    def get_brawlers(self):
+        """
+        Get available brawlers and information about them.
+
+        No parameters
+
+        Returns Brawlers
+        """
+        return self._get_model(self.api.BRAWLERS_URL, model=Brawlers)

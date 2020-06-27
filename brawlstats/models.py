@@ -2,7 +2,8 @@ from box import Box, BoxList
 from .utils import bstag
 
 
-__all__ = ['Player', 'Club', 'Members', 'Ranking', 'BattleLog', 'Constants']
+__all__ = ['Player', 'Club', 'Members', 'Ranking', 'BattleLog', 'Constants', 'Brawlers']
+
 
 class BaseBox:
     def __init__(self, client, data):
@@ -11,14 +12,7 @@ class BaseBox:
 
     def from_data(self, data):
         self.raw_data = data
-        if isinstance(data, list):
-            self._boxed_data = BoxList(
-                data, camel_killer_box=True
-            )
-        else:
-            self._boxed_data = Box(
-                data, camel_killer_box=True
-            )
+        self._boxed_data = Box(data, camel_killer_box=True)
         return self
 
     def __getattr__(self, attr):
@@ -35,6 +29,17 @@ class BaseBox:
             return self._boxed_data[item]
         except IndexError:
             raise IndexError('No such index: {}'.format(item))
+
+
+class BaseBoxList(BaseBox):
+    def from_data(self, data):
+        data = data['items']
+        self.raw_data = data
+        self._boxed_data = BoxList(data, camel_killer_box=True)
+        return self
+
+    def __len__(self):
+        return sum(1 for i in self)
 
 
 class Player(BaseBox):
@@ -85,43 +90,29 @@ class Club(BaseBox):
         return self.client._get_model(url, model=Members)
 
 
-class Members(BaseBox):
+class Members(BaseBoxList):
     """
     Returns the members in a club.
     """
-
-    def __init__(self, client, data):
-        super().__init__(client, data['items'])
-
-    def __len__(self):
-        return sum(1 for i in self)
 
     def __repr__(self):
         return '<Members object count={}>'.format(len(self))
 
 
-class Ranking(BaseBox):
+class Ranking(BaseBoxList):
     """
     Returns a player or club ranking that contains a list of players or clubs.
     """
-
-    def __init__(self, client, data):
-        super().__init__(client, data['items'])
-
-    def __len__(self):
-        return sum(1 for i in self)
 
     def __repr__(self):
         return '<Ranking object count={}>'.format(len(self))
 
 
-class BattleLog(BaseBox):
+class BattleLog(BaseBoxList):
     """
     Returns a full player battle object with all of its attributes.
     """
-
-    def __init__(self, client, data):
-        super().__init__(client, data['items'])
+    pass
 
 
 class Constants(BaseBox):
@@ -129,3 +120,15 @@ class Constants(BaseBox):
     Returns some Brawl Stars constants.
     """
     pass
+
+
+class Brawlers(BaseBoxList):
+    """
+    Returns list of available brawlers and information about them.
+    """
+
+    def __repr__(self):
+        return '<Brawlers object count={}>'.format(len(self))
+
+    def __str__(self):
+        return 'Here {} brawlers'.format(len(self))

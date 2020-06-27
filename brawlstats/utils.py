@@ -16,6 +16,7 @@ class API:
         self.CLUB = self.BASE + '/clubs'
         self.RANKINGS = self.BASE + '/rankings'
         self.CONSTANTS = 'https://fourjr.herokuapp.com/bs/constants'
+        self.BRAWLERS_URL = self.BASE + "/brawlers"
 
         # Get package version from __init__.py
         path = os.path.dirname(__file__)
@@ -55,6 +56,7 @@ def bstag(tag):
 
     return tag
 
+
 def get_datetime(timestamp: str, unix=True):
     """
     Converts a %Y%m%dT%H%M%S.%fZ to a UNIX timestamp
@@ -76,6 +78,12 @@ def get_datetime(timestamp: str, unix=True):
     else:
         return time
 
+
+# do nothing
+def nothing(value):
+    return value
+
+
 def typecasted(func):
     """Decorator that converts arguments via annotations.
     Source: https://github.com/cgrok/clashroyale/blob/master/clashroyale/official_api/utils.py#L11"""
@@ -89,7 +97,7 @@ def typecasted(func):
         for _, param in signature:
             converter = param.annotation
             if converter is inspect._empty:
-                converter = lambda a: a  # do nothing
+                converter = nothing
             if param.kind is param.POSITIONAL_OR_KEYWORD:
                 if args:
                     to_conv = args.pop(0)
