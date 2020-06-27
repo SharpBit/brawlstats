@@ -94,7 +94,7 @@ def nothing(value):
 
 
 def typecasted(func):
-    f"""Decorator that converts arguments via annotations.
+    """Decorator that converts arguments via annotations.
     Source: https://github.com/cgrok/clashroyale/blob/master/clashroyale/official_api/utils.py#L11"""
     signature = inspect.signature(func).parameters.items()
 
