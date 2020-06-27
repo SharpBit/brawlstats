@@ -11,20 +11,26 @@ from .errors import NotFoundError
 
 class API:
     def __init__(self, base_url, version=1):
-        self.BASE = base_url or 'https://api.brawlstars.com/v{}'.format(version)
+        self.BASE = base_url or f'https://api.brawlstars.com/v{version}'
         self.PROFILE = self.BASE + '/players'
         self.CLUB = self.BASE + '/clubs'
         self.RANKINGS = self.BASE + '/rankings'
         self.CONSTANTS = 'https://fourjr.herokuapp.com/bs/constants'
+        self.BRAWLERS_URL = self.BASE + "/brawlers"
 
         # Get package version from __init__.py
         path = os.path.dirname(__file__)
         with open(os.path.join(path, '__init__.py')) as f:
-            self.VERSION = re.search(r'^__version__ = [\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE).group(1)
+            self.VERSION = re.search(
+                r'^__version__ = [\'"]([^\'"]*)[\'"]',
+                f.read(), re.MULTILINE
+            ).group(1)
 
         # Get current brawlers and their IDs
         try:
-            resp = urllib.request.urlopen(self.CONSTANTS + '/characters').read()
+            resp = urllib.request.urlopen(
+                self.CONSTANTS + '/characters'
+            ).read()
             if isinstance(resp, bytes):
                 resp = resp.decode('utf-8')
             data = json.loads(resp)
@@ -33,7 +39,8 @@ class API:
         else:
             if data:
                 self.BRAWLERS = {
-                    b['tID'].lower(): int(str(b['scId'])[:2] + '0' + str(b['scId'])[2:])
+                    b['tID'].lower():
+                    int(str(b['scId'])[:2] + '0' + str(b['scId'])[2:])
                     for b in data if b['tID']
                 }
             else:
@@ -55,6 +62,7 @@ def bstag(tag):
 
     return tag
 
+
 def get_datetime(timestamp: str, unix=True):
     """
     Converts a %Y%m%dT%H%M%S.%fZ to a UNIX timestamp
@@ -63,8 +71,10 @@ def get_datetime(timestamp: str, unix=True):
     Parameters
     ----------
     timestamp: str
-        A timestamp in the %Y-%m-%dT%H:%M:%S.%fZ format, usually returned by the API
-        in the ``created_time`` field for example (eg. 2018-07-18T14:59:06.000Z)
+        A timestamp in the %Y-%m-%dT%H:%M:%S.%fZ format,
+        usually returned by the API
+        in the ``created_time`` field
+        for example (eg. 2018-07-18T14:59:06.000Z)
     unix: Optional[bool] = True
         Whether to return a POSIX timestamp (seconds since epoch) or not
 
@@ -76,8 +86,14 @@ def get_datetime(timestamp: str, unix=True):
     else:
         return time
 
+
+# do nothing
+def nothing(value):
+    return value
+
+
 def typecasted(func):
-    """Decorator that converts arguments via annotations.
+    f"""Decorator that converts arguments via annotations.
     Source: https://github.com/cgrok/clashroyale/blob/master/clashroyale/official_api/utils.py#L11"""
     signature = inspect.signature(func).parameters.items()
 
@@ -89,7 +105,7 @@ def typecasted(func):
         for _, param in signature:
             converter = param.annotation
             if converter is inspect._empty:
-                converter = lambda a: a  # do nothing
+                converter = nothing
             if param.kind is param.POSITIONAL_OR_KEYWORD:
                 if args:
                     to_conv = args.pop(0)
