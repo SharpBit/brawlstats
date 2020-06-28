@@ -9,8 +9,8 @@ import requests
 from cachetools import TTLCache
 
 from .errors import Forbidden, NotFoundError, RateLimitError, ServerError, UnexpectedError
-from .models import BattleLog, Brawlers, Club, Constants, Members, Player, Ranking
-from .utils import API, bstag, typecasted
+from .models import BattleLog, Brawlers, Club, Members, Player, Ranking
+from .utils import API, bstag, typecasted, find_brawler
 
 log = logging.getLogger(__name__)
 
@@ -150,7 +150,7 @@ class Client:
 
         return data
 
-    async def _aget_model(self, url, model, key=None):
+    async def _aget_model(self, url, model):
         """Method to turn the response data into a Model class for the async client."""
         if self.prevent_ratelimit:
             # Use asyncio.Lock() if prevent_ratelimit=True
@@ -160,31 +160,17 @@ class Client:
         else:
             data = await self._arequest(url)
 
-        if model == Constants:
-            if key:
-                if data.get(key):
-                    return model(self, data.get(key))
-                else:
-                    raise KeyError('No such Constants key "{}"'.format(key))
-
         return model(self, data)
 
-    def _get_model(self, url, model, key=None):
+    def _get_model(self, url, model):
         """Method to turn the response data into a Model class for the sync client."""
         if self.is_async:
             # Calls the async function
-            return self._aget_model(url, model=model, key=key)
+            return self._aget_model(url, model=model)
 
         data = self._request(url)
         if self.prevent_ratelimit:
             time.sleep(0.1)
-
-        if model == Constants:
-            if key:
-                if data.get(key):
-                    return model(self, data.get(key))
-                else:
-                    raise KeyError('No such Constants key "{}"'.format(key))
 
         return model(self, data)
 
@@ -272,24 +258,36 @@ class Client:
 
         Returns Ranking
         """
-        if region is None:
-            region = 'global'
-
-        if brawler is not None:
-            if isinstance(brawler, str):
-                brawler = brawler.lower()
-            # Replace brawler name with ID
-            if brawler in self.api.BRAWLERS.keys():
-                brawler = self.api.BRAWLERS[brawler]
-
-            if brawler not in self.api.BRAWLERS.values():
-                raise ValueError('Invalid brawler.')
 
         # Check for invalid parameters
         if ranking not in ('players', 'clubs', 'brawlers'):
-            raise ValueError("'ranking' must be 'players', 'clubs' or 'brawlers'.")
+            raise ValueError("'ranking' must be 'players', 'clubs' or 'brawlers'")
         if not 0 < limit <= 200:
-            raise ValueError('Make sure limit is between 1 and 200.')
+            raise ValueError('Make sure limit is between 1 and 200')
+
+        if ranking == "brawlers":
+            # Check for invalid parameters
+            if brawler is None:
+                raise ValueError("`brawler` must be entered and not None")
+            else:
+                if isinstance(brawler, int):
+                    pattern = "id"
+                elif isinstance(brawler, str):
+                    brawler = brawler.upper()
+                    pattern = "name"
+                else:
+                    raise TypeError('Invalid `brawler` type, must be str or int')
+
+                # Replace brawler name with brawler obj. also not valid ids raise error
+                brawler = self.get_brawlers().find(pattern, brawler)
+                if brawler is None:
+                    raise ValueError('Invalid `brawler`')
+                else:
+                    # Replace brawler obj with ID.
+                    brawler = brawler["id"]
+
+        if region is None:
+            region = 'global'
 
         # Construct URL
         url = '{}/{}/{}?limit={}'.format(self.api.RANKINGS, region, ranking, limit)
@@ -297,19 +295,6 @@ class Client:
             url = '{}/{}/{}/{}?limit={}'.format(self.api.RANKINGS, region, ranking, brawler, limit)
 
         return self._get_model(url, model=Ranking)
-
-    def get_constants(self, key=None):
-        """
-        Gets Brawl Stars constants extracted from the app.
-
-        Parameters
-        ----------
-        key: Optional[str] = None
-            Any key to get specific data.
-
-        Returns Constants
-        """
-        return self._get_model(self.api.CONSTANTS, model=Constants, key=key)
 
     def get_brawlers(self):
         """
@@ -319,4 +304,4 @@ class Client:
 
         Returns Brawlers
         """
-        return self._get_model(self.api.BRAWLERS_URL, model=Brawlers)
+        return self._get_model(self.api.BRAWLERS, model=Brawlers)

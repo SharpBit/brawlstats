@@ -1,8 +1,8 @@
 from box import Box, BoxList
-from .utils import bstag
+from .utils import bstag, find_brawler
 
 
-__all__ = ['Player', 'Club', 'Members', 'Ranking', 'BattleLog', 'Constants', 'Brawlers']
+__all__ = ['Player', 'Club', 'Members', 'Ranking', 'BattleLog', 'Brawlers']
 
 
 class BaseBox:
@@ -115,13 +115,6 @@ class BattleLog(BaseBoxList):
     pass
 
 
-class Constants(BaseBox):
-    """
-    Returns some Brawl Stars constants.
-    """
-    pass
-
-
 class Brawlers(BaseBoxList):
     """
     Returns list of available brawlers and information about them.
@@ -132,3 +125,19 @@ class Brawlers(BaseBoxList):
 
     def __str__(self):
         return 'Here {} brawlers'.format(len(self))
+
+    def find(self, pattern, match):
+        """
+        Find brawler containing template
+
+        Parameters
+        ----------
+        pattern: any python instance, usually str or int
+            `match` value to find in brawlers
+
+        match: any python instance, usually str or int
+            key by which the search will be performed
+
+        Returns brawler object
+        """
+        return find_brawler(self, pattern, match)

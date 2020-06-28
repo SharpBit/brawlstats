@@ -1,8 +1,6 @@
 import inspect
-import json
 import os
 import re
-import urllib.request
 from datetime import datetime
 from functools import wraps
 
@@ -15,30 +13,12 @@ class API:
         self.PROFILE = self.BASE + '/players'
         self.CLUB = self.BASE + '/clubs'
         self.RANKINGS = self.BASE + '/rankings'
-        self.CONSTANTS = 'https://fourjr.herokuapp.com/bs/constants'
-        self.BRAWLERS_URL = self.BASE + "/brawlers"
+        self.BRAWLERS = self.BASE + "/brawlers"
 
         # Get package version from __init__.py
         path = os.path.dirname(__file__)
         with open(os.path.join(path, '__init__.py')) as f:
             self.VERSION = re.search(r'^__version__ = [\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE).group(1)
-
-        # Get current brawlers and their IDs
-        try:
-            resp = urllib.request.urlopen(self.CONSTANTS + '/characters').read()
-            if isinstance(resp, bytes):
-                resp = resp.decode('utf-8')
-            data = json.loads(resp)
-        except (TypeError, urllib.error.HTTPError, urllib.error.URLError):
-            self.BRAWLERS = {}
-        else:
-            if data:
-                self.BRAWLERS = {
-                    b['tID'].lower(): int(str(b['scId'])[:2] + '0' + str(b['scId'])[2:])
-                    for b in data if b['tID']
-                }
-            else:
-                self.BRAWLERS = {}
 
 
 def bstag(tag):
@@ -111,3 +91,26 @@ def typecasted(func):
                     new_kwargs[nk] = nv
         return func(*new_args, **new_kwargs)
     return wrapper
+
+
+def find_brawler(brawlers, pattern, match):
+    """
+    Find brawler containing template
+
+    Parameters
+    ----------
+    brawlers: Brawlers
+        Brawlers instance
+
+    pattern: any python instance, usually str or int
+        `match` value to find in brawlers
+
+    match: any python instance, usually str or int
+        key by which the search will be performed
+
+    Returns brawler object
+    """
+    for brawler in brawlers:
+        if brawler.get(pattern) == match:
+            return brawler
+    return None  # returns explicitly
