@@ -95,17 +95,17 @@ def typecasted(func):
 
 def find_brawler(brawlers, pattern, match):
     """
-    Find brawler containing template
+    Find first match brawler containing template
 
     Parameters
     ----------
     brawlers: Brawlers
         Brawlers instance
 
-    pattern: any python instance, usually str or int
+    pattern: Any, usually str or int
         `match` value to find in brawlers
 
-    match: any python instance, usually str or int
+    match: Any, usually str or int
         key by which the search will be performed
 
     Returns brawler object

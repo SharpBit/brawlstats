@@ -11,6 +11,9 @@ async def main():
     print(player.trophies)  # access attributes using dot.notation
     print(player.solo_victories)  # use snake_case instead of camelCase
 
+    battles = await client.get_battle_logs('GGJVJLU2')
+    print(battles[0].battle.mode)
+
     club = await player.get_club()
     print(club.tag)
     members = await club.get_members()  # members sorted by trophies
@@ -33,8 +36,20 @@ async def main():
     for player in ranking:
         print(player.name, player.rank)
 
-    battles = await client.get_battle_logs('GGJVJLU2')
-    print(battles[0].battle.mode)
+    # get all brawlers and info about them
+    brawlers = await client.get_brawlers()
+    print(brawlers, "->", len(brawlers))
+    for brawler in brawlers[:5]:  # prints top 5 brawlers
+        print(brawler.name)
+
+    # find blrawler by name
+    shelly = brawlers.find("name", "shelly")
+    print(shelly.id)
+
+    # find brawler by id
+    spike = brawlers.find("id", 16000005)
+    print(spike.gadgets)
+
 
 # run the async loop
 loop = asyncio.get_event_loop()

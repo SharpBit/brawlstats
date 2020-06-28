@@ -10,7 +10,7 @@ from cachetools import TTLCache
 
 from .errors import Forbidden, NotFoundError, RateLimitError, ServerError, UnexpectedError
 from .models import BattleLog, Brawlers, Club, Members, Player, Ranking
-from .utils import API, bstag, typecasted, find_brawler
+from .utils import API, bstag, typecasted
 
 log = logging.getLogger(__name__)
 
@@ -273,7 +273,6 @@ class Client:
                 if isinstance(brawler, int):
                     pattern = "id"
                 elif isinstance(brawler, str):
-                    brawler = brawler.upper()
                     pattern = "name"
                 else:
                     raise TypeError('Invalid `brawler` type, must be str or int')

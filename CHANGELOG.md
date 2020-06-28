@@ -2,6 +2,26 @@
 All notable changes to this project will be documented in this file.
 
 
+## [Unnoun yet] - 6/28/20
+### Added
+- `find_brawler` function added to utils
+- `find` function added to `Brawlers`
+- `MyBox` and `MyBoxList` to also control the behavior of subclasses, such as brawler in brawlers, etc.
+### Changed
+- `Api.BRAWLERS_URL` -> `Api.BRAWLERS`
+- examples now use get_brawlers
+### Fixed
+- now `get_rankings` works, and handles all cases (earlier errors could occur, for example, if you did not enter `brawler` if `ranking == "brawlers"`)
+### Deleted
+- `get_constants`
+-`Api.CONSTANTS`
+- old `Api.BRAWLERS`
+- loading in `Api` `Api.BRAWLERS`
+- class `Constants`
+- `if model == Constants` and its body from `_aget_model` and `_get_model`
+- `key` argument from `_aget_model` and `_get_model`
+(as unnecessary, get_brawlers replaces this)
+
 ## [Unnoun yet] - 6/27/20
 ### Added
 - `get_brawlers` function to get available brawlers
