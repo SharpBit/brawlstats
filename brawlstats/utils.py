@@ -1,8 +1,8 @@
 import inspect
-import json
+# import json
 import os
 import re
-import urllib.request
+# import urllib.request
 from datetime import datetime
 from functools import wraps
 
@@ -16,29 +16,18 @@ class API:
         self.CLUB = self.BASE + '/clubs'
         self.RANKINGS = self.BASE + '/rankings'
         self.CONSTANTS = 'https://fourjr.herokuapp.com/bs/constants'
-        self.BRAWLERS_URL = self.BASE + "/brawlers"
+        self.BRAWLERS = self.BASE + '/brawlers'
 
         # Get package version from __init__.py
         path = os.path.dirname(__file__)
         with open(os.path.join(path, '__init__.py')) as f:
             self.VERSION = re.search(r'^__version__ = [\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE).group(1)
 
-        # Get current brawlers and their IDs
-        try:
-            resp = urllib.request.urlopen(self.CONSTANTS + '/characters').read()
-            if isinstance(resp, bytes):
-                resp = resp.decode('utf-8')
-            data = json.loads(resp)
-        except (TypeError, urllib.error.HTTPError, urllib.error.URLError):
-            self.BRAWLERS = {}
-        else:
-            if data:
-                self.BRAWLERS = {
-                    b['tID'].lower(): int(str(b['scId'])[:2] + '0' + str(b['scId'])[2:])
-                    for b in data if b['tID']
-                }
-            else:
-                self.BRAWLERS = {}
+        self.CURRENT_BRAWLERS = {}
+
+    def set_brawlers(self, brawlers):
+        self.CURRENT_BRAWLERS = {b['name'].lower(): int(b['id']) for b in brawlers}
+        print(self.CURRENT_BRAWLERS)
 
 
 def bstag(tag):
@@ -79,8 +68,8 @@ def get_datetime(timestamp: str, unix=True):
         return time
 
 
-# do nothing
 def nothing(value):
+    """Function that returns the argument"""
     return value
 
 
