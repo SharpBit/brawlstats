@@ -64,6 +64,7 @@ class Player(BaseBox):
     def get_club(self):
         """
         Gets the player's club.
+        
         Returns Optional[Club]
         """
         if not self.club:
@@ -86,6 +87,7 @@ class Club(BaseBox):
     def get_members(self):
         """
         Gets the members of a club.
+
         Returns Members
         """
         url = '{}/{}/members'.format(self.client.api.CLUB, bstag(self.tag))
