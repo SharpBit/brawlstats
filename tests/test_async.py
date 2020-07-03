@@ -113,6 +113,10 @@ class TestAsyncClient(asynctest.TestCase):
 
         await self.assertAsyncRaises(KeyError, self.client.get_constants('invalid'))
 
+    async def test_get_brawlers(self):
+        brawlers = await self.client.get_brawlers()
+        self.assertIsInstance(brawlers, brawlstats.Brawlers)
+
     async def asyncTearDown(self):
         await self.client.close()
 

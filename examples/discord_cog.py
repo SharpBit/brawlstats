@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import brawlstats
 
+
 class BrawlStars(commands.Cog, name='Brawl Stars'):
     """A simple cog for Brawl Stars commands using discord.py"""
 
@@ -17,6 +18,7 @@ class BrawlStars(commands.Cog, name='Brawl Stars'):
         except brawlstats.RequestError as e:  # catches all exceptions
             return await ctx.send('```\n{}: {}\n```'.format(e.code, e.message))  # sends code and error message
         em = discord.Embed(title='{0.name} ({0.tag})'.format(player))
+
         em.description = 'Trophies: {}'.format(player.trophies)  # you could make this better by using embed fields
         await ctx.send(embed=em)
 
