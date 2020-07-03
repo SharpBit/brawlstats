@@ -32,6 +32,9 @@ class BaseBox:
 
 
 class BaseBoxList(BaseBox):
+    def __init__(self, client, data):
+        super().__init__(client, data['items'])
+
     def from_data(self, data):
         self.raw_data = data
         self._boxed_data = BoxList(data, camel_killer_box=True)
@@ -94,9 +97,6 @@ class Members(BaseBoxList):
     Returns the members in a club.
     """
 
-    def __init__(self, client, data):
-        super().__init__(client, data['items'])
-
     def __repr__(self):
         return '<Members object count={}>'.format(len(self))
 
@@ -106,9 +106,6 @@ class Ranking(BaseBoxList):
     Returns a player or club ranking that contains a list of players or clubs.
     """
 
-    def __init__(self, client, data):
-        super().__init__(client, data['items'])
-
     def __repr__(self):
         return '<Ranking object count={}>'.format(len(self))
 
@@ -117,9 +114,6 @@ class BattleLog(BaseBoxList):
     """
     Returns a full player battle object with all of its attributes.
     """
-
-    def __init__(self, client, data):
-        super().__init__(client, data['items'])
 
 
 class Constants(BaseBox):
@@ -134,5 +128,8 @@ class Brawlers(BaseBoxList):
     Returns list of available brawlers and information about them.
     """
 
-    def __init__(self, client, data):
-        super().__init__(client, data['items'])
+def __repr__(self):
+        return '<Brawlers object count={}>'.format(len(self))
+
+    def __str__(self):
+        return 'Here {} brawlers'.format(len(self))
