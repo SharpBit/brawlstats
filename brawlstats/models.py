@@ -128,7 +128,7 @@ class Brawlers(BaseBoxList):
     Returns list of available brawlers and information about them.
     """
 
-def __repr__(self):
+    def __repr__(self):
         return '<Brawlers object count={}>'.format(len(self))
 
     def __str__(self):
