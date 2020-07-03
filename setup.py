@@ -25,7 +25,7 @@ setup(
     keywords=['brawl stars, brawlstats, supercell'],
     packages=find_packages(),
     install_requires=requirements,
-    python_requires='>=3.5',
+    python_requires='>=3.5.3',
     project_urls={
         'Source Code': 'https://github.com/SharpBit/brawlstats',
         'Issue Tracker': 'https://github.com/SharpBit/brawlstats/issues',
@@ -39,7 +39,7 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: Implementation :: CPython',
+        'Programming Language :: Python :: 3.8',
         'Natural Language :: English'
     ]
 )

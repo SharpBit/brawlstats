@@ -24,7 +24,8 @@ Features
 - Get a player profile and battlelog.
 - Get a club and its members.
 - Get the top 200 rankings for players, clubs, or a specific brawler.
-- Get information about maps, brawlers, and more!
+- Get information about maps and more!
+- Get information about current available brawlers.
 
 Installation
 ~~~~~~~~~~~~
