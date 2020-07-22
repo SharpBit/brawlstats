@@ -70,10 +70,14 @@ class Client:
 
         # Load brawlers for get_rankings
         if self.is_async:
-            brawlers_info = self.loop.run_until_complete(self.get_brawlers())
+            self.loop.create_task(self.__ainit__())
         else:
             brawlers_info = self.get_brawlers()
-        self.api.set_brawlers(brawlers_info)
+            self.api.set_brawlers(brawlers_info)
+
+    async def __ainit__(self):
+        """Task created to run `get_brawlers` asynchronously"""
+        self.api.set_brawlers(await self.get_brawlers())
 
     def __repr__(self):
         return '<Client async={} timeout={} debug={}>'.format(self.is_async, self.timeout, self.debug)
