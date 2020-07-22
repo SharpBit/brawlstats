@@ -27,7 +27,6 @@ class API:
 
     def set_brawlers(self, brawlers):
         self.CURRENT_BRAWLERS = {b['name'].lower(): int(b['id']) for b in brawlers}
-        print(self.CURRENT_BRAWLERS)
 
 
 def bstag(tag):
