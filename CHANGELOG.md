@@ -5,11 +5,8 @@ All notable changes to this project will be documented in this file.
 ## [4.0.4] - 7/22/20
 ### Added
 - `get_brawlers` function to get available brawlers
-- tox for Python 3.8 works
 ### Changed
 - Split `BaseBox` into `BaseBox` and `BaseBoxList` for convenience
-### Fixed
-- tox uses tox env correctly
 
 ## [4.0.3] - 4/17/20
 ### Fixed
