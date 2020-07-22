@@ -1,6 +1,13 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+
+## [4.0.4] - 7/22/20
+### Added
+- `get_brawlers` function to get available brawlers
+### Changed
+- Split `BaseBox` into `BaseBox` and `BaseBoxList` for convenience
+
 ## [4.0.3] - 4/17/20
 ### Fixed
 - Brawler leaderboards for Python 3.5

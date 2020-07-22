@@ -25,6 +25,9 @@ Data Models
 .. autoclass:: brawlstats.models.Constants
     :members:
 
+.. autoclass:: brawlstats.models.Brawlers
+    :members:
+
 
 Attributes of Data Models
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -264,3 +267,16 @@ Attributes:
             ]
         }
     }
+
+Brawlers
+~~~~~~~~
+
+Returns list of available brawlers and information about them with this structure:
+
+Attributes:
+
+::
+
+[
+    Brawler
+]

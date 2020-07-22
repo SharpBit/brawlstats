@@ -9,7 +9,7 @@ import requests
 from cachetools import TTLCache
 
 from .errors import Forbidden, NotFoundError, RateLimitError, ServerError, UnexpectedError
-from .models import BattleLog, Club, Constants, Members, Player, Ranking
+from .models import BattleLog, Brawlers, Club, Constants, Members, Player, Ranking
 from .utils import API, bstag, typecasted
 
 log = logging.getLogger(__name__)
@@ -50,16 +50,16 @@ class Client:
         self.loop = options.get('loop', asyncio.get_event_loop()) if self.is_async else None
         self.connector = options.get('connector')
 
+        self.debug = options.get('debug', False)
+        self.cache = TTLCache(3200 * 3, 60 * 3)  # 3200 requests per minute
+
         # Session and request options
         self.session = options.get('session') or (
             aiohttp.ClientSession(loop=self.loop, connector=self.connector) if self.is_async else requests.Session()
         )
         self.timeout = timeout
         self.prevent_ratelimit = options.get('prevent_ratelimit', False)
-        self.api = API(options.get('base_url'), version=1)
-
-        self.debug = options.get('debug', False)
-        self.cache = TTLCache(3200 * 3, 60 * 3)  # 3200 requests per minute
+        self.api = API(base_url=options.get('base_url'), version=1)
 
         # Request/response headers
         self.headers = {
@@ -67,6 +67,17 @@ class Client:
             'User-Agent': 'brawlstats/{0} (Python {1[0]}.{1[1]})'.format(self.api.VERSION, sys.version_info),
             'Accept-Encoding': 'gzip'
         }
+
+        # Load brawlers for get_rankings
+        if self.is_async:
+            self.loop.create_task(self.__ainit__())
+        else:
+            brawlers_info = self.get_brawlers()
+            self.api.set_brawlers(brawlers_info)
+
+    async def __ainit__(self):
+        """Task created to run `get_brawlers` asynchronously"""
+        self.api.set_brawlers(await self.get_brawlers())
 
     def __repr__(self):
         return '<Client async={} timeout={} debug={}>'.format(self.is_async, self.timeout, self.debug)
@@ -272,18 +283,19 @@ class Client:
 
         Returns Ranking
         """
-        if region is None:
-            region = 'global'
-
         if brawler is not None:
             if isinstance(brawler, str):
                 brawler = brawler.lower()
-            # Replace brawler name with ID
-            if brawler in self.api.BRAWLERS.keys():
-                brawler = self.api.BRAWLERS[brawler]
 
-            if brawler not in self.api.BRAWLERS.values():
+            # Replace brawler name with ID
+            if brawler in self.api.CURRENT_BRAWLERS.keys():
+                brawler = self.api.CURRENT_BRAWLERS[brawler]
+
+            if brawler not in self.api.CURRENT_BRAWLERS.values():
                 raise ValueError('Invalid brawler.')
+
+        if region is None:
+            region = 'global'
 
         # Check for invalid parameters
         if ranking not in ('players', 'clubs', 'brawlers'):
@@ -310,3 +322,13 @@ class Client:
         Returns Constants
         """
         return self._get_model(self.api.CONSTANTS, model=Constants, key=key)
+
+    def get_brawlers(self):
+        """
+        Get available brawlers and information about them.
+
+        No parameters
+
+        Returns Brawlers
+        """
+        return self._get_model(self.api.BRAWLERS, model=Brawlers)
