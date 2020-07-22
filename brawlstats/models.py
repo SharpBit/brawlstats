@@ -64,7 +64,7 @@ class Player(BaseBox):
     def get_club(self):
         """
         Gets the player's club.
-        
+
         Returns Optional[Club]
         """
         if not self.club:
