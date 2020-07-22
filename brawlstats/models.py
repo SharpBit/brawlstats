@@ -41,11 +41,6 @@ class BaseBoxList(BaseBox):
         return sum(1 for i in self)
 
 
-class BaseBoxListItems(BaseBoxList):
-    def __init__(self, client, data):
-        super().__init__(client, data['items'])
-
-
 class Player(BaseBox):
     """
     Returns a full player object with all of its attributes.
@@ -64,7 +59,6 @@ class Player(BaseBox):
     def get_club(self):
         """
         Gets the player's club.
-
         Returns Optional[Club]
         """
         if not self.club:
@@ -87,35 +81,43 @@ class Club(BaseBox):
     def get_members(self):
         """
         Gets the members of a club.
-
         Returns Members
         """
         url = '{}/{}/members'.format(self.client.api.CLUB, bstag(self.tag))
         return self.client._get_model(url, model=Members)
 
 
-class Members(BaseBoxListItems):
+class Members(BaseBoxList):
     """
     Returns the members in a club.
     """
+
+    def __init__(self, client, data):
+        super().__init__(client, data['items'])
 
     def __repr__(self):
         return '<Members object count={}>'.format(len(self))
 
 
-class Ranking(BaseBoxListItems):
+class Ranking(BaseBoxList):
     """
     Returns a player or club ranking that contains a list of players or clubs.
     """
+
+    def __init__(self, client, data):
+        super().__init__(client, data['items'])
 
     def __repr__(self):
         return '<Ranking object count={}>'.format(len(self))
 
 
-class BattleLog(BaseBoxListItems):
+class BattleLog(BaseBoxList):
     """
     Returns a full player battle object with all of its attributes.
     """
+
+    def __init__(self, client, data):
+        super().__init__(client, data['items'])
 
 
 class Constants(BaseBox):
@@ -125,10 +127,13 @@ class Constants(BaseBox):
     pass
 
 
-class Brawlers(BaseBoxListItems):
+class Brawlers(BaseBoxList):
     """
     Returns list of available brawlers and information about them.
     """
+
+    def __init__(self, client, data):
+        super().__init__(client, data['items'])
 
     def __repr__(self):
         return '<Brawlers object count={}>'.format(len(self))
