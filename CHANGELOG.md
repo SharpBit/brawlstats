@@ -6,9 +6,9 @@ All notable changes to this project will be documented in this file.
 ### Added
 - `get_brawlers` function to get available brawlers
 ### Changed
-- splitting `BaseBox` into `BaseBox` and `BaseBoxList` for convenience
+- splitting `BaseBox` into `BaseBox`, `BaseBoxListItems` and `BaseBoxList` for convenience
 ### Fixed
-- tox for py38 works (not completely sure)
+- tox for Python 3.8 works
 
 ## [4.0.3] - 4/17/20
 ### Fixed
