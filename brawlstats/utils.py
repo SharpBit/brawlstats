@@ -1,6 +1,8 @@
 import inspect
+# import json
 import os
 import re
+# import urllib.request
 from datetime import datetime
 from functools import wraps
 
@@ -13,7 +15,7 @@ class API:
         self.PROFILE = self.BASE + '/players'
         self.CLUB = self.BASE + '/clubs'
         self.RANKINGS = self.BASE + '/rankings'
-        # self.CONSTANTS = 'https://fourjr.herokuapp.com/bs/constants'
+        self.CONSTANTS = 'https://fourjr.herokuapp.com/bs/constants'
         self.BRAWLERS = self.BASE + '/brawlers'
 
         # Get package version from __init__.py
@@ -21,12 +23,10 @@ class API:
         with open(os.path.join(path, '__init__.py')) as f:
             self.VERSION = re.search(r'^__version__ = [\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE).group(1)
 
-        # development:
         self.CURRENT_BRAWLERS = {}
 
     def set_brawlers(self, brawlers):
         self.CURRENT_BRAWLERS = {b['name'].lower(): int(b['id']) for b in brawlers}
-        print(self.CURRENT_BRAWLERS)
 
 
 def bstag(tag):
@@ -99,26 +99,3 @@ def typecasted(func):
                     new_kwargs[nk] = nv
         return func(*new_args, **new_kwargs)
     return wrapper
-
-
-def find_brawler(brawlers, pattern, match):
-    """
-    Find first match brawler containing template
-
-    Parameters
-    ----------
-    brawlers: Brawlers
-        Brawlers instance
-
-    pattern: Any, usually str or int
-        `match` value to find in brawlers
-
-    match: Any, usually str or int
-        key by which the search will be performed
-
-    Returns brawler object
-    """
-    for brawler in brawlers:
-        if brawler.get(pattern) == match:
-            return brawler
-    return None  # returns explicitly

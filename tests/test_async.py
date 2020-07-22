@@ -99,26 +99,23 @@ class TestAsyncClient(asynctest.TestCase):
             await self.client.get_rankings(ranking='people')
 
         with self.assertRaises(ValueError):
-            await self.client.get_rankings(ranking='players', limit=0)
-
-        with self.assertRaises(ValueError):
-            await self.client.get_rankings(ranking='players', limit=201)
-
-        with self.assertRaises(ValueError):
-            await self.client.get_rankings(ranking='brawlers')
+            await self.client.get_rankings(ranking='people', limit=0)
 
         with self.assertRaises(ValueError):
             await self.client.get_rankings(ranking='brawlers', brawler='SharpBit')
 
-        with self.assertRaises(TypeError):
-            await self.client.get_rankings(ranking='brawlers', brawler=5.5)
+    async def test_get_constants(self):
+        constants = await self.client.get_constants()
+        self.assertIsInstance(constants, brawlstats.Constants)
+
+        maps = await self.client.get_constants('maps')
+        self.assertIsInstance(maps, brawlstats.Constants)
+
+        await self.assertAsyncRaises(KeyError, self.client.get_constants('invalid'))
 
     async def test_get_brawlers(self):
         brawlers = await self.client.get_brawlers()
         self.assertIsInstance(brawlers, brawlstats.Brawlers)
-
-        self.assertTrue(brawlers.find("a", 0) is None)
-        self.assertTrue(brawlers.find("id", 16000000).name == 'SHELLY')
 
     async def asyncTearDown(self):
         await self.client.close()
