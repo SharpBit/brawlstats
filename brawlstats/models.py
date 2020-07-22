@@ -1,8 +1,26 @@
 from box import Box, BoxList
-from .utils import bstag
+from .utils import bstag, find_brawler
 
 
-__all__ = ['Player', 'Club', 'Members', 'Ranking', 'BattleLog', 'Constants', 'Brawlers']
+__all__ = ['Player', 'Club', 'Members', 'Ranking', 'BattleLog', 'Brawlers']
+
+
+# for child classes
+class MyBox(Box):
+    def __getattr__(self, attr):
+        try:
+            return super().__getattr__(attr)
+        except AttributeError:
+            return None  # users can use an if statement rather than try/except to find a missing attribute
+
+
+# for child classes
+class MyBoxList(BoxList):
+    def __getattr__(self, attr):
+        try:
+            return super().__getattr__(attr)
+        except AttributeError:
+            return None  # users can use an if statement rather than try/except to find a missing attribute
 
 
 class BaseBox:
@@ -12,7 +30,7 @@ class BaseBox:
 
     def from_data(self, data):
         self.raw_data = data
-        self._boxed_data = Box(data, camel_killer_box=True)
+        self._boxed_data = MyBox(data, camel_killer_box=True)
         return self
 
     def __getattr__(self, attr):
@@ -34,7 +52,7 @@ class BaseBox:
 class BaseBoxList(BaseBox):
     def from_data(self, data):
         self.raw_data = data
-        self._boxed_data = BoxList(data, camel_killer_box=True)
+        self._boxed_data = MyBoxList(data, box_class=MyBox, camel_killer_box=True)
         return self
 
     def __len__(self):
@@ -122,13 +140,6 @@ class BattleLog(BaseBoxList):
         super().__init__(client, data['items'])
 
 
-class Constants(BaseBox):
-    """
-    Returns some Brawl Stars constants.
-    """
-    pass
-
-
 class Brawlers(BaseBoxList):
     """
     Returns list of available brawlers and information about them.
@@ -142,3 +153,21 @@ class Brawlers(BaseBoxList):
 
     def __str__(self):
         return 'Here {} brawlers'.format(len(self))
+
+    def find(self, pattern, match):
+        """
+        Find first match brawler containing template
+
+        Parameters
+        ----------
+        pattern: Any, usually str or int
+            `match` value to find in brawlers
+
+        match: Any, usually str or int
+            key by which the search will be performed
+
+        Returns brawler object
+        """
+        if pattern == "name" and isinstance(match, str):
+            match = match.upper()
+        return find_brawler(self, pattern, match)

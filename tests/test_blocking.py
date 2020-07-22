@@ -64,10 +64,6 @@ class TestBlockingClient(unittest.TestCase):
         self.assertIsInstance(us_player_ranking, brawlstats.Ranking)
         self.assertTrue(len(us_player_ranking) == 1)
 
-        self.assertRaises(ValueError, self.client.get_rankings, ranking='people')
-        self.assertRaises(ValueError, self.client.get_rankings, ranking='people', limit=0)
-        self.assertRaises(ValueError, self.client.get_rankings, ranking='brawlers', brawler='SharpBit')
-
         club_ranking = self.client.get_rankings(ranking='clubs')
         self.assertIsInstance(club_ranking, brawlstats.Ranking)
 
@@ -82,18 +78,20 @@ class TestBlockingClient(unittest.TestCase):
         self.assertIsInstance(us_brawler_ranking, brawlstats.Ranking)
         self.assertTrue(len(us_brawler_ranking) == 1)
 
-    def test_get_constants(self):
-        constants = self.client.get_constants()
-        self.assertIsInstance(constants, brawlstats.Constants)
+        self.assertRaises(ValueError, self.client.get_rankings, ranking='people')
+        self.assertRaises(ValueError, self.client.get_rankings, ranking='players', limit=0)
+        self.assertRaises(ValueError, self.client.get_rankings, ranking='players', limit=201)
+        self.assertRaises(ValueError, self.client.get_rankings, ranking='brawlers')
+        self.assertRaises(ValueError, self.client.get_rankings, ranking='brawlers', brawler='SharpBit')
+        self.assertRaises(ValueError, self.client.get_rankings, ranking='brawlers', brawler=5.5)
 
-        maps = self.client.get_constants('maps')
-        self.assertIsInstance(maps, brawlstats.Constants)
-
-        self.assertRaises(KeyError, self.client.get_constants, 'invalid')
-
-    def test_get_brawlers(self):
+    async def test_get_brawlers(self):
         brawlers = self.client.get_brawlers()
         self.assertIsInstance(brawlers, brawlstats.Brawlers)
+
+        self.assertTrue(brawlers.find("a", 0) is None)
+        self.assertTrue(brawlers.find("id", 555) is None)
+        self.assertTrue(brawlers.find("id", 16000000).name == 'SHELLY')
 
     def tearDown(self):
         self.client.close()
