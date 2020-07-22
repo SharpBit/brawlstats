@@ -73,6 +73,7 @@ Contributing
 Special thanks to this project's contributors ❤️
 
 - `4JR`_
+- `golbu`_
 - `kawaii banana`_
 - `kjkui`_
 - `Kyber`_
@@ -97,3 +98,4 @@ If you want to contribute, whether it be a bug fix or new feature, make sure to 
 .. _Papiersnipper: https://github.com/robinmahieu
 .. _Pollen: https://github.com/pollen5
 .. _kawaii banana: https://github.com/bananaboy21
+.. _golbu: https://github.com/0dminnimda
