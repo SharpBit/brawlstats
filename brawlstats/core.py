@@ -59,6 +59,8 @@ class Client:
         )
         self.timeout = timeout
         self.prevent_ratelimit = options.get('prevent_ratelimit', False)
+        if self.is_async and self.prevent_ratelimit:
+            self.lock = asyncio.Lock(loop=self.loop)
         self.api = API(base_url=options.get('base_url'), version=1)
 
         # Request/response headers
@@ -164,8 +166,8 @@ class Client:
     async def _aget_model(self, url, model, key=None):
         """Method to turn the response data into a Model class for the async client."""
         if self.prevent_ratelimit:
-            # Use asyncio.Lock() if prevent_ratelimit=True
-            async with asyncio.Lock():
+            # Use self.lock if prevent_ratelimit=True
+            async with self.lock:
                 data = await self._arequest(url)
                 await asyncio.sleep(0.1)
         else:
