@@ -10,7 +10,7 @@ from cachetools import TTLCache
 
 from .errors import Forbidden, NotFoundError, RateLimitError, ServerError, UnexpectedError
 from .models import BattleLog, Brawlers, Club, Constants, Members, Player, Ranking
-from .utils import API, bstag, typecasted
+from .utils import API, bstag, bstags, typecasted
 
 log = logging.getLogger(__name__)
 
@@ -127,6 +127,59 @@ class Client:
             log.debug('GET {} got result from cache.'.format(url))
         return data
 
+    async def _fetch(self, url):
+        async with self.session.get(url, timeout=self.timeout, headers=self.headers) as resp:
+            return await (url, resp)
+
+    async def _arequests2(self, urls):
+        """Async method to request a url."""
+        tasks = []
+
+        data = {}
+
+        for url in urls:
+            # Try and retrieve from cache
+            cache = self._resolve_cache(url)
+            if cache is not None:
+                return cache
+
+
+            task = asyncio.ensure_future(self._fetch(url))
+            tasks.append(task)
+
+        try:
+            responses = await asyncio.gather(*tasks)
+        except asyncio.TimeoutError:
+            raise ServerError(503, url)
+        else:
+            for resp in responses:
+                data = self._raise_for_status(resp, await resp.text())
+                
+                # Cache the data if successful
+                self.cache[url] = data
+
+        return data
+
+    async def _arequests(self, urls):
+        tasks = []
+
+        for url in urls:
+            task = asyncio.ensure_future(self._arequest2(url))
+            tasks.append(task)
+
+        return await asyncio.gather(*tasks)
+
+    async def _arequest2(self, url):
+        if self.prevent_ratelimit:
+            # Use self.lock if prevent_ratelimit=True
+            async with self.lock:
+                data = await self._arequest(url)
+                await asyncio.sleep(self.waiting_time)
+        else:
+            data = await self._arequest(url)
+
+        return data
+
     async def _arequest(self, url):
         """Async method to request a url."""
         # Try and retrieve from cache
@@ -147,9 +200,6 @@ class Client:
 
     def _request(self, url):
         """Sync method to request a url."""
-        if self.is_async:
-            return self._arequest(url)
-
         # Try and retrieve from cache
         cache = self._resolve_cache(url)
         if cache is not None:
@@ -204,6 +254,23 @@ class Client:
 
         return model(self, data)
 
+    async def _aget_models(self, urls, model):
+        res = await self._arequests(urls)
+
+        return [model(self, data) for data in res]
+
+    def _get_models(self, urls, model):
+        if self.is_async:
+            # Calls the async function
+            return self._aget_models(urls, model=model)
+
+        for url in urls:
+            data = self._request(url)
+            if self.prevent_ratelimit:
+                time.sleep(self.waiting_time)
+
+        return model(self, data)
+
     @typecasted
     def get_player(self, tag: bstag):
         """
@@ -223,6 +290,14 @@ class Client:
     get_profile = get_player
 
     @typecasted
+    def get_players(self, tags: bstags):
+        urls = ['{}/{}'.format(self.api.PROFILE, tag) for tag in tags]
+
+        return self._get_models(urls, model=Player)
+
+    get_profiles = get_players
+
+    @typecasted
     def get_battle_logs(self, tag: bstag):
         """Get a player's battle logs.
 
@@ -235,6 +310,11 @@ class Client:
         Returns BattleLog
         """
         url = '{}/{}/battlelog'.format(self.api.PROFILE, tag)
+        return self._get_model(url, model=BattleLog)
+
+    @typecasted
+    def get_multiple_battle_logs(self, tags: bstags):
+        url = ['{}/{}/battlelog'.format(self.api.PROFILE, tag) for tag in tags]
         return self._get_model(url, model=BattleLog)
 
     @typecasted

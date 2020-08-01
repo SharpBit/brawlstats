@@ -45,6 +45,10 @@ def bstag(tag):
     return tag
 
 
+def bstags(tags):
+    return [bstag(tag) for tag in tags]
+
+
 def get_datetime(timestamp: str, unix=True):
     """
     Converts a %Y%m%dT%H%M%S.%fZ to a UNIX timestamp
