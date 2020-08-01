@@ -40,6 +40,8 @@ class Client:
         Whether or not to wait between requests to prevent being ratelimited.
     base_url: Optional[str] = None
         Sets a different base URL to make request to.
+    waiting_time: Optional[float] = 0.01
+        Timeout between requests, works if prevent_ratelimit = True
     """
 
     REQUEST_LOG = '{method} {url} recieved {text} has returned {status}'
@@ -59,6 +61,7 @@ class Client:
         )
         self.timeout = timeout
         self.prevent_ratelimit = options.get('prevent_ratelimit', False)
+        self.waiting_time = options.get('waiting_time', 0.1)
         if self.is_async and self.prevent_ratelimit:
             self.lock = asyncio.Lock(loop=self.loop)
         self.api = API(base_url=options.get('base_url'), version=1)
@@ -169,7 +172,7 @@ class Client:
             # Use self.lock if prevent_ratelimit=True
             async with self.lock:
                 data = await self._arequest(url)
-                await asyncio.sleep(0.1)
+                await asyncio.sleep(self.waiting_time)
         else:
             data = await self._arequest(url)
 
@@ -190,7 +193,7 @@ class Client:
 
         data = self._request(url)
         if self.prevent_ratelimit:
-            time.sleep(0.1)
+            time.sleep(self.waiting_time)
 
         if model == Constants:
             if key:
