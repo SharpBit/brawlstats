@@ -5,6 +5,7 @@ import re
 # import urllib.request
 from datetime import datetime
 from functools import wraps
+import collections.abc as abc
 
 from .errors import NotFoundError
 
@@ -103,3 +104,11 @@ def typecasted(func):
                     new_kwargs[nk] = nv
         return func(*new_args, **new_kwargs)
     return wrapper
+
+
+def isiter(obj):
+    return isinstance(obj, abc.Iterable)
+
+
+def same(elements):
+    return len(elements) < 1 or len(elements) == elements.count(elements[0])

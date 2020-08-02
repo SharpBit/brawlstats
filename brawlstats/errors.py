@@ -8,6 +8,16 @@ class RequestError(Exception):
         return self.message
 
 
+class IncorrectDataError(Exception):
+    """Client provided incorrect parameters for the request."""
+
+    def __init__(self, code, url, message):
+        self.code = code
+        self.url = url
+        self.message = message
+        super().__init__(self.code, self.message)
+
+
 class Forbidden(RequestError):
     """Raised if your API Key is invalid."""
 

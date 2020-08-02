@@ -6,6 +6,9 @@ The possible exceptions thrown by the library.
 .. autoexception:: brawlstats.errors.RequestError
        :members:
 
+.. autoexception:: brawlstats.errors.IncorrectDataError
+       :members:    
+
 .. autoexception:: brawlstats.errors.Forbidden
        :members:
 

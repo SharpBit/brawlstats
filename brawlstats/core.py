@@ -8,9 +8,9 @@ import aiohttp
 import requests
 from cachetools import TTLCache
 
-from .errors import Forbidden, NotFoundError, RateLimitError, ServerError, UnexpectedError
+from .errors import IncorrectDataError, Forbidden, NotFoundError, RateLimitError, ServerError, UnexpectedError
 from .models import BattleLog, Brawlers, Club, Constants, Members, Player, Ranking
-from .utils import API, bstag, bstags, typecasted
+from .utils import API, bstag, bstags, isiter, typecasted, same
 
 log = logging.getLogger(__name__)
 
@@ -107,6 +107,8 @@ class Client:
 
         if 300 > code >= 200:
             return data
+        if code == 400:
+            raise IncorrectDataError(code, url, data['message'])
         if code == 403:
             raise Forbidden(code, url, data['message'])
         if code == 404:
@@ -314,8 +316,8 @@ class Client:
 
     @typecasted
     def get_multiple_battle_logs(self, tags: bstags):
-        url = ['{}/{}/battlelog'.format(self.api.PROFILE, tag) for tag in tags]
-        return self._get_model(url, model=BattleLog)
+        urls = ['{}/{}/battlelog'.format(self.api.PROFILE, tag) for tag in tags]
+        return self._get_models(urls, model=BattleLog)
 
     @typecasted
     def get_club(self, tag: bstag):
@@ -334,6 +336,11 @@ class Client:
         return self._get_model(url, model=Club)
 
     @typecasted
+    def get_clubs(self, tags: bstags):
+        urls = ['{}/{}'.format(self.api.CLUB, tag) for tag in tags]
+        return self._get_models(urls, model=Club)
+
+    @typecasted
     def get_club_members(self, tag: bstag):
         """
         Get the members of a club.
@@ -348,6 +355,43 @@ class Client:
         """
         url = '{}/{}/members'.format(self.api.CLUB, tag)
         return self._get_model(url, model=Members)
+
+    @typecasted
+    def get_multiple_club_members(self, tags: bstags):
+        urls = ['{}/{}/members'.format(self.api.CLUB, tag) for tag in tags]
+        return self._get_models(urls, model=Members)
+
+    def _check_rankings(self, ranking, region, limit, brawler):
+        if region is None:
+            region = 'global'
+
+        # Check for invalid parameters
+        if ranking not in ('players', 'clubs', 'brawlers'):
+            raise ValueError("'ranking' must be 'players', 'clubs' or 'brawlers'.")
+        if not 0 < limit <= 200:
+            raise ValueError('Make sure limit is between 1 and 200.')
+
+        if ranking == 'brawlers':
+            if brawler is None:
+                raise ValueError('Brawler not set.')
+            else:
+                if isinstance(brawler, str):
+                    brawler = brawler.lower()
+
+                # Replace brawler name with ID
+                if brawler in self.api.CURRENT_BRAWLERS.keys():
+                    brawler = self.api.CURRENT_BRAWLERS[brawler]
+
+                if brawler not in self.api.CURRENT_BRAWLERS.values():
+                    raise ValueError('Invalid brawler.')
+
+            # Construct URL
+            url = '{}/{}/{}/{}?limit={}'.format(self.api.RANKINGS, region, ranking, brawler, limit)
+        else:
+            # Construct URL
+            url = '{}/{}/{}?limit={}'.format(self.api.RANKINGS, region, ranking, limit)
+
+        return url
 
     def get_rankings(self, *, ranking: str, region=None, limit: int=200, brawler=None):
         """
@@ -368,32 +412,31 @@ class Client:
 
         Returns Ranking
         """
-        if brawler is not None:
-            if isinstance(brawler, str):
-                brawler = brawler.lower()
-
-            # Replace brawler name with ID
-            if brawler in self.api.CURRENT_BRAWLERS.keys():
-                brawler = self.api.CURRENT_BRAWLERS[brawler]
-
-            if brawler not in self.api.CURRENT_BRAWLERS.values():
-                raise ValueError('Invalid brawler.')
-
-        if region is None:
-            region = 'global'
-
-        # Check for invalid parameters
-        if ranking not in ('players', 'clubs', 'brawlers'):
-            raise ValueError("'ranking' must be 'players', 'clubs' or 'brawlers'.")
-        if not 0 < limit <= 200:
-            raise ValueError('Make sure limit is between 1 and 200.')
-
-        # Construct URL
-        url = '{}/{}/{}?limit={}'.format(self.api.RANKINGS, region, ranking, limit)
-        if ranking == 'brawlers':
-            url = '{}/{}/{}/{}?limit={}'.format(self.api.RANKINGS, region, ranking, brawler, limit)
+        url = self._check_rankings(ranking, region, limit, brawler)
 
         return self._get_model(url, model=Ranking)
+
+    def get_multiple_rankings(self, *, rankings: str, regions=None, limits: int=200, brawlers=None):
+        params = [rankings, regions, limits, brawlers]
+
+        lengths = []
+
+        for param in params:
+            if isiter(param):
+                lengths.append(len(param))
+
+        if not same(lengths):
+            raise ValueError("all of itersble parameters must be the same length")
+
+        len_ = lengths[0]
+
+        for i in range(len(params)):
+            if not isiter(params[i]):
+                params[i] = [params[i] for _ in range(len_)]
+
+        urls = [self._check_rankings(*params) for params in zip(*params)]
+
+        return self._get_models(urls, model=Ranking)
 
     def get_constants(self, key=None):
         """

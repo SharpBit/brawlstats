@@ -277,6 +277,6 @@ Attributes:
 
 ::
 
-[
-    Brawler
-]
+    [
+        Brawler
+    ]
