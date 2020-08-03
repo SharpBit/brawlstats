@@ -5,14 +5,156 @@ import sys
 import time
 
 import aiohttp
+from aiohttp.client_reqrep import ClientResponse
 import requests
 from cachetools import TTLCache
 
 from .errors import IncorrectDataError, Forbidden, NotFoundError, RateLimitError, ServerError, UnexpectedError
 from .models import BattleLog, Brawlers, Club, Constants, Members, Player, Ranking
-from .utils import API, bstag, bstags, isiter, typecasted, same
+from .utils import API, bstag, bstags, isiter, not_unique, typecasted, same
 
 log = logging.getLogger(__name__)
+
+
+class MyClientResponse(ClientResponse):
+    def _raise_for_status(self):
+        """
+        Checks for invalid error codes returned by the API.
+        """
+        try:
+            data = json.loads(text)
+        except json.JSONDecodeError:
+            data = text
+
+        code = getattr(resp, 'status', None) or getattr(resp, 'status_code')
+        url = resp.url
+
+        if self.debug:
+            log.debug(self.REQUEST_LOG.format(method='GET', url=url, text=text, status=code))
+
+        if 300 > code >= 200:
+            return data
+        if code == 400:
+            raise IncorrectDataError(code, url, data['message'])
+        if code == 403:
+            raise Forbidden(code, url, data['message'])
+        if code == 404:
+            raise NotFoundError(code, reason='Resource not found.')
+        if code == 429:
+            raise RateLimitError(code, url)
+        if code == 500:
+            raise UnexpectedError(code, url, data)
+        if code == 503:
+            raise ServerError(code, url)
+
+    # def raise_for_status(self) -> None:
+    #     if 400 <= self.status:
+    #         # reason should always be not None for a started response
+    #         assert self.reason is not None
+    #         self.release()
+    #         raise ClientResponseError(
+    #             self.request_info,
+    #             self.history,
+    #             status=self.status,
+    #             message=self.reason,
+    #             headers=self.headers)
+
+
+class ThrottledClientSession(aiohttp.ClientSession):
+    """Rate-throttled client session class inherited from aiohttp.ClientSession)"""
+    def __init__(self, *args, rate_limit=1, sleep_time=None, min_sleep=0, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.rate_limit = rate_limit
+        self._fillerTask = None
+        self._queue = None
+        self.min_sleep = min_sleep
+
+        if rate_limit < 1:
+            raise ValueError('`rate_limit` must be positive')
+
+        # (increment, sleep) = self._get_rate_increment()
+        size = 2  # min(1, int(rate_limit)) + 1
+        self._queue = asyncio.Queue(size)
+
+        if sleep_time is None:
+            if self.min_sleep <= 0:
+                self.sleep_time = 1 / self.rate_limit  
+            else:
+                self.sleep_time = max(1 / self.rate_limit, self.min_sleep)
+        else:
+            self.sleep_time = sleep_time
+
+        self._fillerTask = asyncio.create_task(self._filler())
+        # self._start_time = None
+        # self._count = 0
+
+
+    async def close(self):
+        """
+        Close rate-limiter's "bucket filler" task
+        """
+        # DEBUG 
+        if self._start_time is not None:
+            duration = time.time() - self._start_time
+            # print('Average WG API request rate: ' + #'{:.1f}'.format(self._count / duration) + ' / sec')
+        if self._fillerTask is not None:
+            self._fillerTask.cancel()
+        try:
+            await asyncio.wait_for(self._fillerTask, timeout=3)
+        except asyncio.TimeoutError as err:
+            print(str(err))
+        await super().close()
+
+    async def _filler(self):#, rate_limit: float = 1):
+        """
+        Filler task to fill the leaky bucket algo
+        """
+        try:
+            if self._queue is None:
+                return None
+            #self.rate_limit = rate_limit
+            #sleep = self._get_sleep()
+            # print('SLEEP: ' + str(sleep))
+            updated_at = time.monotonic()
+            fraction = 0
+            extra_increment = 0
+            for i in range(0, self._queue.maxsize):
+                self._queue.put_nowait(i)
+            while True:
+                if not self._queue.full():
+                    now = time.monotonic()
+                    increment = self.rate_limit * (now - updated_at)
+                    fraction += increment % 1
+                    extra_increment = fraction // 1
+                    items_2_add = int(min(self._queue.maxsize - self._queue.qsize(), int(increment) + extra_increment))
+                    fraction = fraction % 1
+                    for i in range(0, items_2_add):
+                        self._queue.put_nowait(i)
+                    updated_at = now
+                await asyncio.sleep(self.sleep_time)
+        except asyncio.CancelledError:
+            raise Exception("Cancelled")
+            #debug('Cancelled')
+        except Exception as err:
+            raise err#Exception("Cancelled")
+            #error(exception=err)
+
+    async def _allow(self):
+        if self._queue is not None:
+            # debug 
+            #if self._start_time == None:
+            #    self._start_time = time.time()
+            await self._queue.get()
+            self._queue.task_done()
+            # DEBUG 
+            #self._count += 1
+
+    async def _request(self, *args, **kwargs):
+        """
+        Throttled _request()
+        """
+        await self._allow()
+        return await super()._request(*args, **kwargs)
 
 
 class Client:
@@ -55,9 +197,18 @@ class Client:
         self.debug = options.get('debug', False)
         self.cache = TTLCache(3200 * 3, 60 * 3)  # 3200 requests per minute
 
+        ClientSession = ThrottledClientSession(# aiohttp.ClientSession(
+            loop=self.loop,
+            connector=self.connector,
+            rate_limit=58,  # float("inf"))
+            #response_class=MyClientResponse, raise_for_status=True,
+        )
+
+        # ClientSession = aiohttp.ClientSession(loop=self.loop, connector=self.connector)
+
         # Session and request options
         self.session = options.get('session') or (
-            aiohttp.ClientSession(loop=self.loop, connector=self.connector) if self.is_async else requests.Session()
+            ClientSession if self.is_async else requests.Session()
         )
         self.timeout = timeout
         self.prevent_ratelimit = options.get('prevent_ratelimit', False)
@@ -65,6 +216,7 @@ class Client:
         if self.is_async and self.prevent_ratelimit:
             self.lock = asyncio.Lock(loop=self.loop)
         self.api = API(base_url=options.get('base_url'), version=1)
+        self.use_lock = options.get('use_lock') or sys.version_info < (3, 8)
 
         # Request/response headers
         self.headers = {
@@ -90,15 +242,10 @@ class Client:
     def close(self):
         return self.session.close()
 
-    def _raise_for_status(self, resp, text):
+    def _raise_for_status(self, resp, text, data):
         """
         Checks for invalid error codes returned by the API.
         """
-        try:
-            data = json.loads(text)
-        except json.JSONDecodeError:
-            data = text
-
         code = getattr(resp, 'status', None) or getattr(resp, 'status_code')
         url = resp.url
 
@@ -120,6 +267,8 @@ class Client:
         if code == 503:
             raise ServerError(code, url)
 
+    #def _get_data()
+
     def _resolve_cache(self, url):
         """Find any cached response for the same requested url."""
         data = self.cache.get(url)
@@ -130,48 +279,66 @@ class Client:
         return data
 
     async def _fetch(self, url):
-        async with self.session.get(url, timeout=self.timeout, headers=self.headers) as resp:
-            return await (url, resp)
+        try:
+            async with self.session.get(url, timeout=self.timeout, headers=self.headers) as resp:
+                return resp, await resp.text()
+        except asyncio.TimeoutError:
+            raise ServerError(503, url)
+
+    async def _arequest_ratelimit_yes_lock(self, url):
+        # Use self.lock if prevent_ratelimit=True
+        async with self.lock:
+            return await self._arequest_ratelimit_no_lock(url)
+
+    async def _arequest_ratelimit_no_lock(self, url):
+        data = await self._fetch(url)
+        await asyncio.sleep(self.waiting_time)
+
+        return data
+
+    # async def _arequest_ratelimit_no(self, url):
+    #     return await self._fetch(url)
 
     async def _arequests2(self, urls):
-        """Async method to request a url."""
-        tasks = []
+        """Async method to request a urls."""
+        tasks = {}
+        from_cache = {}
 
-        data = {}
+        if self.prevent_ratelimit:
+            if self.use_lock:
+                func = self._arequest_ratelimit_yes_lock
+            else:
+                func = self._arequest_ratelimit_no_lock
+        else:
+            func = self._fetch
 
         for url in urls:
             # Try and retrieve from cache
             cache = self._resolve_cache(url)
             if cache is not None:
-                return cache
+                from_cache[url] = cache
+                continue
 
+            tasks[url] = asyncio.ensure_future(func(url))
 
-            task = asyncio.ensure_future(self._fetch(url))
-            tasks.append(task)
+        await asyncio.gather(*tasks.values())#, loop=self.loop)#, return_exceptions=True)
 
-        try:
-            responses = await asyncio.gather(*tasks)
-        except asyncio.TimeoutError:
-            raise ServerError(503, url)
-        else:
-            for resp in responses:
-                data = self._raise_for_status(resp, await resp.text())
-                
-                # Cache the data if successful
-                self.cache[url] = data
+        for url, task in tasks.items():
+            # Cache the data if successful
+            self.cache[url] = from_cache[url] = self._raise_for_status(*task._result)
 
-        return data
+        return [from_cache[url] for url in urls]
 
     async def _arequests(self, urls):
         tasks = []
 
         for url in urls:
-            task = asyncio.ensure_future(self._arequest2(url))
+            task = asyncio.ensure_future(self._arequest(url))  # _arequest_ratelimit
             tasks.append(task)
 
         return await asyncio.gather(*tasks)
 
-    async def _arequest2(self, url):
+    async def _arequest_ratelimit(self, url):
         if self.prevent_ratelimit:
             # Use self.lock if prevent_ratelimit=True
             async with self.lock:
@@ -190,8 +357,11 @@ class Client:
             return cache
 
         try:
-            async with self.session.get(url, timeout=self.timeout, headers=self.headers) as resp:
-                data = self._raise_for_status(resp, await resp.text())
+            req = self.session.get(
+                url, timeout=self.timeout, headers=self.headers,
+            )
+            async with req as resp:
+                data = self._raise_for_status(resp, await resp.text(), await resp.json())
         except asyncio.TimeoutError:
             raise ServerError(503, url)
         else:
@@ -209,7 +379,7 @@ class Client:
 
         try:
             with self.session.get(url, timeout=self.timeout, headers=self.headers) as resp:
-                data = self._raise_for_status(resp, resp.text)
+                data = self._raise_for_status(resp, resp.text, resp.json())
         except requests.Timeout:
             raise ServerError(503, url)
         else:
@@ -257,14 +427,28 @@ class Client:
         return model(self, data)
 
     async def _aget_models(self, urls, model):
+        #if self.prevent_ratelimit:
+        #    # Use self.lock if prevent_ratelimit=True
+        #    async with self.lock:
+        #        res = await self._arequests2(urls)
+        #else:
+        #    res = await self._arequests2(urls)
+
         res = await self._arequests(urls)
+        # res = await self._arequests2(urls)
 
         return [model(self, data) for data in res]
 
     def _get_models(self, urls, model):
+        # check the uniqueness of all urls
+        if len(urls) > 1 and not_unique(urls):
+            raise ValueError("not all arguments in iterable are unique")
+
         if self.is_async:
             # Calls the async function
             return self._aget_models(urls, model=model)
+
+        data = self._grequests(urls)
 
         for url in urls:
             data = self._request(url)

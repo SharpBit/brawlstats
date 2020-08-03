@@ -112,3 +112,8 @@ def isiter(obj):
 
 def same(elements):
     return len(elements) < 1 or len(elements) == elements.count(elements[0])
+
+
+def not_unique(x):
+    seen = list()
+    return any(i in seen or seen.append(i) for i in x)
