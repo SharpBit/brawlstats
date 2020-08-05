@@ -170,10 +170,7 @@ class Client:
             return cache
 
         try:
-            req = self.session.get(
-                url, timeout=self.timeout, headers=self.headers,
-            )
-            async with req as resp:
+            async with self.session.get(url, timeout=self.timeout, headers=self.headers) as resp:
                 data = self._raise_for_status(resp, await resp.text(), await resp.json())
         except asyncio.TimeoutError:
             raise ServerError(503, url)
