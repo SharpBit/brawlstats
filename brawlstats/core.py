@@ -36,12 +36,28 @@ class Client:
         Pass a TCPConnector into the client (aiohttp). Defaults to ``None``.
     debug: Optional[bool] = False
         Whether or not to log info for debugging.
-    prevent_ratelimit: Optional[bool] = is_async
-        Whether or not to wait between requests to prevent being ratelimited.
     base_url: Optional[str] = None
         Sets a different base URL to make request to.
-    waiting_time: Optional[float] = 0.01
-        Timeout between requests, works if prevent_ratelimit = True
+    return_raw_data: Optional[bool] = False
+        If ``True``, then it returns raw data without using models,
+        functions work about 2 times faster with async than if ``False``
+    limiter Optional
+        Any object that has `acquire` and `release` functions,
+        such as ``asyncio.Semaphore``, ``asyncio.Lock`` and the like.
+        Used to limit the number of requests and avoid being ratelimited.
+        Works only if `is_async` is ``True``
+        Default is ``asyncio.Semaphore``
+    ratelimit Optional[float] = 15.
+        If `limiter` not set then ``asyncio.Semaphore`` `value`.
+        https://docs.python.org/3/library/asyncio-sync.html#asyncio.Semaphore
+    use_limiter Optional[bool] = `is_async`
+        If ``False``, then the `limiter` is not used for requests (see `limiter`)
+    wait_between Optional[bool] = `is_async`
+        Always wait between requests `waiting_time` to avoid being ratelimited.
+    waiting_time: Optional[float] = 0.
+        Timeout in seconds between requests, works if `wait_between` is ``True``
+    prevent_ratelimit: Optional[bool] = `is_async`
+        If True, overrides `use_limiter` and `wait_between` as True
     """
 
     REQUEST_LOG = '{method} {url} recieved {text} has returned {status}'
@@ -56,14 +72,7 @@ class Client:
         self.cache = TTLCache(3200 * 3, 60 * 3)  # 3200 requests per minute
 
         # Use models or return raw data
-        self.return_raw_data = options.get('return_raw_data')
-        self.req = options.get('req')
-
-        # reminder:
-        # if faster_type[0]:
-        #     rate_limit = 58
-        # if faster_type[1]:
-        #     rate_limit = 45
+        self.return_raw_data = options.get('return_raw_data', False)
 
         # Session and request options
         self.session = options.get('session') or (
@@ -73,14 +82,14 @@ class Client:
         self.api = API(base_url=options.get('base_url'), version=1)
 
         # handling ratelimits
-        prevent_ratelimit = options.get('prevent_ratelimit', self.is_async)
-        self.use_limiter = prevent_ratelimit or options.get('use_limiter', True)
-        self.wait_between = prevent_ratelimit or options.get('wait_between', False)
+        if options.get('prevent_ratelimit', self.is_async):
+            self.use_limiter = self.wait_between = True
+        else:
+            self.use_limiter = options.get('use_limiter', False)
+            self.wait_between = options.get('wait_between', False)
         self.waiting_time = options.get('waiting_time', 0)
-        if self.is_async and self.use_limiter:
-            rate_limit = options.get('rate_limit', 16)
-            self.limiter = asyncio.Semaphore(rate_limit, loop=self.loop)
-            # limiter = asyncio.Lock(loop=self.loop)
+        self.limiter = options.get('limiter') or asyncio.Semaphore(options.get('ratelimit', 15), loop=self.loop)
+        # limiter = asyncio.Lock(loop=self.loop)
 
         # Request/response headers
         self.headers = {
@@ -140,90 +149,16 @@ class Client:
             log.debug('GET {} got result from cache.'.format(url))
         return data
 
-    async def _fetch(self, url):
-        try:
-            async with self.session.get(url, timeout=self.timeout, headers=self.headers) as resp:
-                return resp, await resp.text()
-        except asyncio.TimeoutError:
-            raise ServerError(503, url)
-
-    async def _handle_fetch(self, url):
+    async def _handle_arequest(self, url):
+        """Async method for handling requests to avoid rate limiting"""
         if self.use_limiter:
-            if self.wait_between:
-                await asyncio.sleep(self.waiting_time)
-
-
-        # if self.prevent_ratelimit:
-        #     # Use self.limiter if prevent_ratelimit=True
-        #     if self.use_limiter:
-        #         async with self.limiter:
-        #             data = await self._fetch(url)
-        #             if self.wait_between:
-        #                 await asyncio.sleep(self.waiting_time)
-        #     else:
-        #         data = await self._fetch(url)
-        #         if self.wait_between:
-        #             await asyncio.sleep(self.waiting_time)
-        # else:
-        #     data = await self._areq_fetchuest(url)
-
-        return data
-
-    async def _arequests2(self, urls):
-        """Async method to request a urls."""
-        tasks = {}
-        from_cache = {}
-
-        for url in urls:
-            # Try and retrieve from cache
-            cache = self._resolve_cache(url)
-            if cache is not None:
-                from_cache[url] = cache
-                continue
-
-            # add task
-            tasks[url] = asyncio.ensure_future(self._handle_fetch(url))
-
-        self.tasks = tasks
-
-        start = time.time()
-
-        await asyncio.gather(*tasks.values(), loop=self.loop)
-
-        self.time_ = time.time() - start
-
-        for url, task in tasks.items():
-            # Cache and save the data if successful
-            self.cache[url] = from_cache[url] = self._raise_for_status(*task._result)
-
-        # sort by urls order
-        return [from_cache[url] for url in urls]
-
-    async def _arequests(self, urls):
-        tasks = []
-
-        for url in urls:
-            task = asyncio.ensure_future(self._arequest_ratelimit(url))
-            tasks.append(task)
-
-        self.tasks = tasks
-
-        return await asyncio.gather(*tasks)
-
-    async def _arequest_ratelimit(self, url):
-        if self.prevent_ratelimit:
-            # Use self.limiter if prevent_ratelimit=True
-            if self.use_limiter:
-                async with self.limiter:
-                    data = await self._arequest(url)
-                    if self.wait_between:
-                        await asyncio.sleep(self.waiting_time)
-            else:
+            async with self.limiter:
                 data = await self._arequest(url)
-                if self.wait_between:
-                    await asyncio.sleep(self.waiting_time)
         else:
             data = await self._arequest(url)
+
+        if self.wait_between:
+            await asyncio.sleep(self.waiting_time)
 
         return data
 
@@ -248,6 +183,14 @@ class Client:
 
         return data
 
+    def _handle_request(self, url):
+        """Sync method for handling requests to avoid rate limiting"""
+        data = self._request(url)
+        if self.wait_between:
+            time.sleep(self.waiting_time)
+
+        return data
+
     def _request(self, url):
         """Sync method to request a url."""
         # Try and retrieve from cache
@@ -266,21 +209,20 @@ class Client:
 
         return data
 
+    def _handle_model(self, model, data):
+        """Method for handling returning data"""
+        if self.return_raw_data:
+            items = data.get("items")
+            if items is not None:
+                return items
+            else:
+                return data
+        else:
+            return model(self, data)
+
     async def _aget_model(self, url, model, key=None):
         """Method to turn the response data into a Model class for the async client."""
-        if self.prevent_ratelimit:
-            # Use self.limiter if prevent_ratelimit=True
-            if self.use_limiter:
-                async with self.limiter:
-                    data = await self._arequest(url)
-                    if self.wait_between:
-                        await asyncio.sleep(self.waiting_time)
-            else:
-                data = await self._arequest(url)
-                if self.wait_between:
-                    await asyncio.sleep(self.waiting_time)
-        else:
-            data = await self._arequest(url)
+        data = await self._handle_arequest(url)
 
         if model == Constants:
             if key:
@@ -289,7 +231,7 @@ class Client:
                 else:
                     raise KeyError('No such Constants key "{}"'.format(key))
 
-        return model(self, data)
+        return self._handle_model(model, data)
 
     def _get_model(self, url, model, key=None):
         """Method to turn the response data into a Model class for the sync client."""
@@ -297,9 +239,7 @@ class Client:
             # Calls the async function
             return self._aget_model(url, model=model, key=key)
 
-        data = self._request(url)
-        if self.prevent_ratelimit:
-            time.sleep(self.waiting_time)
+        data = self._handle_request(url)
 
         if model == Constants:
             if key:
@@ -308,30 +248,39 @@ class Client:
                 else:
                     raise KeyError('No such Constants key "{}"'.format(key))
 
-        return model(self, data)
+        return self._handle_model(model, data)
+
+    def _handle_models(self, model, data_list):
+        """Method for handling multiple returning data"""
+        if self.return_raw_data:
+            for i, data in enumerate(data_list):
+                items = data.get("items")
+                if items is not None:
+                    data_list[i] = items
+                else:
+                    data_list[i] = data
+            return data_list
+        else:
+            return [model(self, data) for data in data_list]
 
     async def _aget_models(self, urls, model):
-        start = time.time()
+        """
+        Method to get multiple responses and
+        turn it into a Model class for the async client.
+        """
+        # create tasks
+        tasks = [asyncio.ensure_future(self._handle_arequest(url)) for url in urls]
 
-        if self.req == 1:
-            res = await self._arequests(urls)
-        elif self.req == 2:
-            res = await self._arequests2(urls)
+        # await all tasks
+        data_list = await asyncio.gather(*tasks)
 
-        self.time_1 = time.time() - start
-
-        start = time.time()
-
-        if self.return_raw_data:
-            return_data = [model(self, data) for data in res]
-        else:
-            return_data = res
-
-        self.time_2 = time.time() - start
-
-        return return_data
+        return self._handle_models(model, data_list)
 
     def _get_models(self, urls, model):
+        """
+        Method to get multiple responses and
+        turn it into a Model class for the sync client.
+        """
         # check the uniqueness of all urls
         if len(urls) > 1 and not_unique(urls):
             raise ValueError("not all arguments in iterable are unique")
@@ -340,14 +289,10 @@ class Client:
             # Calls the async function
             return self._aget_models(urls, model=model)
 
-        data = self._grequests(urls)
+        # make requests
+        data_list = [self._handle_request(url) for url in urls]
 
-        for url in urls:
-            data = self._request(url)
-            if self.prevent_ratelimit:
-                time.sleep(self.waiting_time)
-
-        return model(self, data)
+        return self._handle_models(model, data_list)
 
     @typecasted
     def get_player(self, tag: bstag):
@@ -369,8 +314,19 @@ class Client:
 
     @typecasted
     def get_players(self, tags: bstags):
-        urls = ['{}/{}'.format(self.api.PROFILE, tag) for tag in tags]
+        """
+        Get a multiple player's stats.
 
+        Parameters
+        ----------
+        tags: list of tags
+            A list of valid player tags.
+            Player tags must be str.
+            Valid characters: 0289PYLQGRJCUV
+
+        Returns list of Player
+        """
+        urls = ['{}/{}'.format(self.api.PROFILE, tag) for tag in tags]
         return self._get_models(urls, model=Player)
 
     get_profiles = get_players
@@ -392,6 +348,17 @@ class Client:
 
     @typecasted
     def get_multiple_battle_logs(self, tags: bstags):
+        """Get a multiple player's battle logs.
+
+        Parameters
+        ----------
+        tags: list of tags
+            A list of valid player tags.
+            Player tags must be str.
+            Valid characters: 0289PYLQGRJCUV
+
+        Returns list of BattleLog
+        """
         urls = ['{}/{}/battlelog'.format(self.api.PROFILE, tag) for tag in tags]
         return self._get_models(urls, model=BattleLog)
 
@@ -413,6 +380,18 @@ class Client:
 
     @typecasted
     def get_clubs(self, tags: bstags):
+        """
+        Get a multiple club's stats.
+
+        Parameters
+        ----------
+        tags: list of tags
+            A list of valid player tags.
+            Player tags must be str.
+            Valid characters: 0289PYLQGRJCUV
+
+        Returns list of Club
+        """
         urls = ['{}/{}'.format(self.api.CLUB, tag) for tag in tags]
         return self._get_models(urls, model=Club)
 
@@ -434,6 +413,18 @@ class Client:
 
     @typecasted
     def get_multiple_club_members(self, tags: bstags):
+        """
+        Get the multiple members of a club.
+
+        Parameters
+        ----------
+        tags: list of tags
+            A list of valid player tags.
+            Player tags must be str.
+            Valid characters: 0289PYLQGRJCUV
+
+        Returns list of Members
+        """
         urls = ['{}/{}/members'.format(self.api.CLUB, tag) for tag in tags]
         return self._get_models(urls, model=Members)
 
@@ -469,7 +460,7 @@ class Client:
 
         return url
 
-    def get_rankings(self, *, ranking: str, region=None, limit: int=200, brawler=None):
+    def get_rankings(self, *, ranking: str, region=None, limit: int = 200, brawler=None):
         """
         Get the top count players/clubs/brawlers.
 
@@ -489,10 +480,27 @@ class Client:
         Returns Ranking
         """
         url = self._check_rankings(ranking, region, limit, brawler)
-
         return self._get_model(url, model=Ranking)
 
-    def get_multiple_rankings(self, *, rankings: str, regions=None, limits: int=200, brawlers=None):
+    def get_multiple_rankings(self, *, rankings: str, regions=None, limits: int = 200, brawlers=None):
+        """
+        Get the multiple top count players/clubs/brawlers.
+
+        Parameters
+        ----------
+        rankings: list of str
+            The type of ranking. Must be "players", "clubs", "brawlers".
+            Anything else will return a ValueError.
+        regions: Optional[list of str]
+            The region to retrieve from. Must be a 2 letter country code.
+        limits: Optional[list of int] = 200
+            The number of top players or clubs to fetch.
+            If count > 200, it will return a ValueError.
+        brawlers: Optional[list of Union[str, int]] = None
+            The brawler name or ID.
+
+        Returns Ranking
+        """
         params = [rankings, regions, limits, brawlers]
 
         lengths = []
@@ -504,14 +512,13 @@ class Client:
         if not same(lengths):
             raise ValueError("all of itersble parameters must be the same length")
 
-        len_ = lengths[0]
+        num = lengths[0]
 
-        for i in range(len(params)):
-            if not isiter(params[i]):
-                params[i] = [params[i] for _ in range(len_)]
+        for i, data in enumerate(params):
+            if not isiter(data):
+                params[i] = [data] * num
 
         urls = [self._check_rankings(*params) for params in zip(*params)]
-
         return self._get_models(urls, model=Ranking)
 
     def get_constants(self, key=None):
@@ -532,6 +539,7 @@ class Client:
         Get available brawlers and information about them.
 
         No parameters
+        -------------
 
         Returns Brawlers
         """
