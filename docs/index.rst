@@ -21,6 +21,7 @@ Features
 
 - Easy to use with an object oriented design.
 - Use the same client for sync and async usage.
+- Сustomizable for specific needs.
 - Get a player profile and battlelog.
 - Get a club and its members.
 - Get the top 200 rankings for players, clubs, or a specific brawler.

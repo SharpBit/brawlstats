@@ -18,6 +18,16 @@ async def main():
     for player in best_players:
         print(player.name, player.trophies)
 
+    # get tag for each member
+    player_tags = [member.tag for member in members]
+
+    # get every member in the club as player
+    players = await client.get_players(player_tags)
+
+    # print highest trophies for top 5 members
+    for player in players[:5]:
+        print(player.highest_trophies)
+
     # get top 5 players in the world
     ranking = await client.get_rankings(ranking='players', limit=5)
     for player in ranking:
@@ -37,5 +47,4 @@ async def main():
     print(battles[0].battle.mode)
 
 # run the async loop
-loop = asyncio.get_event_loop()
-loop.run_until_complete(main())
+loop = asyncio.run(main())

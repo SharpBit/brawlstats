@@ -15,6 +15,16 @@ best_players = members[:5]  # gets best 5 players
 for player in best_players:
     print(player.name, player.trophies)  # prints name and trophies
 
+# get tag for each member
+player_tags = [member.tag for member in members]
+
+# get every member in the club as player
+players = client.get_players(player_tags)
+
+# print highest trophies for top 5 members
+for player in players[:5]:
+    print(player.highest_trophies)
+
 # gets top 5 players in the world
 ranking = client.get_rankings(ranking='players', limit=5)
 for player in ranking:
