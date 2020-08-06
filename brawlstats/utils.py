@@ -27,7 +27,7 @@ class API:
         self.CURRENT_BRAWLERS = {}
 
     def set_brawlers(self, brawlers):
-        self.CURRENT_BRAWLERS = {b['name'].lower(): int(b['id']) for b in brawlers}
+        self.CURRENT_BRAWLERS = {b['name']: int(b['id']) for b in brawlers}
 
 
 def bstag(tag):
@@ -111,6 +111,10 @@ def typecasted(func):
 
 def isiter(obj):
     return isinstance(obj, abc.Iterable)
+
+
+def isstr(obj):
+    return isinstance(obj, str)
 
 
 def same(elements):

@@ -10,7 +10,7 @@ from cachetools import TTLCache
 
 from .errors import IncorrectDataError, Forbidden, NotFoundError, RateLimitError, ServerError, UnexpectedError
 from .models import BattleLog, Brawlers, Club, Constants, Members, Player, Ranking
-from .utils import API, bstag, bstags, isiter, not_unique, typecasted, same
+from .utils import API, bstag, bstags, isiter, isstr, not_unique, typecasted, same
 
 log = logging.getLogger(__name__)
 
@@ -432,6 +432,7 @@ class Client:
         # Check for invalid parameters
         if ranking not in ('players', 'clubs', 'brawlers'):
             raise ValueError("'ranking' must be 'players', 'clubs' or 'brawlers'.")
+
         if not 0 < limit <= 200:
             raise ValueError('Make sure limit is between 1 and 200.')
 
@@ -439,8 +440,10 @@ class Client:
             if brawler is None:
                 raise ValueError('Brawler not set.')
             else:
-                if isinstance(brawler, str):
-                    brawler = brawler.lower()
+                if isstr(brawler):
+                    brawler = brawler.upper()
+                elif not isinstance(brawler, int):
+                    raise TypeError("`brawler` must be int or str")
 
                 # Replace brawler name with ID
                 if brawler in self.api.CURRENT_BRAWLERS.keys():
@@ -503,17 +506,20 @@ class Client:
         lengths = []
 
         for param in params:
-            if isiter(param):
+            if isiter(param) and not isstr(param):
                 lengths.append(len(param))
 
         if not same(lengths):
-            raise ValueError("all of itersble parameters must be the same length")
+            raise ValueError("All of itersble parameters must be the same length")
 
-        num = lengths[0]
+        if len(lengths) < 1:
+            raise ValueError("At least one argument must be iterable and not string")
+
+        total_length = lengths[0]
 
         for i, data in enumerate(params):
-            if not isiter(data):
-                params[i] = [data] * num
+            if not isiter(data) or isstr(data):
+                params[i] = [data] * total_length
 
         urls = [self._check_rankings(*params) for params in zip(*params)]
         return self._get_models(urls, model=Ranking)
