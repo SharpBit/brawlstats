@@ -1,11 +1,26 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [4.0.x] - x/x/x
+## [4.0.x] - 8/xx/20
 ### Fixed
+- Docs in api.rst (get brawlers function)
 ### Added
+- Exception `IncorrectDataError` for response code 400
+- Parameters for client init: `return_raw_data`, `limiter`, `ratelimit`, `use_limiter`, `wait_between`, `waiting_time`
+- Functions `_handle_arequest` and `_handle_request` for handling requests to avoid rate limiting
+- Functions `_handle_model`and `_handle_models` handling any returning data
+- Functions `_aget_models` and `_get_models` get multiple responses and turn it into a Model class
+- Functions `get_players`, `get_multiple_battle_logs`, `get_clubs`, `get_multiple_club_members`. `get_multiple_rankings`
+- Function `_check_rankings` checks each parameter and gives out the url for the request
+- Functions `get_rankings` and `get_multiple_rankings` use `_check_rankings` 
 ### Changed
+- Parameter `prevent_ratelimit` now if True, overrides `use_limiter` and `wait_between` as True
+- `client.lock` now is `client.limiter`, it sets by `limiter` parameter, default is asyncio.Semaphore
+- Instead of get json inside `_raise_for_status` it happens in the `_arequest` and `_request`
+- `_handle_arequest` and `_handle_request` using instead of handling inside `_arequest` and `_request`
+- Use original brawler names (upper style) for api.CURRENT_BRAWLERS and in `_check_rankings` insted of lower
 ### Removed
+- 
 
 ## [4.0.5] - 7/27/20
 ### Fixed

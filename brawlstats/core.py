@@ -89,7 +89,6 @@ class Client:
             self.wait_between = options.get('wait_between', False)
         self.waiting_time = options.get('waiting_time', 0)
         self.limiter = options.get('limiter') or asyncio.Semaphore(options.get('ratelimit', 15), loop=self.loop)
-        # limiter = asyncio.Lock(loop=self.loop)
 
         # Request/response headers
         self.headers = {
@@ -426,6 +425,7 @@ class Client:
         return self._get_models(urls, model=Members)
 
     def _check_rankings(self, ranking, region, limit, brawler):
+        """Сhecks each parameter and gives out the url for the request"""
         if region is None:
             region = 'global'
 
@@ -485,6 +485,15 @@ class Client:
     def get_multiple_rankings(self, *, rankings: str, regions=None, limits: int = 200, brawlers=None):
         """
         Get the multiple top count players/clubs/brawlers.
+
+        Parameters can be non-iterable (except for str),
+        then parameters will be replaced with an array full of identical values,
+        length is the same as others
+
+        Ex:
+        get_multiple_rankings(rankings="players", limits=[100, 200])
+        equal to
+        get_multiple_rankings(rankings=["players", "players"], limits=[100, 200])
 
         Parameters
         ----------
