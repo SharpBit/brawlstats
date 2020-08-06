@@ -18,7 +18,8 @@ All notable changes to this project will be documented in this file.
 - `client.lock` now is `client.limiter`, it sets by `limiter` parameter, default is asyncio.Semaphore
 - Instead of get json inside `_raise_for_status` it happens in the `_arequest` and `_request`
 - `_handle_arequest` and `_handle_request` using instead of handling inside `_arequest` and `_request`
-- Use original brawler names (upper style) for api.CURRENT_BRAWLERS and in `_check_rankings` insted of lower
+- Using original brawler names (upper style) for api.CURRENT_BRAWLERS and in `_check_rankings` insted of lower
+- Using for running async `asyncio.run` like more high-level function and easier to perception
 ### Removed
 - 
 
