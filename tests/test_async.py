@@ -168,9 +168,6 @@ class TestAsyncClient(asynctest.TestCase):
         with self.assertRaises(brawlstats.NotFoundError):
             await self.client.get_players(['AAA'])
 
-        with self.assertRaises(ValueError):
-            await self.client.get_players([])
-
     async def test_get_multiple_battle_logs(self):
         multiple_battle_logs = await self.client.get_multiple_battle_logs(self.PLAYER_TAGS)
         self.assertIsInstance(multiple_battle_logs, list)
@@ -185,9 +182,6 @@ class TestAsyncClient(asynctest.TestCase):
 
         with self.assertRaises(brawlstats.NotFoundError):
             await self.client.get_multiple_battle_logs(['AAA'])
-
-        with self.assertRaises(ValueError):
-            await self.client.get_multiple_battle_logs([])
 
     async def test_get_clubs(self):
         clubs = await self.client.get_clubs(self.CLUB_TAGS)
@@ -212,9 +206,6 @@ class TestAsyncClient(asynctest.TestCase):
         with self.assertRaises(brawlstats.NotFoundError):
             await self.client.get_clubs(['AAA'])
 
-        with self.assertRaises(ValueError):
-            await self.client.get_clubs([])
-
     async def test_get_multiple_club_members(self):
         multiple_club_members = await self.client.get_multiple_club_members(self.CLUB_TAGS)
         self.assertIsInstance(multiple_club_members, list)
@@ -233,9 +224,6 @@ class TestAsyncClient(asynctest.TestCase):
 
         with self.assertRaises(brawlstats.NotFoundError):
             await self.client.get_multiple_club_members(['AAA'])
-
-        with self.assertRaises(ValueError):
-            await self.client.get_multiple_club_members([])
 
     async def test_get_multiple_rankings(self):
         multiple_player_ranking = await self.client.get_multiple_rankings(rankings=['players'])

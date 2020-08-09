@@ -124,7 +124,6 @@ class TestBlockingClient(unittest.TestCase):
         self.assertRaises(brawlstats.NotFoundError, self.client.get_players, ['2PPPPPPP'])
         self.assertRaises(brawlstats.NotFoundError, self.client.get_players, ['P'])
         self.assertRaises(brawlstats.NotFoundError, self.client.get_players, ['AAA'])
-        self.assertRaises(ValueError, self.client.get_players, [])
 
     def test_get_multiple_battle_logs(self):
         multiple_battle_logs = self.client.get_multiple_battle_logs(self.PLAYER_TAGS)
@@ -135,7 +134,6 @@ class TestBlockingClient(unittest.TestCase):
         self.assertRaises(brawlstats.NotFoundError, self.client.get_multiple_battle_logs, ['2PPPPPPP'])
         self.assertRaises(brawlstats.NotFoundError, self.client.get_multiple_battle_logs, ['P'])
         self.assertRaises(brawlstats.NotFoundError, self.client.get_multiple_battle_logs, ['AAA'])
-        self.assertRaises(ValueError, self.client.get_multiple_battle_logs, [])
 
     def test_get_clubs(self):
         clubs = self.client.get_clubs(self.CLUB_TAGS)
@@ -154,7 +152,6 @@ class TestBlockingClient(unittest.TestCase):
         self.assertRaises(brawlstats.NotFoundError, self.client.get_clubs, ['8GGGGGGG'])
         self.assertRaises(brawlstats.NotFoundError, self.client.get_clubs, ['P'])
         self.assertRaises(brawlstats.NotFoundError, self.client.get_clubs, ['AAA'])
-        self.assertRaises(ValueError, self.client.get_clubs, [])
 
     def test_get_multiple_club_members(self):
         multiple_club_members = self.client.get_multiple_club_members(self.CLUB_TAGS)
@@ -169,7 +166,6 @@ class TestBlockingClient(unittest.TestCase):
         self.assertRaises(brawlstats.NotFoundError, self.client.get_multiple_club_members, ['8GGGGGGG'])
         self.assertRaises(brawlstats.NotFoundError, self.client.get_multiple_club_members, ['P'])
         self.assertRaises(brawlstats.NotFoundError, self.client.get_multiple_club_members, ['AAA'])
-        self.assertRaises(ValueError, self.client.get_multiple_club_members, [])
 
     def test_get_multiple_rankings(self):
         multiple_player_ranking = self.client.get_multiple_rankings(rankings=['players'])
