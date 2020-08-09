@@ -47,9 +47,6 @@ def bstag(tag):
 
 
 def bstags(tags):
-    if len(tags) < 1:
-        raise ValueError("there must be at least one tag in `tags`")
-
     return [bstag(tag) for tag in tags]
 
 
