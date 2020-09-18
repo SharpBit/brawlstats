@@ -35,6 +35,7 @@ class NotFoundError(RequestError):
 
 class RateLimitError(RequestError):
     """Raised when the rate limit is reached."""
+
     def __init__(self, code, url):
         self.code = code
         self.url = url

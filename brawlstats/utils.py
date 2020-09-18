@@ -1,10 +1,9 @@
 import inspect
-# import json
 import os
 import re
-# import urllib.request
 from datetime import datetime
 from functools import wraps
+from typing import Union
 
 from .errors import NotFoundError
 
@@ -45,20 +44,21 @@ def bstag(tag):
     return tag
 
 
-def get_datetime(timestamp: str, unix=True):
-    """
-    Converts a %Y%m%dT%H%M%S.%fZ to a UNIX timestamp
-    or a datetime.datetime object
+def get_datetime(timestamp: str, unix: bool=True) -> Union[int, datetime.datetime]:
+    """Converts a %Y%m%dT%H%M%S.%fZ to a UNIX timestamp or a datetime.datetime object
 
     Parameters
     ----------
-    timestamp: str
+    timestamp : str
         A timestamp in the %Y-%m-%dT%H:%M:%S.%fZ format, usually returned by the API
         in the ``created_time`` field for example (eg. 2018-07-18T14:59:06.000Z)
-    unix: Optional[bool] = True
-        Whether to return a POSIX timestamp (seconds since epoch) or not
+    unix : bool, optional
+        Whether to return a POSIX timestamp (seconds since epoch) or not, by default True
 
-    Returns Union[int, datetime.datetime]
+    Returns
+    -------
+    Union[int, datetime.datetime]
+        If unix=True it will return int, otherwise datetime.datetime
     """
     time = datetime.strptime(timestamp, '%Y-%m-%dT%H:%M:%S.%fZ')
     if unix:
