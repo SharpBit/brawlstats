@@ -4,7 +4,7 @@ import brawlstats
 client = brawlstats.Client('token')
 
 
-player = client.get_profile('GGJVJLU2')
+player = client.get_profile('V2LQY9UY')
 print(player.trophies)  # access attributes using dot.notation
 print(player.solo_victories)  # use snake_case instead of camelCase
 
@@ -35,5 +35,5 @@ for player in ranking:
     print(player.name, player.rank)
 
 # Gets a player's recent battles
-battles = client.get_battle_logs('GGJVJLU2')
+battles = client.get_battle_logs('UL0GCC8')
 print(battles[0].battle.mode)

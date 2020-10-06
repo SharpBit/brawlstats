@@ -3,12 +3,11 @@ import json
 import logging
 import sys
 import time
+from typing import Union
 
 import aiohttp
 import requests
 from cachetools import TTLCache
-
-from typing import Union
 
 from .errors import Forbidden, NotFoundError, RateLimitError, ServerError, UnexpectedError
 from .models import BattleLog, Brawlers, Club, Constants, Members, Player, Ranking

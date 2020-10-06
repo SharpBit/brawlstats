@@ -8,7 +8,7 @@ client = brawlstats.Client('token', is_async=True)
 
 # await only works in an async loop
 async def main():
-    player = await client.get_profile('GGJVJLU2')
+    player = await client.get_profile('V2LQY9UY')
     print(player.trophies)  # access attributes using dot.notation
     print(player.solo_victories)  # use snake_case instead of camelCase
 
@@ -39,7 +39,7 @@ async def main():
         print(player.name, player.rank)
 
     # Gets a player's recent battles
-    battles = await client.get_battle_logs('GGJVJLU2')
+    battles = await client.get_battle_logs('UL0GCC8')
     print(battles[0].battle.mode)
 
 # run the async loop
