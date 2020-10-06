@@ -1,11 +1,16 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [4.0.6] - 10/6/20
+### Changed
+- Format of the string of `utils.get_datetime`
+### Fixed
+- `Player.get_club` now works for the async client if the player is not in a club
+
 ## [4.0.5] - 7/27/20
 ### Fixed
 - Removed the print statement on client initialization
 - Actually uses asyncio.Lock properly if the async client has the option `prevent_ratelimit=True`
-
 
 ## [4.0.4] - 7/22/20
 ### Added
