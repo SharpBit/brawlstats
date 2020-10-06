@@ -50,7 +50,7 @@ def get_datetime(timestamp: str, unix: bool=True) -> Union[int, datetime]:
     Parameters
     ----------
     timestamp : str
-        A timestamp in the %Y%%dT%H%M%S.%fZ format, usually returned by the API in the
+        A timestamp in the %Y%m%dT%H%M%S.%fZ format, usually returned by the API in the
         ``battleTime`` field in battle log responses - e.g., 20200925T184431.000Z
     unix : bool, optional
         Whether to return a POSIX timestamp (seconds since epoch) or not, by default True
