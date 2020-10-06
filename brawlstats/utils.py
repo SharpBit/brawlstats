@@ -44,14 +44,14 @@ def bstag(tag):
     return tag
 
 
-def get_datetime(timestamp: str, unix: bool=True) -> Union[int, datetime.datetime]:
+def get_datetime(timestamp: str, unix: bool=True) -> Union[int, datetime]:
     """Converts a %Y%m%dT%H%M%S.%fZ to a UNIX timestamp or a datetime.datetime object
 
     Parameters
     ----------
     timestamp : str
-        A timestamp in the %Y-%m-%dT%H:%M:%S.%fZ format, usually returned by the API
-        in the ``created_time`` field for example (eg. 2018-07-18T14:59:06.000Z)
+        A timestamp in the %Y%m%dT%H%M%S.%fZ format, usually returned by the API in the
+        ``battleTime`` field in battle log responses - e.g., 20200925T184431.000Z
     unix : bool, optional
         Whether to return a POSIX timestamp (seconds since epoch) or not, by default True
 
@@ -60,11 +60,12 @@ def get_datetime(timestamp: str, unix: bool=True) -> Union[int, datetime.datetim
     Union[int, datetime.datetime]
         If unix=True it will return int, otherwise datetime.datetime
     """
-    time = datetime.strptime(timestamp, '%Y-%m-%dT%H:%M:%S.%fZ')
+    time = datetime.strptime(timestamp, '%Y%m%dT%H%M%S.%fZ')
+
     if unix:
         return int(time.timestamp())
-    else:
-        return time
+
+    return time
 
 
 def nothing(value):

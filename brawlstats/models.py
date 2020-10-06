@@ -94,7 +94,12 @@ class Player(BaseBox):
             A list of the members in a club, or None if the player is not in a club.
         """
         if not self.club:
+            if self.client.is_async:
+                async def wrapper():
+                    return None
+                return wrapper()
             return None
+
         url = '{}/{}'.format(self.client.api.CLUB, bstag(self.club.tag))
         return self.client._get_model(url, model=Club)
 
