@@ -83,6 +83,7 @@ Special thanks to this project's contributors ❤️
 - `Stitch`_
 
 If you want to contribute, whether it be a bug fix or new feature, make sure to follow the `contributing guidelines`_.
+This project is no longer actively maintained. No new features will be added, only bugfixes and security fixes will be accepted.
 
 .. _create an issue: https://github.com/SharpBit/brawlstats/issues
 .. _Read the Docs: https://brawlstats.rtfd.io/

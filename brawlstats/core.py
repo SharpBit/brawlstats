@@ -3,6 +3,7 @@ import json
 import logging
 import sys
 import time
+from typing import Union
 
 import aiohttp
 import requests
@@ -16,30 +17,28 @@ log = logging.getLogger(__name__)
 
 
 class Client:
-    """
-    This is a sync/async client class that lets you access the Brawl Stars API
+    """A sync/async client class that lets you access the Brawl Stars API
 
     Parameters
     ------------
     token: str
         The API Key that you can get from https://developer.brawlstars.com
-    timeout: Optional[int] = 30
-        How long to wait in seconds before shutting down requests.
-    is_async: Optional[bool] = False
-        Setting this to ``True`` makes the client async. Default is ``False``
-    session: Optional[Union[requests.Session, aiohttp.ClientSession]] = None
-        Use a current session or a make new one.
-    loop: Optional[asyncio.window_events._WindowsSelectorEventLoop]
-        The event loop to use for asynchronous operations. Defaults to ``None``,
-        in which case the default event loop is ``asyncio.get_event_loop()``.
-    connector: Optional[aiohttp.TCPConnector]
-        Pass a TCPConnector into the client (aiohttp). Defaults to ``None``.
-    debug: Optional[bool] = False
-        Whether or not to log info for debugging.
-    prevent_ratelimit: Optional[bool] = False
-        Whether or not to wait between requests to prevent being ratelimited.
-    base_url: Optional[str] = None
-        Sets a different base URL to make request to.
+    session: Union[requests.Session, aiohttp.ClientSession], optional
+        Use a current session or a make new one, by default None
+    timeout: int, optional
+        How long to wait in seconds before shutting down requests, by default 30
+    is_async: bool, optional
+        Setting this to ``True`` makes the client async, by default False
+    loop: asyncio.window_events._WindowsSelectorEventLoop, optional
+        The event loop to use for asynchronous operations, by default None
+    connector: aiohttp.TCPConnector, optional
+        Pass a TCPConnector into the client (aiohttp), by default None
+    debug: bool, optional
+        Whether or not to log info for debugging, by default False
+    prevent_ratelimit: bool, optional
+        Whether or not to wait between requests to prevent being ratelimited, by default False
+    base_url: str, optional
+        Sets a different base URL to make request to, by default None
     """
 
     REQUEST_LOG = '{method} {url} recieved {text} has returned {status}'
@@ -202,17 +201,19 @@ class Client:
         return model(self, data)
 
     @typecasted
-    def get_player(self, tag: bstag):
-        """
-        Get a player's stats.
+    def get_player(self, tag: bstag) -> Player:
+        """Gets a player's stats.
 
         Parameters
         ----------
-        tag: str
+        tag : str
             A valid player tag.
             Valid characters: 0289PYLQGRJCUV
 
-        Returns Player
+        Returns
+        -------
+        Player
+            A player object with all of its attributes.
         """
         url = '{}/{}'.format(self.api.PROFILE, tag)
         return self._get_model(url, model=Player)
@@ -220,70 +221,86 @@ class Client:
     get_profile = get_player
 
     @typecasted
-    def get_battle_logs(self, tag: bstag):
-        """Get a player's battle logs.
+    def get_battle_logs(self, tag: bstag) -> BattleLog:
+        """Gets a player's battle logs.
 
         Parameters
         ----------
-        tag: str
+        tag : str
             A valid player tag.
             Valid characters: 0289PYLQGRJCUV
 
-        Returns BattleLog
+        Returns
+        -------
+        BattleLog
+            A player battle object with all of its attributes.
         """
         url = '{}/{}/battlelog'.format(self.api.PROFILE, tag)
         return self._get_model(url, model=BattleLog)
 
     @typecasted
-    def get_club(self, tag: bstag):
-        """
-        Get a club's stats.
+    def get_club(self, tag: bstag) -> Club:
+        """Gets a club's stats.
 
         Parameters
         ----------
-        tag: str
+        tag : str
             A valid club tag.
             Valid characters: 0289PYLQGRJCUV
 
-        Returns Club
+        Returns
+        -------
+        Club
+            A club object with all of its attributes.
         """
         url = '{}/{}'.format(self.api.CLUB, tag)
         return self._get_model(url, model=Club)
 
     @typecasted
-    def get_club_members(self, tag: bstag):
-        """
-        Get the members of a club.
+    def get_club_members(self, tag: bstag) -> Members:
+        """Gets the members of a club.
 
         Parameters
         ----------
-        tag: str
+        tag : str
             A valid club tag.
             Valid characters: 0289PYLQGRJCUV
 
-        Returns Members
+        Returns
+        -------
+        Members
+            A list of the members in a club.
         """
         url = '{}/{}/members'.format(self.api.CLUB, tag)
         return self._get_model(url, model=Members)
 
-    def get_rankings(self, *, ranking: str, region=None, limit: int=200, brawler=None):
-        """
-        Get the top count players/clubs/brawlers.
+    def get_rankings(self, *, ranking: str, region: str=None, limit: int=200, brawler: Union[str, int]=None) -> Ranking:
+        """Gets the top count players/clubs/brawlers.
 
         Parameters
         ----------
-        ranking: str
+        ranking : str
             The type of ranking. Must be "players", "clubs", "brawlers".
-            Anything else will return a ValueError.
-        region: Optional[str]
-            The region to retrieve from. Must be a 2 letter country code.
-        limit: Optional[int] = 200
-            The number of top players or clubs to fetch.
-            If count > 200, it will return a ValueError.
-        brawler: Optional[Union[str, int]] = None
-            The brawler name or ID.
+        region : str, optional
+            The region to retrieve from. Must be a 2 letter country code, by default None
+        limit : int, optional
+            The number of top players or clubs to fetch, by default 200
+        brawler : Union[str, int], optional
+            The brawler name or ID, by default None
 
-        Returns Ranking
+        Returns
+        -------
+        Ranking
+            A player or club ranking that contains a list of players or clubs.
+
+        Raises
+        ------
+        ValueError
+            The brawler name or ID is invalid.
+        ValueError
+            `rankings` is not "players", "clubs", or "brawlers"
+        ValueError
+            `limit` is not between 1 and 200, inclusive.
         """
         if brawler is not None:
             if isinstance(brawler, str):
@@ -312,25 +329,27 @@ class Client:
 
         return self._get_model(url, model=Ranking)
 
-    def get_constants(self, key=None):
-        """
-        Gets Brawl Stars constants extracted from the app.
+    def get_constants(self, key: str=None) -> Constants:
+        """Gets Brawl Stars constants extracted from the app.
 
         Parameters
         ----------
-        key: Optional[str] = None
-            Any key to get specific data.
+        key : str, optional
+            Any key to get specific data, by default None
 
-        Returns Constants
+        Returns
+        -------
+        Constants
+            Data containing some Brawl Stars constants.
         """
         return self._get_model(self.api.CONSTANTS, model=Constants, key=key)
 
-    def get_brawlers(self):
-        """
-        Get available brawlers and information about them.
+    def get_brawlers(self) -> Brawlers:
+        """Gets available brawlers and information about them.
 
-        No parameters
-
-        Returns Brawlers
+        Returns
+        -------
+        Brawlers
+            A list of available brawlers and information about them.
         """
         return self._get_model(self.api.BRAWLERS, model=Brawlers)

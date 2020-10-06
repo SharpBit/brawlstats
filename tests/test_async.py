@@ -13,8 +13,8 @@ load_dotenv()
 class TestAsyncClient(asynctest.TestCase):
     use_default_loop = True
 
-    PLAYER_TAG = '#GGJVJLU2'
-    CLUB_TAG = '#QCCQCGV'
+    PLAYER_TAG = '#V2LQY9UY'
+    CLUB_TAG = '#UL0GCC8'
 
     async def setUp(self):
         session = aiohttp.ClientSession(loop=self.loop)

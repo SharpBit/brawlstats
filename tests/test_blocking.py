@@ -9,8 +9,8 @@ load_dotenv()
 
 class TestBlockingClient(unittest.TestCase):
 
-    PLAYER_TAG = '#GGJVJLU2'
-    CLUB_TAG = '#QCCQCGV'
+    PLAYER_TAG = '#V2LQY9UY'
+    CLUB_TAG = '#UL0GCC8'
 
     def setUp(self):
 

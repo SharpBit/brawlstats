@@ -1,6 +1,9 @@
 API Reference
 =============
 
+Client
+~~~~~~
+
 .. autoclass:: brawlstats.Client
     :members:
 
@@ -277,6 +280,6 @@ Attributes:
 
 ::
 
-[
-    Brawler
-]
+    [
+        Brawler
+    ]

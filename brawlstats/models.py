@@ -1,6 +1,6 @@
 from box import Box, BoxList
-from .utils import bstag
 
+from .utils import bstag
 
 __all__ = ['Player', 'Club', 'Members', 'Ranking', 'BattleLog', 'Constants', 'Brawlers']
 
@@ -41,10 +41,39 @@ class BaseBoxList(BaseBox):
         return sum(1 for i in self)
 
 
+class Members(BaseBoxList):
+    """A list of the members in a club."""
+
+    def __init__(self, client, data):
+        super().__init__(client, data['items'])
+
+    def __repr__(self):
+        return '<Members object count={}>'.format(len(self))
+
+
+class Club(BaseBox):
+    """A club object with all of its attributes."""
+
+    def __repr__(self):
+        return "<Club object name='{0.name}' tag='{0.tag}'>".format(self)
+
+    def __str__(self):
+        return '{0.name} ({0.tag})'.format(self)
+
+    def get_members(self) -> Members:
+        """Gets the members of a club.
+
+        Returns
+        -------
+        Members
+            A list of the members in a club.
+        """
+        url = '{}/{}/members'.format(self.client.api.CLUB, bstag(self.tag))
+        return self.client._get_model(url, model=Members)
+
+
 class Player(BaseBox):
-    """
-    Returns a full player object with all of its attributes.
-    """
+    """A player object with all of its attributes."""
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -56,55 +85,27 @@ class Player(BaseBox):
     def __str__(self):
         return '{0.name} ({0.tag})'.format(self)
 
-    def get_club(self):
-        """
-        Gets the player's club.
+    def get_club(self) -> Club:
+        """Gets the player's club.
 
-        Returns Optional[Club]
+        Returns
+        -------
+        Club or None
+            A list of the members in a club, or None if the player is not in a club.
         """
         if not self.club:
+            if self.client.is_async:
+                async def wrapper():
+                    return None
+                return wrapper()
             return None
+
         url = '{}/{}'.format(self.client.api.CLUB, bstag(self.club.tag))
         return self.client._get_model(url, model=Club)
 
 
-class Club(BaseBox):
-    """
-    Returns a full club object with all of its attributes.
-    """
-
-    def __repr__(self):
-        return "<Club object name='{0.name}' tag='{0.tag}'>".format(self)
-
-    def __str__(self):
-        return '{0.name} ({0.tag})'.format(self)
-
-    def get_members(self):
-        """
-        Gets the members of a club.
-
-        Returns Members
-        """
-        url = '{}/{}/members'.format(self.client.api.CLUB, bstag(self.tag))
-        return self.client._get_model(url, model=Members)
-
-
-class Members(BaseBoxList):
-    """
-    Returns the members in a club.
-    """
-
-    def __init__(self, client, data):
-        super().__init__(client, data['items'])
-
-    def __repr__(self):
-        return '<Members object count={}>'.format(len(self))
-
-
 class Ranking(BaseBoxList):
-    """
-    Returns a player or club ranking that contains a list of players or clubs.
-    """
+    """A player or club ranking that contains a list of players or clubs."""
 
     def __init__(self, client, data):
         super().__init__(client, data['items'])
@@ -114,25 +115,19 @@ class Ranking(BaseBoxList):
 
 
 class BattleLog(BaseBoxList):
-    """
-    Returns a full player battle object with all of its attributes.
-    """
+    """A player battle object with all of its attributes."""
 
     def __init__(self, client, data):
         super().__init__(client, data['items'])
 
 
 class Constants(BaseBox):
-    """
-    Returns some Brawl Stars constants.
-    """
+    """Data containing some Brawl Stars constants."""
     pass
 
 
 class Brawlers(BaseBoxList):
-    """
-    Returns list of available brawlers and information about them.
-    """
+    """A list of available brawlers and information about them."""
 
     def __init__(self, client, data):
         super().__init__(client, data['items'])
