@@ -259,7 +259,7 @@ class Client:
             A valid club tag.
             Valid characters: 0289PYLQGRJCUV
         use_cache : bool, optional
-            Whether to use the internal 3 minutes cache, by default True    
+            Whether to use the internal 3 minutes cache, by default True
 
         Returns
         -------
@@ -289,7 +289,10 @@ class Client:
         url = '{}/{}/members'.format(self.api.CLUB, tag)
         return self._get_model(url, model=Members, use_cache=use_cache)
 
-    def get_rankings(self, *, ranking: str, region: str=None, limit: int=200, brawler: Union[str, int]=None, use_cache=True) -> Ranking:
+    def get_rankings(
+        self, *, ranking: str, region: str=None, limit: int=200,
+        brawler: Union[str, int]=None, use_cache=True
+    ) -> Ranking:
         """Gets the top count players/clubs/brawlers.
 
         Parameters
