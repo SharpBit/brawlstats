@@ -192,7 +192,7 @@ class Client:
         """Method to turn the response data into a Model class for the sync client."""
         if self.is_async:
             # Calls the async function
-            return self._aget_model(url, use_cache, model=model, key=key)
+            return self._aget_model(url, model=model, use_cache=use_cache, key=key)
 
         data = self._request(url, use_cache)
         if self.prevent_ratelimit:
@@ -225,7 +225,7 @@ class Client:
             A player object with all of its attributes.
         """
         url = '{}/{}'.format(self.api.PROFILE, tag)
-        return self._get_model(url, use_cache, model=Player)
+        return self._get_model(url, model=Player, use_cache=use_cache)
 
     get_profile = get_player
 
@@ -247,7 +247,7 @@ class Client:
             A player battle object with all of its attributes.
         """
         url = '{}/{}/battlelog'.format(self.api.PROFILE, tag)
-        return self._get_model(url, use_cache, model=BattleLog)
+        return self._get_model(url, model=BattleLog, use_cache=use_cache)
 
     @typecasted
     def get_club(self, tag: bstag, use_cache=True) -> Club:
@@ -267,7 +267,7 @@ class Client:
             A club object with all of its attributes.
         """
         url = '{}/{}'.format(self.api.CLUB, tag)
-        return self._get_model(url, use_cache, model=Club)
+        return self._get_model(url, model=Club, use_cache=use_cache)
 
     @typecasted
     def get_club_members(self, tag: bstag, use_cache=True) -> Members:
@@ -287,7 +287,7 @@ class Client:
             A list of the members in a club.
         """
         url = '{}/{}/members'.format(self.api.CLUB, tag)
-        return self._get_model(url, use_cache, model=Members)
+        return self._get_model(url, model=Members, use_cache=use_cache)
 
     def get_rankings(self, *, ranking: str, region: str=None, limit: int=200, brawler: Union[str, int]=None, use_cache=True) -> Ranking:
         """Gets the top count players/clubs/brawlers.
@@ -344,7 +344,7 @@ class Client:
         if ranking == 'brawlers':
             url = '{}/{}/{}/{}?limit={}'.format(self.api.RANKINGS, region, ranking, brawler, limit)
 
-        return self._get_model(url, use_cache, model=Ranking)
+        return self._get_model(url, model=Ranking, use_cache=use_cache)
 
     def get_constants(self, key: str=None, use_cache=True) -> Constants:
         """Gets Brawl Stars constants extracted from the app.
