@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [4.1.0] - 1/4/21
+### Added
+- `use_cache` parameter for methods to specify whether or not to use cache for a specific API call
+### Changed
+- Wrapper no longer replaces the letter O with 0 for tags to better represent a valid tag
+
 ## [4.0.6] - 10/6/20
 ### Changed
 - Format of the string of `utils.get_datetime`
