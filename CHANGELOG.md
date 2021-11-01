@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [4.1.1] - 10/31/21
+### Fixed
+- Installation dependency issue with aiohttp
+
 ## [4.1.0] - 1/4/21
 ### Added
 - `use_cache` parameter for methods to specify whether or not to use cache for a specific API call
