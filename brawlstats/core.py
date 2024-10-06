@@ -31,8 +31,12 @@ class Client:
         Setting this to ``True`` makes the client async, by default False
     loop: asyncio.window_events._WindowsSelectorEventLoop, optional
         The event loop to use for asynchronous operations, by default None
+        If you are passing in an aiohttp session, using this will not work.
+        You must set it when initializing the session.
     connector: aiohttp.TCPConnector, optional
         Pass a TCPConnector into the client (aiohttp), by default None
+        If you are passing in an aiohttp session, using this will not work.
+        You must set it when initializing the session.
     debug: bool, optional
         Whether or not to log info for debugging, by default False
     prevent_ratelimit: bool, optional
@@ -53,7 +57,7 @@ class Client:
         self.cache = TTLCache(3200 * 3, 60 * 3)  # 3200 requests per minute
 
         # Session and request options
-        self.session = options.get('session') or (
+        self.session = session or (
             aiohttp.ClientSession(loop=self.loop, connector=self.connector) if self.is_async else requests.Session()
         )
         self.timeout = timeout
@@ -71,12 +75,12 @@ class Client:
 
         # Load brawlers for get_rankings
         if self.is_async:
-            self.loop.create_task(self.__ainit__())
+            self.loop.create_task(self._ainit())
         else:
             brawlers_info = self.get_brawlers()
             self.api.set_brawlers(brawlers_info)
 
-    async def __ainit__(self):
+    async def _ainit(self):
         """Task created to run `get_brawlers` asynchronously"""
         self.api.set_brawlers(await self.get_brawlers())
 
@@ -282,7 +286,7 @@ class Client:
         ranking : str
             The type of ranking. Must be "players", "clubs", "brawlers".
         region : str, optional
-            The region to retrieve from. Must be a 2 letter country code, by default None
+            The region to retrieve from. Must be a 2 letter country code, 'global', or None: by default None
         limit : int, optional
             The number of top players or clubs to fetch, by default 200
         brawler : Union[str, int], optional
