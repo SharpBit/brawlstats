@@ -13,11 +13,13 @@ class TestBlockingClient(unittest.TestCase):
     CLUB_TAG = '#UL0GCC8'
 
     def setUp(self):
-
         self.client = brawlstats.Client(
             os.getenv('token'),
             base_url=os.getenv('base_url')
         )
+
+    def tearDown(self):
+        self.client.close()
 
     def test_get_player(self):
         player = self.client.get_player(self.PLAYER_TAG)
@@ -94,9 +96,6 @@ class TestBlockingClient(unittest.TestCase):
     def test_get_brawlers(self):
         brawlers = self.client.get_brawlers()
         self.assertIsInstance(brawlers, brawlstats.Brawlers)
-
-    def tearDown(self):
-        self.client.close()
 
 
 if __name__ == '__main__':

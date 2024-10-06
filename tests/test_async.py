@@ -1,6 +1,5 @@
 import os
 
-import aiohttp
 import asynctest
 import brawlstats
 import pytest
@@ -11,20 +10,19 @@ load_dotenv()
 
 
 class TestAsyncClient(asynctest.TestCase):
-    use_default_loop = True
 
     PLAYER_TAG = '#V2LQY9UY'
     CLUB_TAG = '#UL0GCC8'
 
     async def setUp(self):
-        session = aiohttp.ClientSession(loop=self.loop)
-
         self.client = brawlstats.Client(
             os.getenv('token'),
             base_url=os.getenv('base_url'),
-            is_async=True,
-            session=session
+            is_async=True
         )
+
+    async def tearDown(self):
+        await self.client.close()
 
     async def test_get_player(self):
         player = await self.client.get_player(self.PLAYER_TAG)
@@ -116,9 +114,6 @@ class TestAsyncClient(asynctest.TestCase):
     async def test_get_brawlers(self):
         brawlers = await self.client.get_brawlers()
         self.assertIsInstance(brawlers, brawlstats.Brawlers)
-
-    async def asyncTearDown(self):
-        await self.client.close()
 
 
 if __name__ == '__main__':
