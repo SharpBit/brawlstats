@@ -123,10 +123,14 @@ class Client:
             log.debug('GET {} got result from cache.'.format(url))
         return data
 
-    async def _arequest(self, url):
+    async def _arequest(self, url, use_cache=True):
         """Async method to request a url."""
         # Try and retrieve from cache
-        cache = self._resolve_cache(url)
+        if use_cache:
+            cache = self._resolve_cache(url)
+        else:
+            cache = None
+
         if cache is not None:
             return cache
 
@@ -141,13 +145,16 @@ class Client:
 
         return data
 
-    def _request(self, url):
+    def _request(self, url, use_cache=True):
         """Sync method to request a url."""
         if self.is_async:
-            return self._arequest(url)
+            return self._arequest(url, use_cache)
 
         # Try and retrieve from cache
-        cache = self._resolve_cache(url)
+        if use_cache:
+            cache = self._resolve_cache(url)
+        else:
+            cache = None
         if cache is not None:
             return cache
 
@@ -162,12 +169,12 @@ class Client:
 
         return data
 
-    async def _aget_model(self, url, model, key=None):
+    async def _aget_model(self, url, model, use_cache=True, key=None):
         """Method to turn the response data into a Model class for the async client."""
         if self.prevent_ratelimit:
             # Use self.lock if prevent_ratelimit=True
             async with self.lock:
-                data = await self._arequest(url)
+                data = await self._arequest(url, use_cache)
                 await asyncio.sleep(0.1)
         else:
             data = await self._arequest(url)
@@ -181,13 +188,13 @@ class Client:
 
         return model(self, data)
 
-    def _get_model(self, url, model, key=None):
+    def _get_model(self, url, model, use_cache=True, key=None):
         """Method to turn the response data into a Model class for the sync client."""
         if self.is_async:
             # Calls the async function
-            return self._aget_model(url, model=model, key=key)
+            return self._aget_model(url, model=model, use_cache=use_cache, key=key)
 
-        data = self._request(url)
+        data = self._request(url, use_cache)
         if self.prevent_ratelimit:
             time.sleep(0.1)
 
@@ -201,7 +208,7 @@ class Client:
         return model(self, data)
 
     @typecasted
-    def get_player(self, tag: bstag) -> Player:
+    def get_player(self, tag: bstag, use_cache=True) -> Player:
         """Gets a player's stats.
 
         Parameters
@@ -209,6 +216,8 @@ class Client:
         tag : str
             A valid player tag.
             Valid characters: 0289PYLQGRJCUV
+        use_cache : bool, optional
+            Whether to use the internal 3 minutes cache, by default True
 
         Returns
         -------
@@ -216,12 +225,12 @@ class Client:
             A player object with all of its attributes.
         """
         url = '{}/{}'.format(self.api.PROFILE, tag)
-        return self._get_model(url, model=Player)
+        return self._get_model(url, model=Player, use_cache=use_cache)
 
     get_profile = get_player
 
     @typecasted
-    def get_battle_logs(self, tag: bstag) -> BattleLog:
+    def get_battle_logs(self, tag: bstag, use_cache=True) -> BattleLog:
         """Gets a player's battle logs.
 
         Parameters
@@ -229,6 +238,8 @@ class Client:
         tag : str
             A valid player tag.
             Valid characters: 0289PYLQGRJCUV
+        use_cache : bool, optional
+            Whether to use the internal 3 minutes cache, by default True
 
         Returns
         -------
@@ -236,10 +247,10 @@ class Client:
             A player battle object with all of its attributes.
         """
         url = '{}/{}/battlelog'.format(self.api.PROFILE, tag)
-        return self._get_model(url, model=BattleLog)
+        return self._get_model(url, model=BattleLog, use_cache=use_cache)
 
     @typecasted
-    def get_club(self, tag: bstag) -> Club:
+    def get_club(self, tag: bstag, use_cache=True) -> Club:
         """Gets a club's stats.
 
         Parameters
@@ -247,6 +258,8 @@ class Client:
         tag : str
             A valid club tag.
             Valid characters: 0289PYLQGRJCUV
+        use_cache : bool, optional
+            Whether to use the internal 3 minutes cache, by default True
 
         Returns
         -------
@@ -254,10 +267,10 @@ class Client:
             A club object with all of its attributes.
         """
         url = '{}/{}'.format(self.api.CLUB, tag)
-        return self._get_model(url, model=Club)
+        return self._get_model(url, model=Club, use_cache=use_cache)
 
     @typecasted
-    def get_club_members(self, tag: bstag) -> Members:
+    def get_club_members(self, tag: bstag, use_cache=True) -> Members:
         """Gets the members of a club.
 
         Parameters
@@ -265,6 +278,8 @@ class Client:
         tag : str
             A valid club tag.
             Valid characters: 0289PYLQGRJCUV
+        use_cache : bool, optional
+            Whether to use the internal 3 minutes cache, by default True
 
         Returns
         -------
@@ -272,9 +287,12 @@ class Client:
             A list of the members in a club.
         """
         url = '{}/{}/members'.format(self.api.CLUB, tag)
-        return self._get_model(url, model=Members)
+        return self._get_model(url, model=Members, use_cache=use_cache)
 
-    def get_rankings(self, *, ranking: str, region: str=None, limit: int=200, brawler: Union[str, int]=None) -> Ranking:
+    def get_rankings(
+        self, *, ranking: str, region: str=None, limit: int=200,
+        brawler: Union[str, int]=None, use_cache=True
+    ) -> Ranking:
         """Gets the top count players/clubs/brawlers.
 
         Parameters
@@ -287,6 +305,8 @@ class Client:
             The number of top players or clubs to fetch, by default 200
         brawler : Union[str, int], optional
             The brawler name or ID, by default None
+        use_cache : bool, optional
+            Whether to use the internal 3 minutes cache, by default True
 
         Returns
         -------
@@ -327,15 +347,17 @@ class Client:
         if ranking == 'brawlers':
             url = '{}/{}/{}/{}?limit={}'.format(self.api.RANKINGS, region, ranking, brawler, limit)
 
-        return self._get_model(url, model=Ranking)
+        return self._get_model(url, model=Ranking, use_cache=use_cache)
 
-    def get_constants(self, key: str=None) -> Constants:
+    def get_constants(self, key: str=None, use_cache=True) -> Constants:
         """Gets Brawl Stars constants extracted from the app.
 
         Parameters
         ----------
         key : str, optional
             Any key to get specific data, by default None
+        use_cache : bool, optional
+            Whether to use the internal 3 minutes cache, by default True
 
         Returns
         -------
@@ -344,8 +366,13 @@ class Client:
         """
         return self._get_model(self.api.CONSTANTS, model=Constants, key=key)
 
-    def get_brawlers(self) -> Brawlers:
+    def get_brawlers(self, use_cache=True) -> Brawlers:
         """Gets available brawlers and information about them.
+
+        Parameters
+        ----------
+        use_cache : bool, optional
+            Whether to use the internal 3 minutes cache, by default True
 
         Returns
         -------
