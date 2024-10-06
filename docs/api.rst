@@ -94,12 +94,14 @@ Member
 
 Members is a list of club members. Get this by accessing
 ``Club.members`` or ``Club.get_members()``.
+The club's members are sorted in order of descending trophies.
 Each Member in the list has the following attributes:
 
 .. code:: py
 
    members = club.members
-   print(members[0].name, members[0].role) # prints best player's name and role (sorted by trophies)
+   # Prints club's best player's name and role
+   print(members[0].name, members[0].role)
 
 Attributes:
 
@@ -158,8 +160,10 @@ can only be accessed from ``Player.brawlers``.
 .. code:: py
 
    brawlers = player.brawlers
-   top_brawler = brawlers[0]  # first index in list = highest trophies
-   print(top_brawler.name, top_brawler.trophies)  # prints best brawler's name and trophies
+   # List is sorted by descending trophies
+   top_brawler = brawlers[0]
+   # print the player's best brawler's name and trophies
+   print(top_brawler.name, top_brawler.trophies)
 
 Attributes:
 
