@@ -49,7 +49,7 @@ class UnexpectedError(RequestError):
     def __init__(self, url, code, text):
         self.code = code
         self.url = url
-        self.message = 'An unexpected error has occured.\n{text}'
+        self.message = 'An unexpected error has occured.\n{}'.format(text)
         super().__init__(self.code, self.message)
 
 
