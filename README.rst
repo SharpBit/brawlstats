@@ -20,8 +20,8 @@ Brawl Stats
     :target: https://github.com/SharpBit/brawlstats/blob/master/LICENSE
     :alt: MIT License
 
-- This library is a sync and async wrapper for the Brawl Stars API.
-- Python 3.5.3 or later is required.
+- This library is a sync and async Python wrapper for the Brawl Stars API.
+- Python 3.9 or later is required.
 
 Features
 ~~~~~~~~
@@ -72,11 +72,11 @@ Contributing
 ~~~~~~~~~~~~
 Special thanks to this project's contributors ❤️
 
-- `4JR`_
+- `erickang21`_
+- `fourjr`_
 - `golbu`_
-- `kawaii banana`_
 - `kjkui`_
-- `Kyber`_
+- `kyb3r`_
 - `Papiersnipper`_
 - `Pollen`_
 - `OrangutanGaming`_
@@ -86,17 +86,16 @@ If you want to contribute, whether it be a bug fix or new feature, make sure to 
 This project is no longer actively maintained. No new features will be added, only bugfixes and security fixes will be accepted.
 
 .. _create an issue: https://github.com/SharpBit/brawlstats/issues
-.. _Read the Docs: https://brawlstats.rtfd.io/
+.. _Read the Docs: https://brawlstats.readthedocs.io/en/stable/
 .. _examples folder: https://github.com/SharpBit/brawlstats/tree/master/examples
 .. _discord.py: https://github.com/rapptz/discord.py
 .. _contributing guidelines: https://github.com/SharpBit/brawlstats/blob/master/CONTRIBUTING.md
 
-.. _4JR: https://github.com/fourjr
+.. _erickang21: https://github.com/erickang21
+.. _fourjr: https://github.com/fourjr
 .. _OrangutanGaming: https://github.com/OrangutanGaming
 .. _Stitch: https://github.com/Soumil07
 .. _kjkui: https://github.com/kjkui
-.. _Kyber: https://github.com/kyb3r
+.. _kyb3r: https://github.com/kyb3r
 .. _Papiersnipper: https://github.com/robinmahieu
-.. _Pollen: https://github.com/pollen5
-.. _kawaii banana: https://github.com/bananaboy21
 .. _golbu: https://github.com/0dminnimda

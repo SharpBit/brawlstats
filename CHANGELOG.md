@@ -1,6 +1,14 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [development] - 10/6/24
+### Fixed
+- Client actually uses session passed into parameters now instead of creating a new one anyways
+- `UnexpectedError` now properly shows the returned text in the message
+### Removed
+- No longer uses `asyncio.Lock` when prevent_ratelimit=True and is_async=True as that just imitates sync behavior
+- Dropped support for Python 3.5, 3.6, 3.7, and 3.8.
+
 ## [4.1.1] - 10/31/21
 ### Fixed
 - Installation dependency issue with aiohttp
