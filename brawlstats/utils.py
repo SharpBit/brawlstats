@@ -29,7 +29,7 @@ class API:
 
 
 def bstag(tag):
-    tag = tag.strip('#').upper().replace('O', '0')
+    tag = tag.strip('#').upper()
     allowed = '0289PYLQGRJCUV'
 
     if len(tag) < 3:
