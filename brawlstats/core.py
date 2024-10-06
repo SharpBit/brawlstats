@@ -2,7 +2,6 @@ import asyncio
 import json
 import logging
 import sys
-import time
 from typing import Union
 
 import aiohttp
@@ -29,18 +28,16 @@ class Client:
         How long to wait in seconds before shutting down requests, by default 30
     is_async: bool, optional
         Setting this to ``True`` makes the client async, by default False
-    loop: asyncio.window_events._WindowsSelectorEventLoop, optional
-        The event loop to use for asynchronous operations, by default None
-        If you are passing in an aiohttp session, using this will not work.
-        You must set it when initializing the session.
-    connector: aiohttp.TCPConnector, optional
-        Pass a TCPConnector into the client (aiohttp), by default None
-        If you are passing in an aiohttp session, using this will not work.
-        You must set it when initializing the session.
+    loop: asyncio.AbstractEventLoop, optional
+        The event loop to use for asynchronous operations, by default None.
+        If you are passing in an aiohttp session, using this will not work:
+        you must set it when initializing the session.
+    connector: aiohttp.BaseConnector, optional
+        Pass a Connector into the client (aiohttp), by default None
+        If you are passing in an aiohttp session, using this will not work:
+        you must set it when initializing the session.
     debug: bool, optional
         Whether or not to log info for debugging, by default False
-    prevent_ratelimit: bool, optional
-        Whether or not to wait between requests to prevent being ratelimited, by default False
     base_url: str, optional
         Sets a different base URL to make request to, by default None
     """
@@ -86,6 +83,18 @@ class Client:
 
     def __repr__(self):
         return '<Client async={} timeout={} debug={}>'.format(self.is_async, self.timeout, self.debug)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.close()
+
+    async def __aenter__(self):
+        return self
+
+    async def __aexit__(self, exc_type, exc_value, traceback):
+        self.close()
 
     def close(self):
         return self.session.close()
@@ -175,13 +184,7 @@ class Client:
 
     async def _aget_model(self, url, model, use_cache=True, key=None):
         """Method to turn the response data into a Model class for the async client."""
-        if self.prevent_ratelimit:
-            # Use self.lock if prevent_ratelimit=True
-            async with self.lock:
-                data = await self._arequest(url, use_cache)
-                await asyncio.sleep(0.1)
-        else:
-            data = await self._arequest(url)
+        data = await self._arequest(url)
 
         if model == Constants:
             if key:
@@ -199,8 +202,6 @@ class Client:
             return self._aget_model(url, model=model, use_cache=use_cache, key=key)
 
         data = self._request(url, use_cache)
-        if self.prevent_ratelimit:
-            time.sleep(0.1)
 
         if model == Constants:
             if key:
