@@ -1,3 +1,5 @@
+# NOTE: This discord example is outdated as Discord's Bot API has changed
+
 import discord
 from discord.ext import commands
 
