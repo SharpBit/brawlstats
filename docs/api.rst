@@ -279,7 +279,7 @@ Name        Type
 =========== ================
 
 BattleBrawler
-~~~~~~~~~~~~
+~~~~~~~~~~~~~
 
 Represents a brawler that was played in a battle.
 Note: ``BattlerBrawler`` only reprents brawlers that were played in a battle
