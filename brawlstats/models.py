@@ -62,6 +62,9 @@ class Club(BaseBox):
 
     def get_members(self) -> Members:
         """Gets the members of a club.
+        Note: It is preferred to get the members
+        via Club.members since this method makes
+        an extra API call but returns the same data.
 
         Returns
         -------
