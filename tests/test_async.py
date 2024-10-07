@@ -1,27 +1,31 @@
 import os
+import unittest
 
-import asynctest
+import aiohttp
 import brawlstats
 import pytest
+
 from dotenv import load_dotenv
 
 pytestmark = pytest.mark.asyncio
 load_dotenv()
 
 
-class TestAsyncClient(asynctest.TestCase):
+class TestAsyncClient(unittest.IsolatedAsyncioTestCase):
 
     PLAYER_TAG = '#V2LQY9UY'
     CLUB_TAG = '#UL0GCC8'
 
-    async def setUp(self):
+    async def asyncSetUp(self):
+        session = aiohttp.ClientSession(trust_env=True)
         self.client = brawlstats.Client(
-            os.getenv('token'),
+            token=os.getenv('token'),
+            session=session,
             base_url=os.getenv('base_url'),
             is_async=True
         )
 
-    async def tearDown(self):
+    async def asyncTearDown(self):
         await self.client.close()
 
     async def test_get_player(self):
@@ -72,7 +76,8 @@ class TestAsyncClient(asynctest.TestCase):
         self.assertIsInstance(club_members, brawlstats.Members)
         self.assertIn(self.PLAYER_TAG, [x.tag for x in club_members])
 
-        await self.assertAsyncRaises(brawlstats.NotFoundError, self.client.get_club_members('8GGGGGGG'))
+        with self.assertRaises(brawlstats.NotFoundError):
+            await self.client.get_club_members('8GGGGGGG')
 
     async def test_get_rankings(self):
         player_ranking = await self.client.get_rankings(ranking='players')
@@ -115,4 +120,4 @@ class TestAsyncClient(asynctest.TestCase):
 
 
 if __name__ == '__main__':
-    asynctest.main()
+    unittest.main()

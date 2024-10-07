@@ -14,7 +14,7 @@ class TestBlockingClient(unittest.TestCase):
 
     def setUp(self):
         self.client = brawlstats.Client(
-            os.getenv('token'),
+            token=os.getenv('token'),
             base_url=os.getenv('base_url')
         )
 
