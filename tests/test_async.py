@@ -19,9 +19,9 @@ class TestAsyncClient(unittest.IsolatedAsyncioTestCase):
     async def asyncSetUp(self):
         session = aiohttp.ClientSession(trust_env=True)
         self.client = brawlstats.Client(
-            token=os.getenv('token'),
+            token=os.getenv('TOKEN'),
             session=session,
-            base_url=os.getenv('base_url'),
+            base_url=os.getenv('BASE_URL'),
             is_async=True
         )
 
