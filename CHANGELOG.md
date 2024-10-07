@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - Client actually uses session passed into parameters now instead of creating a new one anyways
 - `UnexpectedError` now properly shows the returned text in the message
+- The `use_cache` parameter now works for `get_constants`, `get_brawlers`, and the async client.
 ### Removed
 - No longer uses `asyncio.Lock` when prevent_ratelimit=True and is_async=True as that just imitates sync behavior
 - Dropped support for Python 3.5, 3.6, 3.7, and 3.8.

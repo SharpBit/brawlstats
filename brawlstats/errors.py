@@ -27,7 +27,7 @@ class NotFoundError(RequestError):
         self.reason = kwargs.pop('reason', None)
         self.invalid_chars = kwargs.pop('invalid_chars', [])
         if self.reason:
-            self.message += '\nReason: {}'.format(self.reason)
+            self.message += f'\nReason: {self.reason}'
         elif self.invalid_chars:
             self.message += 'Invalid characters: {}'.format(', '.join(self.invalid_chars))
         super().__init__(self.code, self.message)
@@ -49,7 +49,7 @@ class UnexpectedError(RequestError):
     def __init__(self, url, code, text):
         self.code = code
         self.url = url
-        self.message = 'An unexpected error has occured.\n{}'.format(text)
+        self.message = f'An unexpected error has occured.\n{text}'
         super().__init__(self.code, self.message)
 
 

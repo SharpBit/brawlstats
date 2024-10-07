@@ -65,8 +65,8 @@ class Client:
 
         # Request/response headers
         self.headers = {
-            'Authorization': 'Bearer {}'.format(token),
-            'User-Agent': 'brawlstats/{0} (Python {1[0]}.{1[1]})'.format(self.api.VERSION, sys.version_info),
+            'Authorization': f'Bearer {token}',
+            'User-Agent': f'brawlstats/{self.api.VERSION} (Python {sys.version_info[0]}.{sys.version_info[1]})',
             'Accept-Encoding': 'gzip'
         }
 
@@ -82,7 +82,7 @@ class Client:
         self.api.set_brawlers(await self.get_brawlers())
 
     def __repr__(self):
-        return '<Client async={} timeout={} debug={}>'.format(self.is_async, self.timeout, self.debug)
+        return f'<Client async={self.is_async} timeout={self.timeout} debug={self.debug}>'
 
     def __enter__(self):
         return self
@@ -133,7 +133,7 @@ class Client:
         if not data:
             return None
         if self.debug:
-            log.debug('GET {} got result from cache.'.format(url))
+            log.debug(f'GET {url} got result from cache.')
         return data
 
     async def _arequest(self, url, use_cache=True):
@@ -161,7 +161,7 @@ class Client:
     def _request(self, url, use_cache=True):
         """Sync method to request a url."""
         if self.is_async:
-            return self._arequest(url, use_cache)
+            return self._arequest(url, use_cache=use_cache)
 
         # Try and retrieve from cache
         if use_cache:
@@ -184,14 +184,14 @@ class Client:
 
     async def _aget_model(self, url, model, use_cache=True, key=None):
         """Method to turn the response data into a Model class for the async client."""
-        data = await self._arequest(url)
+        data = await self._arequest(url, use_cache=use_cache)
 
         if model == Constants:
             if key:
                 if data.get(key):
                     return model(self, data.get(key))
                 else:
-                    raise KeyError('No such Constants key "{}"'.format(key))
+                    raise KeyError(f'No such Constants key "{key}"')
 
         return model(self, data)
 
@@ -208,7 +208,7 @@ class Client:
                 if data.get(key):
                     return model(self, data.get(key))
                 else:
-                    raise KeyError('No such Constants key "{}"'.format(key))
+                    raise KeyError(f'No such Constants key "{key}"')
 
         return model(self, data)
 
@@ -229,7 +229,7 @@ class Client:
         Player
             A player object with all of its attributes.
         """
-        url = '{}/{}'.format(self.api.PROFILE, tag)
+        url = f'{self.api.PROFILE}/{tag}'
         return self._get_model(url, model=Player, use_cache=use_cache)
 
     get_profile = get_player
@@ -251,7 +251,7 @@ class Client:
         BattleLog
             A player battle object with all of its attributes.
         """
-        url = '{}/{}/battlelog'.format(self.api.PROFILE, tag)
+        url = f'{self.api.PROFILE}/{tag}/battlelog'
         return self._get_model(url, model=BattleLog, use_cache=use_cache)
 
     @typecasted
@@ -271,7 +271,7 @@ class Client:
         Club
             A club object with all of its attributes.
         """
-        url = '{}/{}'.format(self.api.CLUB, tag)
+        url = f'{self.api.CLUB}/{tag}'
         return self._get_model(url, model=Club, use_cache=use_cache)
 
     @typecasted
@@ -291,7 +291,7 @@ class Client:
         Members
             A list of the members in a club.
         """
-        url = '{}/{}/members'.format(self.api.CLUB, tag)
+        url = f'{self.api.CLUB}/{tag}/members'
         return self._get_model(url, model=Members, use_cache=use_cache)
 
     def get_rankings(
@@ -348,9 +348,9 @@ class Client:
             raise ValueError('Make sure limit is between 1 and 200.')
 
         # Construct URL
-        url = '{}/{}/{}?limit={}'.format(self.api.RANKINGS, region, ranking, limit)
+        url = f'{self.api.RANKINGS}/{region}/{ranking}?limit={limit}'
         if ranking == 'brawlers':
-            url = '{}/{}/{}/{}?limit={}'.format(self.api.RANKINGS, region, ranking, brawler, limit)
+            url = f'{self.api.RANKINGS}/{region}/{ranking}/{brawler}?limit={limit}'
 
         return self._get_model(url, model=Ranking, use_cache=use_cache)
 
@@ -369,7 +369,7 @@ class Client:
         Constants
             Data containing some Brawl Stars constants.
         """
-        return self._get_model(self.api.CONSTANTS, model=Constants, key=key)
+        return self._get_model(self.api.CONSTANTS, model=Constants, key=key, use_cache=use_cache)
 
     def get_brawlers(self, use_cache=True) -> Brawlers:
         """Gets available brawlers and information about them.
@@ -384,4 +384,4 @@ class Client:
         Brawlers
             A list of available brawlers and information about them.
         """
-        return self._get_model(self.api.BRAWLERS, model=Brawlers)
+        return self._get_model(self.api.BRAWLERS, model=Brawlers, use_cache=use_cache)

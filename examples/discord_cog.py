@@ -19,10 +19,10 @@ class BrawlStars(commands.Cog, name='Brawl Stars'):
         try:
             player = await self.client.get_profile(tag)
         except brawlstats.RequestError as e:  # catches all exceptions
-            return await ctx.send('```\n{}: {}\n```'.format(e.code, e.message))  # sends code and error message
-        em = discord.Embed(title='{0.name} ({0.tag})'.format(player))
+            return await ctx.send(f'```\n{e.code}: {e.message}\n```')  # sends code and error message
+        em = discord.Embed(title=f'{player.name} ({player.tag})')
 
-        em.description = 'Trophies: {}'.format(player.trophies)  # you could make this better by using embed fields
+        em.description = f'Trophies: {player.trophies}'  # you could make this better by using embed fields
         await ctx.send(embed=em)
 
 

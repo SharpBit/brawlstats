@@ -28,7 +28,7 @@ class BaseBox:
         try:
             return self._boxed_data[item]
         except IndexError:
-            raise IndexError('No such index: {}'.format(item))
+            raise IndexError(f'No such index: {item}')
 
 
 class BaseBoxList(BaseBox):
@@ -48,17 +48,17 @@ class Members(BaseBoxList):
         super().__init__(client, data['items'])
 
     def __repr__(self):
-        return '<Members object count={}>'.format(len(self))
+        return f'<Members object count={len(self)}>'
 
 
 class Club(BaseBox):
     """A club object with all of its attributes."""
 
     def __repr__(self):
-        return "<Club object name='{0.name}' tag='{0.tag}'>".format(self)
+        return f"<Club object name='{self.name}' tag='{self.tag}'>"
 
     def __str__(self):
-        return '{0.name} ({0.tag})'.format(self)
+        return f'{self.name} ({self.tag})'
 
     def get_members(self) -> Members:
         """Gets the members of a club.
@@ -71,7 +71,7 @@ class Club(BaseBox):
         Members
             A list of the members in a club.
         """
-        url = '{}/{}/members'.format(self.client.api.CLUB, bstag(self.tag))
+        url = f'{self.client.api.CLUB}/{bstag(self.tag)}/members'
         return self.client._get_model(url, model=Members)
 
 
@@ -83,10 +83,10 @@ class Player(BaseBox):
         self.team_victories = self.x3vs3_victories
 
     def __repr__(self):
-        return "<Player object name='{0.name}' tag='{0.tag}'>".format(self)
+        return f"<Player object name='{self.name}' tag='{self.tag}'>"
 
     def __str__(self):
-        return '{0.name} ({0.tag})'.format(self)
+        return f'{self.name} ({self.tag})'
 
     def get_club(self) -> Club:
         """Gets the player's club.
@@ -103,7 +103,7 @@ class Player(BaseBox):
                 return wrapper()
             return None
 
-        url = '{}/{}'.format(self.client.api.CLUB, bstag(self.club.tag))
+        url = f'{self.client.api.CLUB}/{bstag(self.club.tag)}'
         return self.client._get_model(url, model=Club)
 
 
