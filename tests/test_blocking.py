@@ -87,15 +87,6 @@ class TestBlockingClient(unittest.TestCase):
         self.assertIsInstance(us_brawler_ranking, brawlstats.Ranking)
         self.assertTrue(len(us_brawler_ranking) == 1)
 
-    def test_get_constants(self):
-        constants = self.client.get_constants()
-        self.assertIsInstance(constants, brawlstats.Constants)
-
-        maps = self.client.get_constants('maps')
-        self.assertIsInstance(maps, brawlstats.Constants)
-
-        self.assertRaises(KeyError, self.client.get_constants, 'invalid')
-
     def test_get_brawlers(self):
         brawlers = self.client.get_brawlers()
         self.assertIsInstance(brawlers, brawlstats.Brawlers)

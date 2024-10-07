@@ -14,7 +14,6 @@ class API:
         self.PROFILE = self.BASE + '/players'
         self.CLUB = self.BASE + '/clubs'
         self.RANKINGS = self.BASE + '/rankings'
-        self.CONSTANTS = 'https://fourjr.herokuapp.com/bs/constants'
         self.BRAWLERS = self.BASE + '/brawlers'
         self.EVENT_ROTATION = self.BASE + '/events/rotation'
 

@@ -25,9 +25,6 @@ Data Models
 .. autoclass:: brawlstats.models.Members
     :members:
 
-.. autoclass:: brawlstats.models.Constants
-    :members:
-
 .. autoclass:: brawlstats.models.Brawlers
     :members:
 

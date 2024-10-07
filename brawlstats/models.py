@@ -2,7 +2,7 @@ from box import Box, BoxList
 
 from .utils import bstag
 
-__all__ = ['Player', 'Club', 'Members', 'Ranking', 'BattleLog', 'Constants', 'Brawlers', 'EventRotation']
+__all__ = ['Player', 'Club', 'Members', 'Ranking', 'BattleLog', 'Brawlers', 'EventRotation']
 
 
 class BaseBox:
@@ -133,11 +133,6 @@ class Ranking(BaseBoxList):
 
     def __repr__(self):
         return '<Ranking object count={}>'.format(len(self))
-
-
-class Constants(BaseBox):
-    """Data containing some Brawl Stars constants."""
-    pass
 
 
 class Brawlers(BaseBoxList):

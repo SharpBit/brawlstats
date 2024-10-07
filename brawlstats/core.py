@@ -9,7 +9,7 @@ import requests
 from cachetools import TTLCache
 
 from .errors import Forbidden, NotFoundError, RateLimitError, ServerError, UnexpectedError
-from .models import BattleLog, Brawlers, Club, Constants, EventRotation, Members, Player, Ranking
+from .models import BattleLog, Brawlers, Club, EventRotation, Members, Player, Ranking
 from .utils import API, bstag, typecasted
 
 log = logging.getLogger(__name__)
@@ -185,14 +185,6 @@ class Client:
     async def _aget_model(self, url, model, use_cache=True, key=None):
         """Method to turn the response data into a Model class for the async client."""
         data = await self._arequest(url, use_cache=use_cache)
-
-        if model == Constants:
-            if key:
-                if data.get(key):
-                    return model(self, data.get(key))
-                else:
-                    raise KeyError(f'No such Constants key "{key}"')
-
         return model(self, data)
 
     def _get_model(self, url, model, use_cache=True, key=None):
@@ -202,14 +194,6 @@ class Client:
             return self._aget_model(url, model=model, use_cache=use_cache, key=key)
 
         data = self._request(url, use_cache)
-
-        if model == Constants:
-            if key:
-                if data.get(key):
-                    return model(self, data.get(key))
-                else:
-                    raise KeyError(f'No such Constants key "{key}"')
-
         return model(self, data)
 
     @typecasted
@@ -353,23 +337,6 @@ class Client:
             url = f'{self.api.RANKINGS}/{region}/{ranking}/{brawler}?limit={limit}'
 
         return self._get_model(url, model=Ranking, use_cache=use_cache)
-
-    def get_constants(self, key: str=None, use_cache=True) -> Constants:
-        """Gets Brawl Stars constants extracted from the app.
-
-        Parameters
-        ----------
-        key : str, optional
-            Any key to get specific data, by default None
-        use_cache : bool, optional
-            Whether to use the internal 3 minutes cache, by default True
-
-        Returns
-        -------
-        Constants
-            Data containing some Brawl Stars constants.
-        """
-        return self._get_model(self.api.CONSTANTS, model=Constants, key=key, use_cache=use_cache)
 
     def get_brawlers(self, use_cache=True) -> Brawlers:
         """Gets available brawlers and information about them.
