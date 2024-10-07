@@ -51,6 +51,13 @@ class Members(BaseBoxList):
         return f'<Members object count={len(self)}>'
 
 
+class BattleLog(BaseBoxList):
+    """A player battle object with all of its attributes."""
+
+    def __init__(self, client, data):
+        super().__init__(client, data['items'])
+
+
 class Club(BaseBox):
     """A club object with all of its attributes."""
 
@@ -106,6 +113,17 @@ class Player(BaseBox):
         url = f'{self.client.api.CLUB}/{bstag(self.club.tag)}'
         return self.client._get_model(url, model=Club)
 
+    def get_battle_logs(self) -> BattleLog:
+        """Gets the player's battle logs.
+
+        Returns
+        -------
+        BattleLog
+            The battle log containing the player's most recent battles.
+        """
+        url = f'{self.client.api.PROFILE}/{bstag(self.tag)}/battlelog'
+        return self.client._get_model(url, model=BattleLog)
+
 
 class Ranking(BaseBoxList):
     """A player or club ranking that contains a list of players or clubs."""
@@ -115,13 +133,6 @@ class Ranking(BaseBoxList):
 
     def __repr__(self):
         return '<Ranking object count={}>'.format(len(self))
-
-
-class BattleLog(BaseBoxList):
-    """A player battle object with all of its attributes."""
-
-    def __init__(self, client, data):
-        super().__init__(client, data['items'])
 
 
 class Constants(BaseBox):

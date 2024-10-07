@@ -33,6 +33,9 @@ class TestAsyncClient(asynctest.TestCase):
         self.assertIsInstance(club, brawlstats.Club)
         self.assertEqual(club.tag, self.CLUB_TAG)
 
+        battle_logs = await player.get_battle_logs()
+        self.assertIsInstance(battle_logs, brawlstats.BattleLog)
+
         with self.assertRaises(brawlstats.NotFoundError):
             await self.client.get_player('2PPPPPPP')
 

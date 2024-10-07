@@ -30,6 +30,9 @@ class TestBlockingClient(unittest.TestCase):
         self.assertIsInstance(club, brawlstats.Club)
         self.assertEqual(club.tag, self.CLUB_TAG)
 
+        battle_logs = player.get_battle_logs()
+        self.assertIsInstance(battle_logs, brawlstats.BattleLog)
+
         self.assertRaises(brawlstats.NotFoundError, self.client.get_player, '2PPPPPPP')
         self.assertRaises(brawlstats.NotFoundError, self.client.get_player, 'P')
         self.assertRaises(brawlstats.NotFoundError, self.client.get_player, 'AAA')
