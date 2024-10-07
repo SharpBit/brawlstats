@@ -1,19 +1,12 @@
+os: linux
+dist: focal
 language: python
 
-matrix:
-  include:
-    - python: 3.9
-      dist: xenial
-      sudo: true
-    - python: 3.10
-      dist: xenial
-      sudo: true
-    - python: 3.11
-      dist: xenial
-      sudo: true
-    - python: 3.12
-      dist: xenial
-      sudo: true
+python:
+  - "3.9"
+  - "3.10"
+  - "3.11"
+  - "3.12"
 
 install:
   - pip install -r requirements-dev.txt
