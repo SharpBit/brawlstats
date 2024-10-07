@@ -42,7 +42,7 @@ stdout of your program.
 
 Currently, the following things are logged:
 
-- ``DEBUG``: API Requests
+- ``DEBUG``: API Requests, Cache Hits
 
 
 

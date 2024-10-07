@@ -9,12 +9,16 @@ Welcome to Brawl Stats' documentation!
     :target: https://travis-ci.com/SharpBit/brawlstats
     :alt: Travis-CI build
 
+.. image:: https://img.shields.io/pypi/pyversions/brawlstats.svg
+    :target: https://pypi.org/project/brawlstats/
+    :alt: Supported Versions
+
 .. image:: https://img.shields.io/github/license/SharpBit/brawlstats.svg
     :target: https://github.com/SharpBit/brawlstats/blob/master/LICENSE
     :alt: MIT License
 
-- This library is a sync and async wrapper for the Brawl Stars API.
-- Python 3.5.3 or later is required.
+- This library is a sync and async Python wrapper for the Brawl Stars API.
+- Python 3.9 or later is required.
 
 Features
 ~~~~~~~~
