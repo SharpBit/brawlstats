@@ -20,7 +20,7 @@ Brawl Stats
     :target: https://github.com/SharpBit/brawlstats/blob/master/LICENSE
     :alt: MIT License
 
-- This library is a sync and async Python wrapper for the Brawl Stars API.
+- BrawlStats is a sync and async Python API wrapper to fetch statistics from the official Brawl Stars API.
 - Python 3.9 or later is required.
 
 Features
@@ -79,7 +79,6 @@ Special thanks to this project's contributors ❤️
 - `kjkui`_
 - `kyb3r`_
 - `Papiersnipper`_
-- `Pollen`_
 - `OrangutanGaming`_
 - `Stitch`_
 
