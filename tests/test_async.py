@@ -115,6 +115,10 @@ class TestAsyncClient(asynctest.TestCase):
         brawlers = await self.client.get_brawlers()
         self.assertIsInstance(brawlers, brawlstats.Brawlers)
 
+    async def test_get_event_rotation(self):
+        events = await self.client.get_event_rotation()
+        self.assertIsInstance(events, brawlstats.EventRotation)
+
 
 if __name__ == '__main__':
     asynctest.main()

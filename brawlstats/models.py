@@ -2,7 +2,7 @@ from box import Box, BoxList
 
 from .utils import bstag
 
-__all__ = ['Player', 'Club', 'Members', 'Ranking', 'BattleLog', 'Constants', 'Brawlers']
+__all__ = ['Player', 'Club', 'Members', 'Ranking', 'BattleLog', 'Constants', 'Brawlers', 'EventRotation']
 
 
 class BaseBox:
@@ -134,3 +134,8 @@ class Brawlers(BaseBoxList):
 
     def __init__(self, client, data):
         super().__init__(client, data['items'])
+
+
+class EventRotation(BaseBoxList):
+    """A list of events in the current rotation."""
+    pass

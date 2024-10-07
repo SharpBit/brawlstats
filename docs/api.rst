@@ -31,6 +31,9 @@ Data Models
 .. autoclass:: brawlstats.models.Brawlers
     :members:
 
+.. autoclass:: brawlstats.models.EventRotation
+    :members:
+
 
 Attributes of Data Models
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -301,7 +304,7 @@ Name         Type
 Brawlers
 ~~~~~~~~
 
-Returns list of all brawlers in the game and information,
+Represents a list of all brawlers in the game and information,
 with each item having the following attributes.
 Note: ``Brawlers`` only represents the brawler objects returned
 from ``Client.get_brawlers()``.
@@ -316,3 +319,20 @@ Name                 Type
 ``star_powers``      List[`StarPower`_]
 ``gadgets``          List[`Gadget`_]
 ==================== ==================
+
+EventRotation
+~~~~~~~~~~~~~
+
+Represents a list of events in the current rotation,
+each with the following attributes:
+
+Attributes:
+
+============== ========
+Name           Type
+============== ========
+``start_time`` str
+``end_time``   str
+``slot_id``    int
+``event``      `Event`_
+============== ========

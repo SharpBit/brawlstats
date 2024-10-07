@@ -9,7 +9,7 @@ import requests
 from cachetools import TTLCache
 
 from .errors import Forbidden, NotFoundError, RateLimitError, ServerError, UnexpectedError
-from .models import BattleLog, Brawlers, Club, Constants, Members, Player, Ranking
+from .models import BattleLog, Brawlers, Club, Constants, EventRotation, Members, Player, Ranking
 from .utils import API, bstag, typecasted
 
 log = logging.getLogger(__name__)
@@ -385,3 +385,18 @@ class Client:
             A list of available brawlers and information about them.
         """
         return self._get_model(self.api.BRAWLERS, model=Brawlers, use_cache=use_cache)
+
+    def get_event_rotation(self, use_cache=True) -> EventRotation:
+        """Gets the current events in rotation.
+
+        Parameters
+        ----------
+        use_cache : bool, optional
+            Whether to use the internal 3 minutes cache, by default True
+
+        Returns
+        -------
+        Events
+            A list of the current events in rotation.
+        """
+        return self._get_model(self.api.EVENT_ROTATION, model=EventRotation, use_cache=use_cache)

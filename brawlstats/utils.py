@@ -16,6 +16,7 @@ class API:
         self.RANKINGS = self.BASE + '/rankings'
         self.CONSTANTS = 'https://fourjr.herokuapp.com/bs/constants'
         self.BRAWLERS = self.BASE + '/brawlers'
+        self.EVENT_ROTATION = self.BASE + '/events/rotation'
 
         # Get package version from __init__.py
         path = os.path.dirname(__file__)
