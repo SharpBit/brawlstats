@@ -25,21 +25,21 @@ setup(
     keywords=['brawl stars, brawlstats, supercell'],
     packages=find_packages(),
     install_requires=requirements,
-    python_requires='>=3.5.3',
+    python_requires='>=3.9.0',
     project_urls={
         'Source Code': 'https://github.com/SharpBit/brawlstats',
         'Issue Tracker': 'https://github.com/SharpBit/brawlstats/issues',
-        'Documentation': 'https://brawlstats.readthedocs.io/',
+        'Documentation': 'https://brawlstats.readthedocs.io/en/stable',
     },
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'Topic :: Games/Entertainment :: Real Time Strategy',
         'License :: OSI Approved :: MIT License',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
         'Natural Language :: English'
     ]
 )
