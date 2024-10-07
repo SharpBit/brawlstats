@@ -15,7 +15,7 @@ with open('requirements.txt') as f:
 setup(
     name='brawlstats',
     version=version,
-    description='An easy-to-use wrapper for the Brawl Stars API',
+    description='BrawlStats is an easy-to-use Python API wrapper for the Brawl Stars API',
     long_description=long_description,
     long_description_content_type='text/x-rst',
     url='https://github.com/SharpBit/brawlstats',
