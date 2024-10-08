@@ -10,12 +10,12 @@ from .errors import NotFoundError
 
 class API:
     def __init__(self, base_url, version=1):
-        self.BASE = base_url or 'https://api.brawlstars.com/v{}'.format(version)
+        self.BASE = base_url or f'https://api.brawlstars.com/v{version}'
         self.PROFILE = self.BASE + '/players'
         self.CLUB = self.BASE + '/clubs'
         self.RANKINGS = self.BASE + '/rankings'
-        self.CONSTANTS = 'https://fourjr.herokuapp.com/bs/constants'
         self.BRAWLERS = self.BASE + '/brawlers'
+        self.EVENT_ROTATION = self.BASE + '/events/rotation'
 
         # Get package version from __init__.py
         path = os.path.dirname(__file__)

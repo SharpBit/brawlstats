@@ -25,10 +25,10 @@ Data Models
 .. autoclass:: brawlstats.models.Members
     :members:
 
-.. autoclass:: brawlstats.models.Constants
+.. autoclass:: brawlstats.models.Brawlers
     :members:
 
-.. autoclass:: brawlstats.models.Brawlers
+.. autoclass:: brawlstats.models.EventRotation
     :members:
 
 
@@ -42,12 +42,11 @@ Player
 
 A full player object (all its statistics)
 
-
 Attributes:
 
-============================================ =============
+============================================ ======================
 Name                                         Type
-============================================ =============
+============================================ ======================
 ``tag``                                      str
 ``name``                                     str
 ``name_color``                               str
@@ -58,16 +57,16 @@ Name                                         Type
 ``exp_level``                                int
 ``exp_points``                               int
 ``is_qualified_from_championship_challenge`` bool
-``x3vs3_victories``                          int
-``team_victories``                           int
+``x3vs3_victories`` / ``team_victories``     int
 ``solo_victories``                           int
 ``duo_victories``                            int
 ``best_robo_rumble_time``                    int
 ``best_time_as_big_brawler``                 int
+``brawlers``                                 List[`PlayerBrawler`_]
 ``club.tag``                                 str
 ``club.name``                                str
-``brawlers``                                 List[Brawler]
-============================================ =============
+``icon.id``                                  int
+============================================ ======================
 
 Club
 ~~~~
@@ -75,31 +74,34 @@ Club
 A full club object to get a club's statistics. In order to get this, you
 must get it from the client or a player object.
 
-
 Attributes:
 
-===================== ============
+===================== ===============
 Name                  Type
-===================== ============
+===================== ===============
 ``tag``               str
 ``name``              str
 ``description``       str
 ``type``              str
 ``trophies``          int
 ``required_trophies`` int
-``members``           List[Member]
-===================== ============
+``members``           List[`Member`_]
+``badge_id``          int
+===================== ===============
 
-Members
-~~~~~~~
+Member
+~~~~~~
 
-Returns a list of club members. Get this by accessing
-Club.members or Club.get_members()
+Members is a list of club members. Get this by accessing
+``Club.members`` or ``Club.get_members()``.
+The club's members are sorted in order of descending trophies.
+Each Member in the list has the following attributes:
 
 .. code:: py
 
    members = club.members
-   print(members[0].name, members[0].role) # prints best player's name and role (sorted by trophies)
+   # Prints club's best player's name and role
+   print(members[0].name, members[0].role)
 
 Attributes:
 
@@ -111,14 +113,16 @@ Name           Type
 ``name_color`` str
 ``role``       str
 ``trophies``   int
+``icon.id``    int
 ============== ====
 
 Ranking
 ~~~~~~~
 
-Returns a list of top players, clubs, or brawlers. To access this, do ``ranking[index]``
+A list of top players, clubs, or brawlers.
+Each item in the list has the following attributes:
 
-Player/Brawler attributes:
+Player/Brawler Ranking attributes:
 
 ============== ====
 Name           Type
@@ -129,9 +133,10 @@ Name           Type
 ``trophies``   int
 ``rank``       int
 ``club.name``  str
+``icon.id``    int
 ============== ====
 
-Club attributes:
+Club Ranking attributes:
 
 ================ ====
 Name             Type
@@ -141,36 +146,43 @@ Name             Type
 ``trophies``     int
 ``rank``         int
 ``member_count`` int
+``badge_id``     int
 ================ ====
 
-Brawler
-~~~~~~~
+PlayerBrawler
+~~~~~~~~~~~~~
 
-Returns a brawler object with the following attributes. You can retrieve
-a profile’s brawler info by getting ``Profile.brawlers``
+PlayerBrawlers is a list of brawler objects, each with the following attributes.
+The brawlers are sorted in order of descending trophies.
+Note: ``PlayerBrawler`` only represents a brawler that a player owns and 
+can only be accessed from ``Player.brawlers``.
 
 .. code:: py
 
-   brawlers = profile.brawlers
-   top_brawler = brawlers[0] # first index in list = highest trophies
-   print(top_brawler.name, top_brawler.trophies) # prints best brawler's name and trophies
+   brawlers = player.brawlers
+   # List is sorted by descending trophies
+   top_brawler = brawlers[0]
+   # print the player's best brawler's name and trophies
+   print(top_brawler.name, top_brawler.trophies)
 
 Attributes:
 
-==================== ========
+==================== ==================
 Name                 Type
-==================== ========
+==================== ==================
 ``id``               int
 ``name``             str
 ``power``            int
 ``rank``             int
 ``trophies``         int
 ``highest_trophies`` int
-``star_powers``      List[SP]
-==================== ========
+``star_powers``      List[`StarPower`_]
+``gadgets``          List[`Gadget`_]
+``gears``            List[`Gear`_]
+==================== ==================
 
-Star Power
-~~~~~~~~~~
+StarPower
+~~~~~~~~~
 
 Attributes:
 
@@ -181,105 +193,143 @@ Name     Type
 ``name`` str
 ======== ====
 
-Battle Logs
-~~~~~~~~~~~
-
-Returns a list of objects with this structure:
+Gadget
+~~~~~~
 
 Attributes:
 
-::
+======== ====
+Name     Type
+======== ====
+``id``   int
+``name`` str
+======== ====
 
-    {
-        "battleTime":"20190706T151526.000Z",
-        "event":{
-            "id":15000126,
-            "mode":"duoShowdown",
-            "map":"Royal Runway"
-        },
-        "battle":{
-            "mode":"duoShowdown",
-            "type":"ranked",
-            "rank":1,
-            "trophyChange":9,
-            "teams":[
-                [
-                    {
-                        "tag":"#Y2QPGG",
-                        "name":"Lex_YouTube",
-                        "brawler":{
-                            "id":16000005,
-                            "name":"SPIKE",
-                            "power":10,
-                            "trophies":495
-                        }
-                    },
-                    {
-                        "tag":"#8Q229LJY",
-                        "name":"Brandon",
-                        "brawler":{
-                            "id":16000003,
-                            "name":"BROCK",
-                            "power":10,
-                            "trophies":495
-                        }
-                    },
-                        {
-                        "tag":"#29RGL0QJ0",
-                        "name":"smallwhitepeen1",
-                        "brawler":{
-                            "id":16000007,
-                            "name":"JESSIE",
-                            "power":7,
-                            "trophies":486
-                        }
-                    }
-                ],
-                [
-                    {
-                        "tag":"#CYLVL8LY",
-                        "name":"TST|ROYER™",
-                        "brawler":{
-                            "id":16000019,
-                            "name":"PENNY",
-                            "power":8,
-                            "trophies":541
-                        }
-                    },
-                    {
-                        "tag":"#8P2URCR0",
-                        "name":"ANOTHER",
-                        "brawler":{
-                            "id":16000023,
-                            "name":"LEON",
-                            "power":8,
-                            "trophies":559
-                        }
-                    },
-                    {
-                        "tag":"#8LRY92QP",
-                        "name":"Marshmello",
-                        "brawler":{
-                            "id":16000021,
-                            "name":"GENE",
-                            "power":7,
-                            "trophies":448
-                        }
-                    }
-                ]
-            ]
-        }
-    }
+Gear
+~~~~
+
+Attributes:
+
+========= ====
+Name      Type
+========= ====
+``id``    int
+``name``  str
+``level`` int
+========= ====
+
+BattleLog
+~~~~~~~~~
+
+A BattleLog contains a list of items, each with the following attributes:
+
+Attributes:
+
+=============== ===============
+Name            Type
+=============== ===============
+``battle_time`` str
+``event``       `Event`_
+``battle``      List[`Battle`_]
+=============== ===============
+
+Event
+~~~~~
+
+An object containing information about an event.
+
+Attributes:
+
+======== ====
+Name     Type
+======== ====
+``id``   int
+``mode`` str
+``map``  str
+======== ====
+
+Battle
+~~~~~~
+
+Each Battle object contains information about a battle.
+Note: The ``star_player`` attribute may not exist for certain modes
+that do not have a star player (e.g. showdown, duoShowdown).
+
+Attributes:
+
+==================== ===========================
+Name                 Type
+==================== ===========================
+``mode``             str
+``type``             str
+``result``           str
+``duration``         int
+``trophy_change``    int
+``star_player``      `BattlePlayer`_
+``teams``            List[List[`BattlePlayer`_]]
+==================== ===========================
+
+BattlePlayer
+~~~~~~~~~~~~
+
+Represents a player who played in a battle.
+
+=========== ================
+Name        Type
+=========== ================
+``tag``     str
+``name``    str
+``brawler`` `BattleBrawler`_
+=========== ================
+
+BattleBrawler
+~~~~~~~~~~~~~
+
+Represents a brawler that was played in a battle.
+Note: ``BattlerBrawler`` only reprents brawlers that were played in a battle
+and can only be accessed from ``BattlePlayer.brawler``.
+
+============ ====
+Name         Type
+============ ====
+``id``       int
+``name``     str
+``power``    int
+``trophies`` int
+============ ====
 
 Brawlers
 ~~~~~~~~
 
-Returns list of available brawlers and information about them with this structure:
+Represents a list of all brawlers in the game and information,
+with each item having the following attributes.
+Note: ``Brawlers`` only represents the brawler objects returned
+from ``Client.get_brawlers()``.
 
 Attributes:
 
-::
+==================== ==================
+Name                 Type
+==================== ==================
+``id``               int
+``name``             str
+``star_powers``      List[`StarPower`_]
+``gadgets``          List[`Gadget`_]
+==================== ==================
 
-    [
-        Brawler
-    ]
+EventRotation
+~~~~~~~~~~~~~
+
+Represents a list of events in the current rotation,
+each with the following attributes:
+
+Attributes:
+
+============== ========
+Name           Type
+============== ========
+``start_time`` str
+``end_time``   str
+``slot_id``    int
+``event``      `Event`_
+============== ========

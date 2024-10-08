@@ -5,16 +5,24 @@ Welcome to Brawl Stats' documentation!
     :target: https://pypi.org/project/brawlstats/
     :alt: PyPi
 
-.. image:: https://travis-ci.com/SharpBit/brawlstats.svg?branch=master
-    :target: https://travis-ci.com/SharpBit/brawlstats
-    :alt: Travis-CI build
+.. image:: https://github.com/SharpBit/brawlstats/actions/workflows/tests.yml/badge.svg
+    :target: https://github.com/SharpBit/brawlstats/actions/workflows/tests.yml
+    :alt: GitHub Actions Tests
+
+.. image:: https://img.shields.io/pypi/pyversions/brawlstats.svg
+    :target: https://pypi.org/project/brawlstats/
+    :alt: Supported Versions
 
 .. image:: https://img.shields.io/github/license/SharpBit/brawlstats.svg
     :target: https://github.com/SharpBit/brawlstats/blob/master/LICENSE
     :alt: MIT License
 
-- This library is a sync and async wrapper for the Brawl Stars API.
-- Python 3.5.3 or later is required.
+.. image:: https://readthedocs.org/projects/brawlstats/badge/?version=stable
+    :target: https://brawlstats.readthedocs.io/en/stable/?badge=stable
+    :alt: Documentation Status
+
+- BrawlStats is a sync and async Python API wrapper to fetch statistics from the official Brawl Stars API.
+- Python 3.9 or later is required.
 
 Features
 ~~~~~~~~
@@ -24,8 +32,8 @@ Features
 - Get a player profile and battlelog.
 - Get a club and its members.
 - Get the top 200 rankings for players, clubs, or a specific brawler.
-- Get information about maps and more!
-- Get information about current available brawlers.
+- Get information about all the brawlers in the game.
+- Get information about the current event rotation!
 
 Installation
 ~~~~~~~~~~~~

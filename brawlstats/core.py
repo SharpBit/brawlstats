@@ -2,7 +2,6 @@ import asyncio
 import json
 import logging
 import sys
-import time
 from typing import Union
 
 import aiohttp
@@ -10,7 +9,7 @@ import requests
 from cachetools import TTLCache
 
 from .errors import Forbidden, NotFoundError, RateLimitError, ServerError, UnexpectedError
-from .models import BattleLog, Brawlers, Club, Constants, Members, Player, Ranking
+from .models import BattleLog, Brawlers, Club, EventRotation, Members, Player, Ranking
 from .utils import API, bstag, typecasted
 
 log = logging.getLogger(__name__)
@@ -29,14 +28,16 @@ class Client:
         How long to wait in seconds before shutting down requests, by default 30
     is_async: bool, optional
         Setting this to ``True`` makes the client async, by default False
-    loop: asyncio.window_events._WindowsSelectorEventLoop, optional
-        The event loop to use for asynchronous operations, by default None
-    connector: aiohttp.TCPConnector, optional
-        Pass a TCPConnector into the client (aiohttp), by default None
+    loop: asyncio.AbstractEventLoop, optional
+        The event loop to use for asynchronous operations, by default None.
+        If you are passing in an aiohttp session, using this will not work:
+        you must set it when initializing the session.
+    connector: aiohttp.BaseConnector, optional
+        Pass a Connector into the client (aiohttp), by default None
+        If you are passing in an aiohttp session, using this will not work:
+        you must set it when initializing the session.
     debug: bool, optional
         Whether or not to log info for debugging, by default False
-    prevent_ratelimit: bool, optional
-        Whether or not to wait between requests to prevent being ratelimited, by default False
     base_url: str, optional
         Sets a different base URL to make request to, by default None
     """
@@ -53,7 +54,7 @@ class Client:
         self.cache = TTLCache(3200 * 3, 60 * 3)  # 3200 requests per minute
 
         # Session and request options
-        self.session = options.get('session') or (
+        self.session = session or (
             aiohttp.ClientSession(loop=self.loop, connector=self.connector) if self.is_async else requests.Session()
         )
         self.timeout = timeout
@@ -64,24 +65,36 @@ class Client:
 
         # Request/response headers
         self.headers = {
-            'Authorization': 'Bearer {}'.format(token),
-            'User-Agent': 'brawlstats/{0} (Python {1[0]}.{1[1]})'.format(self.api.VERSION, sys.version_info),
+            'Authorization': f'Bearer {token}',
+            'User-Agent': f'brawlstats/{self.api.VERSION} (Python {sys.version_info[0]}.{sys.version_info[1]})',
             'Accept-Encoding': 'gzip'
         }
 
         # Load brawlers for get_rankings
         if self.is_async:
-            self.loop.create_task(self.__ainit__())
+            self.loop.create_task(self._ainit())
         else:
             brawlers_info = self.get_brawlers()
             self.api.set_brawlers(brawlers_info)
 
-    async def __ainit__(self):
+    async def _ainit(self):
         """Task created to run `get_brawlers` asynchronously"""
         self.api.set_brawlers(await self.get_brawlers())
 
     def __repr__(self):
-        return '<Client async={} timeout={} debug={}>'.format(self.is_async, self.timeout, self.debug)
+        return f'<Client async={self.is_async} timeout={self.timeout} debug={self.debug}>'
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.close()
+
+    async def __aenter__(self):
+        return self
+
+    async def __aexit__(self, exc_type, exc_value, traceback):
+        self.close()
 
     def close(self):
         return self.session.close()
@@ -120,7 +133,7 @@ class Client:
         if not data:
             return None
         if self.debug:
-            log.debug('GET {} got result from cache.'.format(url))
+            log.debug(f'GET {url} got result from cache.')
         return data
 
     async def _arequest(self, url, use_cache=True):
@@ -148,7 +161,7 @@ class Client:
     def _request(self, url, use_cache=True):
         """Sync method to request a url."""
         if self.is_async:
-            return self._arequest(url, use_cache)
+            return self._arequest(url, use_cache=use_cache)
 
         # Try and retrieve from cache
         if use_cache:
@@ -171,21 +184,7 @@ class Client:
 
     async def _aget_model(self, url, model, use_cache=True, key=None):
         """Method to turn the response data into a Model class for the async client."""
-        if self.prevent_ratelimit:
-            # Use self.lock if prevent_ratelimit=True
-            async with self.lock:
-                data = await self._arequest(url, use_cache)
-                await asyncio.sleep(0.1)
-        else:
-            data = await self._arequest(url)
-
-        if model == Constants:
-            if key:
-                if data.get(key):
-                    return model(self, data.get(key))
-                else:
-                    raise KeyError('No such Constants key "{}"'.format(key))
-
+        data = await self._arequest(url, use_cache=use_cache)
         return model(self, data)
 
     def _get_model(self, url, model, use_cache=True, key=None):
@@ -195,16 +194,6 @@ class Client:
             return self._aget_model(url, model=model, use_cache=use_cache, key=key)
 
         data = self._request(url, use_cache)
-        if self.prevent_ratelimit:
-            time.sleep(0.1)
-
-        if model == Constants:
-            if key:
-                if data.get(key):
-                    return model(self, data.get(key))
-                else:
-                    raise KeyError('No such Constants key "{}"'.format(key))
-
         return model(self, data)
 
     @typecasted
@@ -224,7 +213,7 @@ class Client:
         Player
             A player object with all of its attributes.
         """
-        url = '{}/{}'.format(self.api.PROFILE, tag)
+        url = f'{self.api.PROFILE}/{tag}'
         return self._get_model(url, model=Player, use_cache=use_cache)
 
     get_profile = get_player
@@ -246,7 +235,7 @@ class Client:
         BattleLog
             A player battle object with all of its attributes.
         """
-        url = '{}/{}/battlelog'.format(self.api.PROFILE, tag)
+        url = f'{self.api.PROFILE}/{tag}/battlelog'
         return self._get_model(url, model=BattleLog, use_cache=use_cache)
 
     @typecasted
@@ -266,7 +255,7 @@ class Client:
         Club
             A club object with all of its attributes.
         """
-        url = '{}/{}'.format(self.api.CLUB, tag)
+        url = f'{self.api.CLUB}/{tag}'
         return self._get_model(url, model=Club, use_cache=use_cache)
 
     @typecasted
@@ -286,7 +275,7 @@ class Client:
         Members
             A list of the members in a club.
         """
-        url = '{}/{}/members'.format(self.api.CLUB, tag)
+        url = f'{self.api.CLUB}/{tag}/members'
         return self._get_model(url, model=Members, use_cache=use_cache)
 
     def get_rankings(
@@ -300,7 +289,7 @@ class Client:
         ranking : str
             The type of ranking. Must be "players", "clubs", "brawlers".
         region : str, optional
-            The region to retrieve from. Must be a 2 letter country code, by default None
+            The region to retrieve from. Must be a 2 letter country code, 'global', or None: by default None
         limit : int, optional
             The number of top players or clubs to fetch, by default 200
         brawler : Union[str, int], optional
@@ -343,28 +332,11 @@ class Client:
             raise ValueError('Make sure limit is between 1 and 200.')
 
         # Construct URL
-        url = '{}/{}/{}?limit={}'.format(self.api.RANKINGS, region, ranking, limit)
+        url = f'{self.api.RANKINGS}/{region}/{ranking}?limit={limit}'
         if ranking == 'brawlers':
-            url = '{}/{}/{}/{}?limit={}'.format(self.api.RANKINGS, region, ranking, brawler, limit)
+            url = f'{self.api.RANKINGS}/{region}/{ranking}/{brawler}?limit={limit}'
 
         return self._get_model(url, model=Ranking, use_cache=use_cache)
-
-    def get_constants(self, key: str=None, use_cache=True) -> Constants:
-        """Gets Brawl Stars constants extracted from the app.
-
-        Parameters
-        ----------
-        key : str, optional
-            Any key to get specific data, by default None
-        use_cache : bool, optional
-            Whether to use the internal 3 minutes cache, by default True
-
-        Returns
-        -------
-        Constants
-            Data containing some Brawl Stars constants.
-        """
-        return self._get_model(self.api.CONSTANTS, model=Constants, key=key)
 
     def get_brawlers(self, use_cache=True) -> Brawlers:
         """Gets available brawlers and information about them.
@@ -379,4 +351,19 @@ class Client:
         Brawlers
             A list of available brawlers and information about them.
         """
-        return self._get_model(self.api.BRAWLERS, model=Brawlers)
+        return self._get_model(self.api.BRAWLERS, model=Brawlers, use_cache=use_cache)
+
+    def get_event_rotation(self, use_cache=True) -> EventRotation:
+        """Gets the current events in rotation.
+
+        Parameters
+        ----------
+        use_cache : bool, optional
+            Whether to use the internal 3 minutes cache, by default True
+
+        Returns
+        -------
+        Events
+            A list of the current events in rotation.
+        """
+        return self._get_model(self.api.EVENT_ROTATION, model=EventRotation, use_cache=use_cache)

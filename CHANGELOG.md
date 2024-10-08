@@ -1,6 +1,19 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [4.2.0] - 10/8/24
+### Added
+- Implemented an endpoint with `Client.get_event_rotation` which gets the events in the current rotation.
+- Added a method `Player.get_battle_logs` which directly gets the player's battle log.
+### Fixed
+- Client actually uses session passed into parameters now instead of creating a new one anyways
+- `UnexpectedError` now properly shows the returned text in the message
+- The `use_cache` parameter now works for `get_brawlers` and the async client
+### Removed
+- Removed the prevent_ratelimit option for the Client
+- Dropped support for Python 3.5, 3.6, 3.7, and 3.8
+- Removed `Client.get_constants` as the site that was hosting it is no longer running
+
 ## [4.1.1] - 10/31/21
 ### Fixed
 - Installation dependency issue with aiohttp
