@@ -6,7 +6,7 @@ Welcome to Brawl Stats' documentation!
     :alt: PyPi
 
 .. image:: https://github.com/SharpBit/brawlstats/actions/workflows/tests.yml/badge.svg
-    :target: https://github.com/SharpBit/brawlstats/actions/workflows/tests.yml/badge.svg
+    :target: https://github.com/SharpBit/brawlstats/actions/workflows/tests.yml
     :alt: GitHub Actions Tests
 
 .. image:: https://img.shields.io/pypi/pyversions/brawlstats.svg
